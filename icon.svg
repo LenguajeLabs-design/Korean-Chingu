@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="128" fill="#406c52"/>
+  <path d="M117 147h278v43H117zm0 88h183v41H117zm0 86h278v42H117z" fill="#f5f5f0" opacity=".3"/>
+  <text x="256" y="338" fill="#fffefa" font-family="sans-serif" font-size="196" font-weight="700" text-anchor="middle">친</text>
+</svg>

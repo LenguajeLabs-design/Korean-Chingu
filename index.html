@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f5f0" />
+    <meta name="description" content="A calm, searchable Korean grammar pocket guide for TOPIK I and II. Works offline after your first visit." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Chingu" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Korean Chingu · Grammar pocket guide</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Korean Chingu home">
+          <span class="brand-mark" aria-hidden="true">친</span>
+          <span class="brand-name">korean <b>chingu</b></span>
+        </a>
+        <div class="topbar-actions">
+          <span class="offline-status" id="offline-status" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="offline-label">Preparing offline…</span>
+          </span>
+          <button class="icon-button install-button" id="install-button" type="button" aria-label="How to add this app to your home screen" title="Add to home screen">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <p class="eyebrow">A LITTLE GUIDE FOR THE WAY</p>
+          <h1 id="page-title">Korean, one grammar<br class="desktop-break" /> point at a time<span class="title-period">.</span></h1>
+          <p class="intro-copy">A pocket-sized guide to the patterns that make Korean click. Search, save, and come back to it anywhere.</p>
+        </section>
+
+        <section class="library" aria-label="Grammar library">
+          <form class="search-box" id="search-form" role="search">
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.3 4.3" /></svg>
+            <label class="sr-only" for="search-input">Search grammar</label>
+            <input id="search-input" type="search" placeholder="Try a form, meaning, or example" autocomplete="off" autocapitalize="off" spellcheck="false" />
+            <kbd class="search-hint" aria-hidden="true">⌘ K</kbd>
+            <button class="clear-search" id="clear-search" type="button" aria-label="Clear search" hidden>×</button>
+          </form>
+
+          <div class="library-toolbar">
+            <div class="filter-tabs" role="group" aria-label="Filter by TOPIK level">
+              <button class="filter-tab is-active" type="button" data-level="all" aria-pressed="true">All</button>
+              <button class="filter-tab" type="button" data-level="1" aria-pressed="false">TOPIK I</button>
+              <button class="filter-tab" type="button" data-level="2" aria-pressed="false">TOPIK II</button>
+            </div>
+            <button class="saved-toggle" id="saved-toggle" type="button" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>
+              <span>Saved</span><span class="saved-count" id="saved-count">0</span>
+            </button>
+          </div>
+
+          <div class="results-heading">
+            <p id="results-label">All grammar</p>
+            <span id="results-count" aria-live="polite"></span>
+          </div>
+
+          <div class="grammar-list" id="grammar-list" aria-live="polite"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <span class="empty-mark" aria-hidden="true">?</span>
+            <h2>No matches yet</h2>
+            <p>Try searching a Korean form, an English meaning, or a word from an example.</p>
+            <button class="text-button" id="reset-search" type="button">Clear search</button>
+          </div>
+
+          <button class="surprise-button" id="surprise-button" type="button">
+            <span class="surprise-icon" aria-hidden="true">✳</span>
+            <span><b>Pick one for me</b><small>A quick grammar break</small></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </button>
+        </section>
+      </main>
+
+      <footer class="footer-note">
+        <span class="footer-flower" aria-hidden="true">✳</span>
+        <p>Made for the in-between moments.<br /><span>Level labels are study guides, not an official syllabus.</span></p>
+      </footer>
+    </div>
+
+    <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-form">
+      <div class="dialog-grabber" aria-hidden="true"></div>
+      <div class="dialog-topline">
+        <span class="level-pill" id="detail-level"></span>
+        <div class="dialog-actions">
+          <button class="icon-button detail-save" id="detail-save" type="button" aria-label="Save grammar point"></button>
+          <button class="icon-button close-button" id="close-detail" type="button" aria-label="Close details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+        </div>
+      </div>
+      <div class="detail-content">
+        <p class="detail-kicker" id="detail-category"></p>
+        <h2 class="detail-form" id="detail-form"></h2>
+        <p class="detail-meaning" id="detail-meaning"></p>
+        <div class="detail-rule">
+          <p class="section-label">HOW IT CONNECTS</p>
+          <p id="detail-connection"></p>
+        </div>
+        <div class="example-card">
+          <p class="section-label">IN A SENTENCE</p>
+          <p class="example-korean" id="detail-example"></p>
+          <p class="example-translation" id="detail-translation"></p>
+        </div>
+        <div class="remember-note" id="detail-note-wrap">
+          <span class="note-spark" aria-hidden="true">✳</span>
+          <p id="detail-note"></p>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="install-dialog" id="install-dialog" aria-labelledby="install-title">
+      <div class="dialog-topline">
+        <span class="level-pill">READY FOR THE ROAD</span>
+        <button class="icon-button close-button" id="close-install" type="button" aria-label="Close instructions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+      </div>
+      <div class="install-content">
+        <span class="install-illustration" aria-hidden="true">친</span>
+        <h2 id="install-title">Take Chingu with you.</h2>
+        <p class="install-lead">Open this page once while you have internet. After the offline badge appears, the guide is saved on this phone.</p>
+        <div class="install-steps" id="install-steps">
+          <div><span>1</span><p><b>iPhone</b><br />In Safari, tap Share, then <b>Add to Home Screen</b>.</p></div>
+          <div><span>2</span><p><b>Android</b><br />In Chrome, open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</p></div>
+        </div>
+        <p class="install-footnote">Your saved grammar stays on this device. No account needed.</p>
+      </div>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
