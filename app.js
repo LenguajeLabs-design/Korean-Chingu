@@ -1,4 +1,4 @@
-import { grammar } from "./grammar.js";
+import { grammar } from "./grammar.js?v=4";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -262,7 +262,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=4", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
