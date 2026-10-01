@@ -106,7 +106,7 @@ function render() {
   emptyState.hidden = visible.length !== 0;
   surpriseButton.hidden = visible.length === 0;
   clearSearch.hidden = !searchInput.value;
-  storageNote.hidden = !savedOnly || saved.size === 0;
+  storageNote.hidden = !savedOnly;
 
   if (savedOnly) {
     resultsLabel.textContent = "Saved grammar";
