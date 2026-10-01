@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f5f5f0" />
-    <meta name="description" content="A calm, searchable Korean grammar pocket guide for TOPIK I and II. Works offline after your first visit." />
+    <meta name="theme-color" content="#f6f6f3" />
+    <meta name="description" content="A calm, searchable Korean grammar and vocabulary guide for TOPIK I and II. Works offline after your first visit." />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=5" />
-    <link rel="icon" href="./icon.svg?v=5" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <title>Korean Chingu · Grammar pocket guide</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=6" />
+    <link rel="icon" href="./icon.svg?v=6" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=6" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <title>Korean Chingu · Grammar & vocabulary</title>
   </head>
   <body>
     <div class="app-shell">
@@ -37,11 +37,15 @@
       <main>
         <section class="intro" aria-labelledby="page-title">
           <p class="eyebrow">A LITTLE GUIDE FOR THE WAY</p>
-          <h1 id="page-title">Korean, one grammar<br class="desktop-break" /> point at a time<span class="title-period">.</span></h1>
-          <p class="intro-copy">A pocket-sized guide to the patterns that make Korean click. Search, save, and come back to it anywhere.</p>
+          <h1 id="page-title"><span id="page-title-text">Korean, one grammar point at a time</span><span class="title-period">.</span></h1>
+          <p class="intro-copy" id="intro-copy">A pocket-sized guide to the patterns that make Korean click. Search, save, and come back to it anywhere.</p>
         </section>
 
-        <section class="library" aria-label="Grammar library">
+        <section class="library" id="library" aria-label="Grammar library">
+          <div class="mode-switch" role="group" aria-label="Choose a study guide">
+            <button class="mode-tab is-active" type="button" data-mode="grammar" aria-pressed="true">Grammar</button>
+            <button class="mode-tab" type="button" data-mode="vocabulary" aria-pressed="false">Vocabulary</button>
+          </div>
           <form class="search-box" id="search-form" role="search">
             <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.3 4.3" /></svg>
             <label class="sr-only" for="search-input">Search grammar</label>
@@ -58,9 +62,11 @@
             </div>
             <button class="saved-toggle" id="saved-toggle" type="button" aria-pressed="false">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>
-              <span>Saved</span><span class="saved-count" id="saved-count">0</span>
+              <span id="saved-label">Saved</span><span class="saved-count" id="saved-count">0</span>
             </button>
           </div>
+
+          <div class="topic-filter" id="topic-filter" role="group" aria-label="Filter vocabulary by topic" hidden></div>
 
           <div class="results-heading">
             <p id="results-label">All grammar</p>
@@ -79,7 +85,7 @@
 
           <button class="surprise-button" id="surprise-button" type="button">
             <span class="surprise-icon" aria-hidden="true">✳</span>
-            <span><b>Pick one for me</b><small>A quick grammar break</small></span>
+            <span><b id="surprise-title">Pick one for me</b><small id="surprise-subtitle">A quick grammar break</small></span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
           </button>
         </section>
@@ -111,7 +117,10 @@
         <div class="examples-section">
           <div class="examples-heading">
             <p class="section-label">EXAMPLES</p>
-            <span id="examples-count"></span>
+            <div class="example-tools">
+              <span id="examples-count"></span>
+              <button class="freddie-toggle" type="button" aria-label="Use Freddie’s everyday examples" aria-pressed="false"><span>Freddie mode</span><span class="freddie-state">Off</span></button>
+            </div>
           </div>
           <ol class="examples-list" id="detail-examples"></ol>
           <button class="examples-toggle" id="examples-toggle" type="button" aria-expanded="false">Show one more example</button>
@@ -119,6 +128,42 @@
         <div class="remember-note" id="detail-note-wrap">
           <span class="note-spark" aria-hidden="true">✳</span>
           <p id="detail-note"></p>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="detail-dialog word-dialog" id="word-dialog" aria-labelledby="word-form">
+      <div class="dialog-grabber" aria-hidden="true"></div>
+      <div class="dialog-topline">
+        <span class="level-pill" id="word-level"></span>
+        <div class="dialog-actions">
+          <button class="icon-button detail-save" id="word-save" type="button" aria-label="Save word"></button>
+          <button class="icon-button close-button" id="close-word" type="button" aria-label="Close word details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+        </div>
+      </div>
+      <div class="detail-content">
+        <p class="detail-kicker" id="word-category"></p>
+        <h2 class="detail-form" id="word-form"></h2>
+        <p class="word-pronunciation" id="word-pronunciation"></p>
+        <p class="detail-meaning" id="word-meaning"></p>
+        <div class="detail-rule">
+          <p class="section-label">WORD TYPE</p>
+          <p id="word-type"></p>
+        </div>
+        <div class="word-example">
+          <div class="word-example-heading">
+            <p class="section-label">IN A SENTENCE</p>
+            <div class="example-tools">
+              <span id="word-example-count">Example</span>
+              <button class="freddie-toggle" type="button" aria-label="Use Freddie’s everyday examples" aria-pressed="false"><span>Freddie mode</span><span class="freddie-state">Off</span></button>
+            </div>
+          </div>
+          <p class="example-korean" id="word-example" lang="ko"></p>
+          <p class="example-translation" id="word-translation"></p>
+        </div>
+        <div class="remember-note" id="word-note-wrap">
+          <span class="note-spark" aria-hidden="true">✳</span>
+          <p id="word-note"></p>
         </div>
       </div>
     </dialog>
@@ -131,15 +176,15 @@
       <div class="install-content">
         <span class="install-illustration" aria-hidden="true">친</span>
         <h2 id="install-title">Use Chingu offline.</h2>
-        <p class="install-lead">Open this page once while online. When the badge says “Offline-ready on this device,” the guide and search are cached in this browser. Adding Chingu to your home screen is optional.</p>
+        <p class="install-lead">Open this page once while online. When the badge says “Offline-ready on this device,” grammar, vocabulary, and search are cached in this browser. Adding Chingu to your home screen is optional.</p>
         <div class="install-steps" id="install-steps">
           <div><span>1</span><p><b>iPhone</b><br />Optional: in Safari, tap Share, then <b>Add to Home Screen</b>.</p></div>
           <div><span>2</span><p><b>Android</b><br />Optional: in Chrome, open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</p></div>
         </div>
-        <p class="install-footnote">Saved grammar lives in this browser on this device. It won’t sync, and clearing site data may remove it. No account needed.</p>
+        <p class="install-footnote">Saved grammar, words, and Freddie mode are stored in this browser on this device. They won’t sync, and clearing site data may remove them. No account needed.</p>
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=5"></script>
+    <script type="module" src="./app.js?v=6"></script>
   </body>
 </html>

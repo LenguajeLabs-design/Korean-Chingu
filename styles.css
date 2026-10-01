@@ -54,6 +54,9 @@ main { flex: 1; }
 .intro-copy { max-width: 445px; margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
 
 .library { padding-bottom: 45px; }
+.mode-switch { width: fit-content; margin: 0 0 12px; padding: 3px; display: flex; gap: 2px; border-radius: 11px; background: #eaece7; }
+.mode-tab { min-width: 88px; min-height: 44px; padding: 0 15px; border: 0; border-radius: 8px; background: transparent; color: #737e75; font-size: 12px; font-weight: 650; cursor: pointer; transition: background .18s ease, color .18s ease, box-shadow .18s ease; }
+.mode-tab.is-active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 4px rgba(25, 39, 30, .09); }
 .search-box { height: 56px; padding: 0 15px; display: flex; align-items: center; gap: 11px; background: var(--surface); border: 1px solid rgba(37, 51, 44, .08); border-radius: 15px; box-shadow: 0 5px 18px rgba(35, 51, 44, .035); }
 .search-icon { width: 19px; height: 19px; flex: 0 0 auto; fill: none; stroke: #858d86; stroke-width: 1.7; stroke-linecap: round; }
 .search-box input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 14px; }
@@ -71,6 +74,11 @@ main { flex: 1; }
 .saved-toggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; }
 .saved-count { min-width: 19px; height: 19px; display: grid; place-items: center; padding: 0 4px; border-radius: 10px; background: rgba(37, 51, 44, .07); color: inherit; font-size: 10px; }
 .saved-toggle[aria-pressed="true"] .saved-count { background: rgba(64, 108, 82, .12); }
+.topic-filter { margin: -1px 0 13px; display: flex; gap: 7px; overflow-x: auto; padding: 2px 1px 6px; scrollbar-width: none; }
+.topic-filter::-webkit-scrollbar { display: none; }
+.topic-filter[hidden] { display: none; }
+.topic-tab { min-height: 44px; flex: 0 0 auto; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink-soft); font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease; }
+.topic-tab.is-active { border-color: rgba(62, 108, 80, .16); background: var(--green-wash); color: var(--green-dark); }
 .results-heading { padding: 3px 2px 9px; display: flex; align-items: baseline; justify-content: space-between; }
 .results-heading p { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: -.02em; }
 .results-heading span { color: var(--muted); font-size: 11px; }
@@ -129,6 +137,13 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 .examples-section { margin-top: 22px; }
 .examples-heading { padding: 0 2px; display: flex; align-items: center; justify-content: space-between; }
 .examples-heading > span { color: var(--muted); font-size: 10px; }
+.example-tools { display: inline-flex; align-items: center; justify-content: flex-end; gap: 7px; }
+.example-tools > span { color: var(--muted); font-size: 10px; white-space: nowrap; }
+.freddie-toggle { min-height: 44px; padding: 0 8px 0 10px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font-size: 10px; font-weight: 650; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease; }
+.freddie-toggle:hover { border-color: rgba(62, 108, 80, .28); }
+.freddie-toggle.is-active { border-color: rgba(62, 108, 80, .18); background: var(--green-wash); color: var(--green-dark); }
+.freddie-state { color: var(--muted); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.freddie-toggle.is-active .freddie-state { color: var(--green); }
 .examples-list { margin: 9px 0 0; padding: 0; overflow: hidden; border: 1px solid rgba(37, 51, 44, .075); border-radius: 15px; background: var(--surface); list-style: none; }
 .example-item { padding: 13px 15px; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 9px; }
 .example-item + .example-item { border-top: 1px solid rgba(37, 51, 44, .065); }
@@ -139,6 +154,11 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 .examples-toggle { min-height: 44px; margin: 3px 0 0 -8px; padding: 0 10px; border: 0; border-radius: 9px; background: transparent; color: var(--green-dark); font-size: 12px; font-weight: 700; cursor: pointer; }
 .examples-toggle:hover { background: var(--green-wash); }
 .examples-toggle[hidden] { display: none; }
+.word-example { margin-top: 22px; padding: 16px 17px 15px; border: 1px solid rgba(37, 51, 44, .075); border-radius: 15px; background: var(--surface); }
+.word-example-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.word-example .example-korean { margin-top: 11px; font-size: 18px; }
+.word-pronunciation { margin: 4px 0 5px; color: var(--green); font-size: 13px; font-weight: 550; letter-spacing: .01em; }
+.remember-note[hidden] { display: none; }
 .remember-note { margin-top: 16px; display: flex; align-items: flex-start; gap: 9px; color: #65736a; }
 .note-spark { flex: 0 0 auto; color: #9aab94; font-size: 14px; }
 .remember-note p { margin: 0; font-size: 12px; line-height: 1.6; }
@@ -171,6 +191,8 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
   .filter-tabs { gap: 1px; }
   .filter-tab { min-width: 47px; padding: 0 10px; font-size: 11px; }
   .saved-toggle { gap: 5px; padding: 0 5px; font-size: 11px; }
+  .topic-filter { margin-bottom: 11px; }
+  .topic-tab { min-height: 44px; padding: 0 11px; }
   .grammar-list { gap: 8px; }
   .grammar-card { min-height: 75px; padding-left: 13px; border-radius: 16px; }
   .grammar-main { gap: 11px; }
@@ -185,6 +207,10 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
   .dialog-grabber { width: 35px; height: 4px; margin: 9px auto 0; display: block; border-radius: 4px; background: #d4d8d0; }
   .detail-dialog .dialog-topline { min-height: 54px; padding-top: 4px; }
   .detail-content { padding: 20px 23px 28px; }
+  .examples-heading { gap: 7px; }
+  .example-tools { gap: 5px; }
+  .freddie-toggle { min-height: 44px; padding-right: 7px; padding-left: 8px; gap: 5px; font-size: 9px; }
+  .word-example { padding-right: 14px; padding-left: 14px; }
   .install-content { padding-right: 23px; padding-left: 23px; }
 }
 

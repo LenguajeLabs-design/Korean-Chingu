@@ -1,6 +1,6 @@
 # Korean Chingu
 
-A mobile-first, offline-capable TOPIK I and TOPIK II grammar pocket guide. It uses plain HTML, CSS, and JavaScript so it can be hosted as a static site without a build step or external runtime dependencies.
+A mobile-first, offline-capable TOPIK I and TOPIK II grammar and vocabulary guide. It uses plain HTML, CSS, and JavaScript so it can be hosted as a static site without a build step or external runtime dependencies.
 
 ## Use it
 
@@ -9,7 +9,7 @@ The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the
 - **iPhone:** Open the HTTPS site in Safari, tap Share, then **Add to Home Screen**.
 - **Android:** Open the HTTPS site in Chrome, open the menu, then **Install app** or **Add to Home screen**.
 
-The app uses no remote fonts, APIs, or images. Level labels are study guidance, not an official TOPIK syllabus.
+The app uses no remote fonts, APIs, or images. Vocabulary is grouped into practical travel topics and can be searched by Hangul, romanization, and English meaning. Freddie mode adds first-person everyday study and travel examples. Saved grammar, words, and Freddie mode are stored in the current browser on this device and do not sync. Level labels are study guidance, not an official TOPIK syllabus.
 
 ## Local preview
 
@@ -17,4 +17,4 @@ Any static file server can serve this folder. For example, run `python3 -m http.
 
 ## Content
 
-Grammar entries live in `grammar.js`. Each entry includes a search form, level, meaning, attachment guidance, one example with translation, and a usage note. Keep the data bundled locally so search keeps working offline.
+Grammar entries live in `grammar.js`; vocabulary entries live in `vocabulary.js`; Freddie examples live in `freddie-examples.js`. Keep all content bundled locally so search and examples keep working offline.
