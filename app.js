@@ -9,6 +9,8 @@ const resultsCount = document.querySelector("#results-count");
 const savedCount = document.querySelector("#saved-count");
 const savedToggle = document.querySelector("#saved-toggle");
 const surpriseButton = document.querySelector("#surprise-button");
+const storageNote = document.querySelector("#storage-note");
+const resetSearchButton = document.querySelector("#reset-search");
 const detailDialog = document.querySelector("#detail-dialog");
 const installDialog = document.querySelector("#install-dialog");
 const offlineStatus = document.querySelector("#offline-status");
@@ -37,12 +39,6 @@ function persistSaved() {
   } catch {
     // The guide remains usable when browser storage is unavailable.
   }
-}
-
-function escapeText(value) {
-  return String(value).replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[character]);
 }
 
 function searchableText(item) {
@@ -108,7 +104,9 @@ function render() {
   list.replaceChildren(...visible.map(makeCard));
   list.hidden = visible.length === 0;
   emptyState.hidden = visible.length !== 0;
+  surpriseButton.hidden = visible.length === 0;
   clearSearch.hidden = !searchInput.value;
+  storageNote.hidden = !savedOnly || saved.size === 0;
 
   if (savedOnly) {
     resultsLabel.textContent = "Saved grammar";
@@ -119,6 +117,24 @@ function render() {
   }
   resultsCount.textContent = `${visible.length} ${visible.length === 1 ? "pattern" : "patterns"}`;
   savedCount.textContent = String(saved.size);
+
+  if (visible.length === 0) {
+    const emptyTitle = document.querySelector("#empty-title");
+    const emptyCopy = document.querySelector("#empty-copy");
+    if (savedOnly && saved.size === 0) {
+      emptyTitle.textContent = "Nothing saved yet";
+      emptyCopy.textContent = "Tap the bookmark beside any grammar point to keep it here for later.";
+      resetSearchButton.textContent = "Browse grammar";
+    } else if (savedOnly) {
+      emptyTitle.textContent = "No saved grammar matches";
+      emptyCopy.textContent = "Your saved points are still here. Try clearing the search and level filters.";
+      resetSearchButton.textContent = "Show all saved";
+    } else {
+      emptyTitle.textContent = "No matches yet";
+      emptyCopy.textContent = "Try a Korean form, English meaning, or a word from an example.";
+      resetSearchButton.textContent = "Clear search";
+    }
+  }
 }
 
 function toggleSaved(id) {
@@ -177,7 +193,21 @@ document.querySelectorAll(".filter-tab").forEach((button) => {
 searchInput.addEventListener("input", render);
 document.querySelector("#search-form").addEventListener("submit", (event) => event.preventDefault());
 clearSearch.addEventListener("click", () => { searchInput.value = ""; searchInput.focus(); render(); });
-document.querySelector("#reset-search").addEventListener("click", () => { searchInput.value = ""; savedOnly = false; render(); searchInput.focus(); });
+resetSearchButton.addEventListener("click", () => {
+  searchInput.value = "";
+  if (savedOnly && saved.size > 0) {
+    activeLevel = "all";
+    document.querySelectorAll(".filter-tab").forEach((tab) => {
+      const active = tab.dataset.level === "all";
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-pressed", String(active));
+    });
+  } else {
+    savedOnly = false;
+  }
+  render();
+  searchInput.focus();
+});
 savedToggle.addEventListener("click", () => { savedOnly = !savedOnly; render(); });
 list.addEventListener("click", (event) => {
   const saveButton = event.target.closest("[data-save]");
@@ -222,7 +252,7 @@ document.addEventListener("keydown", (event) => {
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  document.querySelector("#install-button").setAttribute("aria-label", "Install Korean Chingu");
+  document.querySelector("#install-button").setAttribute("aria-label", "Install Korean Chingu (optional)");
 });
 
 function setOfflineState(label, state) {
@@ -234,10 +264,10 @@ function setOfflineState(label, state) {
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
-    .then(() => setOfflineState("Saved for offline", "ready"))
-    .catch(() => setOfflineState("Open once online to save", "error"));
+    .then(() => setOfflineState("Offline-ready on this device", "ready"))
+    .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
 } else {
-  setOfflineState("Open once online to save", "error");
+  setOfflineState("Open this page online on this device to save it", "error");
 }
 
 render();

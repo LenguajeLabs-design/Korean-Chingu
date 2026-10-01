@@ -1,4 +1,4 @@
-const CACHE_NAME = "korean-chingu-v1";
+const CACHE_NAME = "korean-chingu-v2";
 const APP_FILES = [
   "./",
   "./index.html",

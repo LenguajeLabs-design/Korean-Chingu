@@ -22,15 +22,17 @@
           <span class="brand-name">korean <b>chingu</b></span>
         </a>
         <div class="topbar-actions">
-          <span class="offline-status" id="offline-status" role="status">
-            <span class="status-dot" aria-hidden="true"></span>
-            <span id="offline-label">Preparing offline…</span>
-          </span>
-          <button class="icon-button install-button" id="install-button" type="button" aria-label="How to add this app to your home screen" title="Add to home screen">
+          <button class="icon-button install-button" id="install-button" type="button" aria-haspopup="dialog">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
+            <span>Offline setup</span>
           </button>
         </div>
       </header>
+
+      <div class="offline-status" id="offline-status" role="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="offline-label">Saving this guide on this device…</span>
+      </div>
 
       <main>
         <section class="intro" aria-labelledby="page-title">
@@ -65,11 +67,13 @@
             <span id="results-count" aria-live="polite"></span>
           </div>
 
+          <p class="storage-note" id="storage-note" hidden>Saved entries live in this browser on this device. They don’t sync, and clearing site data may remove them.</p>
+
           <div class="grammar-list" id="grammar-list" aria-live="polite"></div>
           <div class="empty-state" id="empty-state" hidden>
             <span class="empty-mark" aria-hidden="true">?</span>
-            <h2>No matches yet</h2>
-            <p>Try searching a Korean form, an English meaning, or a word from an example.</p>
+            <h2 id="empty-title">No matches yet</h2>
+            <p id="empty-copy">Try searching a Korean form, an English meaning, or a word from an example.</p>
             <button class="text-button" id="reset-search" type="button">Clear search</button>
           </div>
 
@@ -123,13 +127,13 @@
       </div>
       <div class="install-content">
         <span class="install-illustration" aria-hidden="true">친</span>
-        <h2 id="install-title">Take Chingu with you.</h2>
-        <p class="install-lead">Open this page once while you have internet. After the offline badge appears, the guide is saved on this phone.</p>
+        <h2 id="install-title">Use Chingu offline.</h2>
+        <p class="install-lead">Open this page once while online. When the badge says “Offline-ready on this device,” the guide and search are cached in this browser. Adding Chingu to your home screen is optional.</p>
         <div class="install-steps" id="install-steps">
-          <div><span>1</span><p><b>iPhone</b><br />In Safari, tap Share, then <b>Add to Home Screen</b>.</p></div>
-          <div><span>2</span><p><b>Android</b><br />In Chrome, open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</p></div>
+          <div><span>1</span><p><b>iPhone</b><br />Optional: in Safari, tap Share, then <b>Add to Home Screen</b>.</p></div>
+          <div><span>2</span><p><b>Android</b><br />Optional: in Chrome, open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</p></div>
         </div>
-        <p class="install-footnote">Your saved grammar stays on this device. No account needed.</p>
+        <p class="install-footnote">Saved grammar lives in this browser on this device. It won’t sync, and clearing site data may remove it. No account needed.</p>
       </div>
     </dialog>
 

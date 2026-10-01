@@ -4,7 +4,7 @@ A mobile-first, offline-capable TOPIK I and TOPIK II grammar pocket guide. It us
 
 ## Use it
 
-The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. After the first deployment, open the HTTPS site once while online so the service worker can cache the interface and grammar data. Add it to your phone's home screen for quick access. Saved grammar is stored in that browser on that device.
+The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. After the first deployment, open the HTTPS site once while online so the service worker can cache the interface and grammar data. Adding it to your phone's home screen is optional. Saved grammar lives in that browser on that device; it does not sync, and clearing site data may remove it.
 
 - **iPhone:** Open the HTTPS site in Safari, tap Share, then **Add to Home Screen**.
 - **Android:** Open the HTTPS site in Chrome, open the menu, then **Install app** or **Add to Home screen**.
