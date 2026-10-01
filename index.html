@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=4" />
-    <link rel="icon" href="./icon.svg?v=4" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=4" />
-    <link rel="stylesheet" href="./styles.css?v=4" />
+    <link rel="manifest" href="./manifest.webmanifest?v=5" />
+    <link rel="icon" href="./icon.svg?v=5" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
     <title>Korean Chingu · Grammar pocket guide</title>
   </head>
   <body>
@@ -108,10 +108,13 @@
           <p class="section-label">HOW IT CONNECTS</p>
           <p id="detail-connection"></p>
         </div>
-        <div class="example-card">
-          <p class="section-label">IN A SENTENCE</p>
-          <p class="example-korean" id="detail-example"></p>
-          <p class="example-translation" id="detail-translation"></p>
+        <div class="examples-section">
+          <div class="examples-heading">
+            <p class="section-label">EXAMPLES</p>
+            <span id="examples-count"></span>
+          </div>
+          <ol class="examples-list" id="detail-examples"></ol>
+          <button class="examples-toggle" id="examples-toggle" type="button" aria-expanded="false">Show one more example</button>
         </div>
         <div class="remember-note" id="detail-note-wrap">
           <span class="note-spark" aria-hidden="true">✳</span>
@@ -137,6 +140,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=4"></script>
+    <script type="module" src="./app.js?v=5"></script>
   </body>
 </html>

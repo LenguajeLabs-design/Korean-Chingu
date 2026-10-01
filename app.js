@@ -1,4 +1,4 @@
-import { grammar } from "./grammar.js?v=4";
+import { grammar } from "./grammar.js?v=5";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -13,6 +13,9 @@ const storageNote = document.querySelector("#storage-note");
 const resetSearchButton = document.querySelector("#reset-search");
 const detailDialog = document.querySelector("#detail-dialog");
 const installDialog = document.querySelector("#install-dialog");
+const detailExamples = document.querySelector("#detail-examples");
+const examplesCount = document.querySelector("#examples-count");
+const examplesToggle = document.querySelector("#examples-toggle");
 const offlineStatus = document.querySelector("#offline-status");
 const offlineLabel = document.querySelector("#offline-label");
 
@@ -22,6 +25,7 @@ let saved = readSaved();
 let activeLevel = "all";
 let savedOnly = false;
 let currentGrammarId = null;
+let detailExamplesExpanded = false;
 let deferredInstallPrompt = null;
 
 function readSaved() {
@@ -42,7 +46,8 @@ function persistSaved() {
 }
 
 function searchableText(item) {
-  return [item.form, item.meaning, item.category, item.connection, item.example, item.translation, item.note, item.searchTerms]
+  const exampleText = (item.examples || []).flatMap((example) => [example.korean, example.translation]);
+  return [item.form, item.meaning, item.category, item.connection, ...exampleText, item.note, item.searchTerms]
     .join(" ").normalize("NFKC").toLocaleLowerCase();
 }
 
@@ -156,6 +161,38 @@ function updateDetailSaveButton() {
   button.innerHTML = bookmarkIcon;
 }
 
+function renderDetailExamples(item) {
+  const examples = item.examples || [{ korean: item.example, translation: item.translation }];
+  const visibleExamples = detailExamplesExpanded ? examples : examples.slice(0, 2);
+  detailExamples.replaceChildren(...visibleExamples.map((example, index) => {
+    const row = document.createElement("li");
+    row.className = "example-item";
+
+    const number = document.createElement("span");
+    number.className = "example-index";
+    number.setAttribute("aria-hidden", "true");
+    number.textContent = String(index + 1).padStart(2, "0");
+
+    const copy = document.createElement("div");
+    copy.className = "example-copy";
+    const korean = document.createElement("p");
+    korean.className = "example-korean";
+    korean.lang = "ko";
+    korean.textContent = example.korean;
+    const translation = document.createElement("p");
+    translation.className = "example-translation";
+    translation.textContent = example.translation;
+    copy.append(korean, translation);
+    row.append(number, copy);
+    return row;
+  }));
+
+  examplesCount.textContent = `${examples.length} examples`;
+  examplesToggle.hidden = examples.length <= 2;
+  examplesToggle.setAttribute("aria-expanded", String(detailExamplesExpanded));
+  examplesToggle.textContent = detailExamplesExpanded ? "Show fewer examples" : `Show ${examples.length - 2} more example${examples.length - 2 === 1 ? "" : "s"}`;
+}
+
 function openDetail(id) {
   const item = grammar.find((entry) => entry.id === id);
   if (!item) return;
@@ -168,10 +205,8 @@ function openDetail(id) {
   form.lang = "ko";
   document.querySelector("#detail-meaning").textContent = item.meaning;
   document.querySelector("#detail-connection").textContent = item.connection;
-  const example = document.querySelector("#detail-example");
-  example.textContent = item.example;
-  example.lang = "ko";
-  document.querySelector("#detail-translation").textContent = item.translation;
+  detailExamplesExpanded = false;
+  renderDetailExamples(item);
   document.querySelector("#detail-note").textContent = item.note;
   updateDetailSaveButton();
   detailDialog.showModal();
@@ -228,6 +263,12 @@ surpriseButton.addEventListener("click", () => {
 document.querySelector("#detail-save").addEventListener("click", () => {
   if (currentGrammarId) toggleSaved(currentGrammarId);
 });
+examplesToggle.addEventListener("click", () => {
+  const item = grammar.find((entry) => entry.id === currentGrammarId);
+  if (!item) return;
+  detailExamplesExpanded = !detailExamplesExpanded;
+  renderDetailExamples(item);
+});
 document.querySelector("#close-detail").addEventListener("click", () => detailDialog.close());
 document.querySelector("#close-install").addEventListener("click", () => installDialog.close());
 document.querySelector("#install-button").addEventListener("click", async () => {
@@ -262,7 +303,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=4", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=5", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
