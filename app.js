@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=17";
-import { vocabulary } from "./vocabulary.js?v=17";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=17";
+import { grammar } from "./grammar.js?v=18";
+import { vocabulary } from "./vocabulary.js?v=18";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=18";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -63,6 +63,9 @@ const routeMissions = [
   { id: "coffee-order", location: "A neighborhood café", title: "Order your coffee just right", description: "Choose it warm or iced, and tell the barista how you like it.", category: "Coffee & Cafés", contexts: ["food", "study", "friends"], wordIds: ["keopi", "aiseukeopi", "ttatteuthada", "sireop", "jumunhada"], bonus: true },
   { id: "coworker-school", location: "Lunch with a coworker", title: "Talk about school over lunch", description: "Swap a few stories about classes, studying, and the next exam.", category: "Work & Study", contexts: ["work", "study"], wordIds: ["dongnyo", "hakgyo", "sueop", "siheom", "gongbuhada"], bonus: true },
   { id: "family-catchup", location: "A family call", title: "Catch up with your family", description: "Ask how everyone is doing and share a small story from Seoul.", category: "Family & People", contexts: ["family", "study", "seoul"], wordIds: ["gajok", "bumonim", "jumal", "jinaeda", "anbu"], bonus: true },
+  { id: "subway-reroute", location: "Seoul subway", title: "Reroute a changing commute", description: "Check a delay, switch lines, and see if you can still catch the last train.", category: "Transit plans", contexts: ["seoul", "work", "study"], wordIds: ["jiyeondoeda", "noseon", "galatada", "makcha", "unhaenghada"], bonus: true },
+  { id: "seoul-gallery", location: "A Seoul gallery", title: "Find an exhibition for the weekend", description: "Check the entrance fee, pick a favorite work, and take your time looking.", category: "Art & culture", contexts: ["hobbies", "seoul", "friends"], wordIds: ["jeonsihoe", "ipjangnyo", "jakpum", "jeonsihada", "gamsanghada"], bonus: true },
+  { id: "quiet-hotel-room", location: "Your Seoul stay", title: "Ask for a quieter room", description: "Make a polite request, check what is possible, and ask about extra fees.", category: "Travel & stay", contexts: ["seoul", "study", "family"], wordIds: ["joyoteohada", "bakkuda", "yocheonghada", "ganeunghada", "chuga-yogeum"], bonus: true },
   { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
   { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true },
   { id: "myeongdong-check-in", location: "Myeongdong", title: "Check in near Myeongdong", description: "Find your stay, hand over your bag, and check when check-in begins.", category: "Travel & Stay", contexts: ["seoul", "study", "work"], wordIds: ["jido", "juso", "sukso", "jim", "chekeuin"], bonus: true },
@@ -587,7 +590,10 @@ function findKoreanWordForm(item, sentence) {
     maepda: ["매웠어요", "매워요", "매웠", "매워"],
     dowajuda: ["도와줬어요", "도와줘요", "도와줬", "도와줘"],
     ttatteuthada: ["따뜻한", "따뜻해요", "따뜻해"],
-    deuda: ["데워 주세요", "데워 먹었어요", "데워서"]
+    deuda: ["데워 주세요", "데워 먹었어요", "데워서"],
+    jiyeondoeda: ["지연됐어요", "지연돼서", "지연될"],
+    joyoteohada: ["조용한", "조용해요", "조용해"],
+    bakkuda: ["바꿔도", "바꿔 주세요", "바꾸면"]
   };
   const verbStem = item.partOfSpeech === "verb" || item.partOfSpeech === "adjective"
     ? item.form.replace(/하다$/, "").replace(/다$/, "")
@@ -1183,7 +1189,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=17", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=18", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));

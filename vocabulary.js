@@ -246,5 +246,65 @@ export const vocabulary = [
   {
     id: "anbu", form: "안부", romanization: "anbu", meaning: "How someone is doing · regards", partOfSpeech: "noun", level: 2, category: "Family & people",
     example: "가족에게 안부를 물어요.", translation: "I ask how my family is doing.", note: ""
+  },
+  {
+    id: "jiyeondoeda", form: "지연되다", romanization: "jiyeondoeda", meaning: "To be delayed", partOfSpeech: "verb", level: 2, category: "Getting around",
+    example: "열차가 10분 지연됐어요.", translation: "The train was delayed by 10 minutes.", note: ""
+  },
+  {
+    id: "noseon", form: "노선", romanization: "noseon", meaning: "Route · transit line", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "이 노선은 시청역에 가요.", translation: "This line goes to City Hall Station.", note: ""
+  },
+  {
+    id: "galatada", form: "갈아타다", romanization: "garatada", meaning: "To change · transfer (vehicles)", partOfSpeech: "verb", level: 2, category: "Getting around",
+    example: "시청역에서 2호선으로 갈아타세요.", translation: "Please transfer to Line 2 at City Hall Station.", note: ""
+  },
+  {
+    id: "makcha", form: "막차", romanization: "makcha", meaning: "Last train · bus", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "막차가 몇 시에 출발해요?", translation: "What time does the last train leave?", note: ""
+  },
+  {
+    id: "unhaenghada", form: "운행하다", romanization: "unhaenghada", meaning: "To operate · run (transport)", partOfSpeech: "verb", level: 2, category: "Getting around",
+    example: "오늘 지하철은 몇 시까지 운행해요?", translation: "Until what time is the subway running today?", note: ""
+  },
+  {
+    id: "jeonsihoe", form: "전시회", romanization: "jeonsihoe", meaning: "Exhibition", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "이번 주말에 사진 전시회가 열려요.", translation: "A photo exhibition is on this weekend.", note: ""
+  },
+  {
+    id: "ipjangnyo", form: "입장료", romanization: "ipjangnyo", meaning: "Admission fee", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "입장료는 얼마예요?", translation: "How much is admission?", note: ""
+  },
+  {
+    id: "jakpum", form: "작품", romanization: "jakpum", meaning: "Work · artwork", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "마음에 드는 작품을 찾았어요.", translation: "I found an artwork I like.", note: ""
+  },
+  {
+    id: "jeonsihada", form: "전시하다", romanization: "jeonsihada", meaning: "To exhibit · display", partOfSpeech: "verb", level: 2, category: "Art & culture",
+    example: "이 미술관은 지역 작가의 작품을 전시해요.", translation: "This gallery exhibits works by local artists.", note: ""
+  },
+  {
+    id: "gamsanghada", form: "감상하다", romanization: "gamsanghada", meaning: "To view · appreciate (art)", partOfSpeech: "verb", level: 2, category: "Art & culture",
+    example: "미술관에서 사진 작품을 감상했어요.", translation: "I viewed photographic artwork at the gallery.", note: "Often used for appreciating art, music, and literature."
+  },
+  {
+    id: "joyoteohada", form: "조용하다", romanization: "joyonghada", meaning: "To be quiet", partOfSpeech: "adjective", level: 2, category: "Places & lodging",
+    example: "조용한 방이 있을까요?", translation: "Would you have a quiet room?", note: "조용한 describes a noun, such as a room."
+  },
+  {
+    id: "bakkuda", form: "바꾸다", romanization: "bakkuda", meaning: "To change · switch", partOfSpeech: "verb", level: 2, category: "Places & lodging",
+    example: "방을 바꿔도 괜찮을까요?", translation: "Would it be okay to change rooms?", note: ""
+  },
+  {
+    id: "yocheonghada", form: "요청하다", romanization: "yocheonghada", meaning: "To request", partOfSpeech: "verb", level: 2, category: "Places & lodging",
+    example: "조용한 방을 요청했어요.", translation: "I requested a quiet room.", note: ""
+  },
+  {
+    id: "ganeunghada", form: "가능하다", romanization: "ganeunghada", meaning: "To be possible", partOfSpeech: "adjective", level: 2, category: "Places & lodging",
+    example: "늦은 체크아웃이 가능해요?", translation: "Is a late checkout possible?", note: ""
+  },
+  {
+    id: "chuga-yogeum", form: "추가 요금", romanization: "chuga yogeum", meaning: "Additional charge", partOfSpeech: "noun", level: 2, category: "Places & lodging",
+    example: "방을 바꾸면 추가 요금이 있어요?", translation: "Is there an extra charge to change rooms?", note: ""
   }
 ];

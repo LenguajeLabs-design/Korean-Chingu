@@ -102,5 +102,20 @@ export const freddieVocabularyExamples = {
   "bumonim": { korean: "여행 중에 부모님께 서울 사진을 보내 드렸어요.", translation: "I sent my parents photos of Seoul while traveling." },
   "jumal": { korean: "주말에 가족과 영상 통화를 했어요.", translation: "I had a video call with my family on the weekend." },
   "jinaeda": { korean: "가족에게 서울에서 잘 지내고 있다고 말했어요.", translation: "I told my family I was doing well in Seoul." },
-  "anbu": { korean: "가족과 통화하며 서로 안부를 물었어요.", translation: "I asked my family how they were doing while we talked on the phone." }
+  "anbu": { korean: "가족과 통화하며 서로 안부를 물었어요.", translation: "I asked my family how they were doing while we talked on the phone." },
+  "jiyeondoeda": { korean: "비 오는 날에는 지하철이 지연될 때가 있어요.", translation: "On rainy days, the subway is sometimes delayed." },
+  "noseon": { korean: "서울숲에 가는 노선을 앱에서 확인했어요.", translation: "I checked the route to Seoul Forest in an app." },
+  "galatada": { korean: "약속 장소에 가려고 시청역에서 갈아탔어요.", translation: "I changed trains at City Hall Station on my way to meet someone." },
+  "makcha": { korean: "전시회를 보고 나와 막차 시간을 확인했어요.", translation: "After seeing the exhibition, I checked the last-train time." },
+  "unhaenghada": { korean: "늦게까지 운행하는 지하철 노선을 앱에서 확인했어요.", translation: "I checked subway lines that run late in an app." },
+  "jeonsihoe": { korean: "주말에 서울의 사진 전시회를 보러 갔어요.", translation: "I went to see a photo exhibition in Seoul on the weekend." },
+  "ipjangnyo": { korean: "전시회 입장료를 확인하고 친구와 표를 샀어요.", translation: "I checked the exhibition admission fee and bought tickets with a friend." },
+  "jakpum": { korean: "마음에 드는 작품을 발견하면 메모를 남겨요.", translation: "When I find a work I like, I make a note of it." },
+  "jeonsihada": { korean: "서울의 작은 미술관에서 지역 작가의 작품을 전시하고 있었어요.", translation: "A small gallery in Seoul was exhibiting works by local artists." },
+  "gamsanghada": { korean: "친구와 전시회에 가서 한국 사진 작품을 감상했어요.", translation: "I went to an exhibition with a friend and viewed Korean photography." },
+  "joyoteohada": { korean: "서울에 머물 때는 조용한 숙소를 찾아요.", translation: "When I stay in Seoul, I look for a quiet place to stay." },
+  "bakkuda": { korean: "방이 시끄러워서 프런트에 바꿔 달라고 했어요.", translation: "The room was noisy, so I asked the front desk to change it." },
+  "yocheonghada": { korean: "숙소에 조용한 방을 요청했어요.", translation: "I requested a quiet room at the accommodation." },
+  "ganeunghada": { korean: "늦은 체크아웃이 가능한지 숙소에 물어봤어요.", translation: "I asked the accommodation if a late checkout was possible." },
+  "chuga-yogeum": { korean: "방을 바꾸면 추가 요금이 있는지 확인했어요.", translation: "I checked whether there was an extra charge to change rooms." }
 };
