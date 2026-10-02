@@ -542,5 +542,61 @@ export const vocabulary = [
   {
     id: "olagada", form: "올라가다", romanization: "ollagada", meaning: "To go up · climb", partOfSpeech: "verb", level: 1, category: "Getting around",
     example: "낙산공원의 언덕을 천천히 올라가요.", translation: "I slowly walk up the hill at Naksan Park.", note: ""
+  },
+  {
+    id: "gyeonghuigung", form: "경희궁", romanization: "gyeonghuigung", meaning: "Gyeonghuigung Palace", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "경희궁을 천천히 둘러봐요.", translation: "I look around Gyeonghuigung at an easy pace.", note: "One of Seoul's five grand palaces, also known as Seogweol."
+  },
+  {
+    id: "seoul-history-museum", form: "서울역사박물관", romanization: "seoul yeoksa bangmulgwan", meaning: "Seoul Museum of History", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "서울역사박물관에서 옛 서울의 사진을 봐요.", translation: "I look at old photos of Seoul at the Seoul Museum of History.", note: "A museum about the city's history and culture."
+  },
+  {
+    id: "donuimun-museum-village", form: "돈의문박물관마을", romanization: "donuimun bangmulgwan maeul", meaning: "Donuimun Museum Village", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "돈의문박물관마을의 골목을 걸어요.", translation: "I walk through an alley in Donuimun Museum Village.", note: "A small village of preserved and recreated Seoul spaces."
+  },
+  {
+    id: "dongnimmun", form: "독립문", romanization: "dongnimmun", meaning: "Independence Gate", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "독립문 앞에서 기념사진을 찍어요.", translation: "I take a keepsake photo in front of Independence Gate.", note: "A historic gate in Seodaemun Independence Park."
+  },
+  {
+    id: "seodaemun-independence-park", form: "서대문독립공원", romanization: "seodaemun dongnip gongwon", meaning: "Seodaemun Independence Park", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "서대문독립공원에서 천천히 산책해요.", translation: "I take a quiet walk through Seodaemun Independence Park.", note: "A historic park in western central Seoul."
+  },
+  {
+    id: "ttukseom-hangang-park", form: "뚝섬한강공원", romanization: "ttukseom hangang gongwon", meaning: "Ttukseom Hangang Park", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "뚝섬한강공원에서 자전거를 타요.", translation: "I ride a bicycle at Ttukseom Hangang Park.", note: "A riverside park in eastern Seoul."
+  },
+  {
+    id: "konkuk-university", form: "건국대학교", romanization: "geon-guk daehakgyo", meaning: "Konkuk University", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "건국대학교 앞에서 친구와 점심을 먹어요.", translation: "I have lunch with a friend near Konkuk University.", note: "The surrounding area has cafés and places to eat."
+  },
+  {
+    id: "childrens-grand-park", form: "어린이대공원", romanization: "eorini daegongwon", meaning: "Children's Grand Park", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "어린이대공원에서 꽃을 구경해요.", translation: "I look at the flowers at Children's Grand Park.", note: "A large public park in Gwangjin-gu with gardens and family attractions."
+  },
+  {
+    id: "achasan", form: "아차산", romanization: "achasan", meaning: "Achasan Mountain", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "아차산에 올라가서 서울 풍경을 바라봐요.", translation: "I climb Achasan and look out at Seoul.", note: "A low mountain on Seoul's eastern edge with walking trails."
+  },
+  {
+    id: "hwaseong-fortress", form: "수원 화성", romanization: "suwon hwaseong", meaning: "Hwaseong Fortress in Suwon", partOfSpeech: "noun", level: 1, category: "Korea landmarks",
+    example: "수원 화성의 성곽길을 걸어요.", translation: "I walk along the fortress wall in Suwon.", note: "A Joseon-era fortress and UNESCO World Heritage site."
+  },
+  {
+    id: "paldalmun", form: "팔달문", romanization: "paldalmun", meaning: "Paldalmun Gate", partOfSpeech: "noun", level: 2, category: "Korea landmarks",
+    example: "팔달문 앞에서 친구를 만나요.", translation: "I meet a friend in front of Paldalmun Gate.", note: "The southern gate of Suwon Hwaseong Fortress."
+  },
+  {
+    id: "suwon-haenggung", form: "화성행궁", romanization: "hwaseong haenggung", meaning: "Hwaseong Temporary Palace", partOfSpeech: "noun", level: 2, category: "Korea landmarks",
+    example: "화성행궁에서 전통 공연을 관람해요.", translation: "I watch a traditional performance at Hwaseong Temporary Palace.", note: "A temporary palace used by Joseon kings when they visited Suwon."
+  },
+  {
+    id: "banghwasuryujeong", form: "방화수류정", romanization: "banghwasuryujeong", meaning: "Banghwasuryujeong Pavilion", partOfSpeech: "noun", level: 2, category: "Korea landmarks",
+    example: "방화수류정 옆 연못의 풍경을 바라봐요.", translation: "I take in the view of the pond beside Banghwasuryujeong Pavilion.", note: "A pavilion overlooking Yongyeon Pond at Hwaseong Fortress."
+  },
+  {
+    id: "yeoksa", form: "역사", romanization: "yeoksa", meaning: "History", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "여행을 하며 그 도시의 역사를 배워요.", translation: "I learn about a city's history while traveling.", note: ""
   }
 ];

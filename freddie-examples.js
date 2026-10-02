@@ -176,5 +176,19 @@ export const freddieVocabularyExamples = {
   "bich": { korean: "밤에 반포대교의 불빛을 친구와 한참 바라봤어요.", translation: "At night, I watched the lights on Banpo Bridge with a friend for a long time." },
   "naksan-park": { korean: "퇴근 후에 낙산공원에 올라가 서울 야경을 봤어요.", translation: "After work, I went up to Naksan Park and saw Seoul at night." },
   "seoul-city-wall": { korean: "친구와 서울성곽길을 걸으며 오래된 이야기를 나눴어요.", translation: "I walked the Seoul City Wall trail with a friend and shared old stories." },
-  "olagada": { korean: "낙산공원의 언덕을 올라가며 팟캐스트를 들었어요.", translation: "I listened to a podcast while walking up the hill at Naksan Park." }
+  "olagada": { korean: "낙산공원의 언덕을 올라가며 팟캐스트를 들었어요.", translation: "I listened to a podcast while walking up the hill at Naksan Park." },
+  "gyeonghuigung": { korean: "주말에 경희궁을 둘러본 뒤 근처에서 커피를 마셨어요.", translation: "After looking around Gyeonghuigung on the weekend, I had coffee nearby." },
+  "seoul-history-museum": { korean: "서울역사박물관에서 서울의 옛 지도를 보며 다음 여행 계획을 세웠어요.", translation: "I planned my next trip while looking at an old map of Seoul at the history museum." },
+  "donuimun-museum-village": { korean: "퇴근 후에 돈의문박물관마을의 골목을 천천히 걸었어요.", translation: "After work, I took a slow walk through the lanes of Donuimun Museum Village." },
+  "dongnimmun": { korean: "친구와 독립문 앞에서 만나 서대문을 걸었어요.", translation: "I met a friend in front of Independence Gate and walked around Seodaemun." },
+  "seodaemun-independence-park": { korean: "일요일에 서대문독립공원을 산책하며 팟캐스트를 들었어요.", translation: "I listened to a podcast while walking through Seodaemun Independence Park on Sunday." },
+  "ttukseom-hangang-park": { korean: "주말에 뚝섬한강공원에서 자전거를 타고 커피를 마셨어요.", translation: "I rode a bike and had coffee at Ttukseom Hangang Park on the weekend." },
+  "konkuk-university": { korean: "수업이 끝난 뒤 건국대학교 근처에서 동료와 점심을 먹었어요.", translation: "After class, I had lunch with a coworker near Konkuk University." },
+  "childrens-grand-park": { korean: "토요일에 어린이대공원에서 꽃을 보고 사진을 찍었어요.", translation: "I looked at the flowers and took photos at Children's Grand Park on Saturday." },
+  "achasan": { korean: "아차산을 천천히 올라가며 한국어 팟캐스트를 들었어요.", translation: "I listened to a Korean podcast while slowly climbing Achasan." },
+  "hwaseong-fortress": { korean: "수원 화성의 성곽길을 걸으며 다음 한국어 수업에서 쓸 표현을 적었어요.", translation: "I wrote down phrases for my next Korean class while walking along Suwon Hwaseong's fortress wall." },
+  "paldalmun": { korean: "팔달문 앞에서 친구를 만나 수원 지도 앱을 확인했어요.", translation: "I met a friend in front of Paldalmun Gate and checked a map app for Suwon." },
+  "suwon-haenggung": { korean: "화성행궁에서 사진을 찍고 근처에서 점심을 먹었어요.", translation: "I took photos at Hwaseong Haenggung and had lunch nearby." },
+  "banghwasuryujeong": { korean: "방화수류정에서 잠깐 쉬면서 오늘 배운 단어를 복습했어요.", translation: "I took a short break at Banghwasuryujeong and reviewed the words I learned today." },
+  "yeoksa": { korean: "서울의 역사를 공부한 뒤 그 장소를 직접 걸어 봤어요.", translation: "After studying Seoul's history, I walked around the place in person." }
 };

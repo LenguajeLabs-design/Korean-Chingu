@@ -1,7 +1,7 @@
-import { grammar } from "./grammar.js?v=26";
-import { vocabulary } from "./vocabulary.js?v=26";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=26";
-import { examRounds } from "./exam-rounds.js?v=26";
+import { grammar } from "./grammar.js?v=27";
+import { vocabulary } from "./vocabulary.js?v=27";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=27";
+import { examRounds } from "./exam-rounds.js?v=27";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -89,13 +89,27 @@ const routeMissions = [
   { id: "lotte-world-tower-view", location: "Lotte World Tower · Seoul Sky", mapSubtitle: "High above Seoul", title: "See Seoul from above", description: "Take the elevator up and describe the view from one of the city’s highest points.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study"], wordIds: ["lotte-world-tower", "seoul-sky", "jeonmangdae", "nophda", "ellebeiteo"], bonus: true },
   { id: "seokchon-lake-loop", location: "Seokchon Lake", mapSubtitle: "Lakeside loop", title: "Take the long way around the lake", description: "Choose a gentle loop, spot the flowers, and decide whether to walk or ride.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["seokchon-hosu", "hosu", "jajeongeo", "joging", "kkot"], bonus: true },
   { id: "banpo-rainbow-fountain", location: "Banpo Hangang Park", mapSubtitle: "Bridge lights & river", title: "A river evening in Banpo", description: "Watch the bridge lights by the river. Fountain shows are seasonal and weather-dependent.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends", "food"], wordIds: ["banpo-daegyo", "banpo-hangang-park", "hangang", "bunsu", "bich"], bonus: true },
-  { id: "naksan-city-wall", location: "Naksan Park & Seoul City Wall", mapSubtitle: "A hilltop night view", title: "Follow the old city wall", description: "Take a steady walk along the wall and pause for a view over downtown Seoul.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["naksan-park", "seoul-city-wall", "olagada", "jeonmang", "sanchaek"], bonus: true }
+  { id: "naksan-city-wall", location: "Naksan Park & Seoul City Wall", mapSubtitle: "A hilltop night view", title: "Follow the old city wall", description: "Take a steady walk along the wall and pause for a view over downtown Seoul.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["naksan-park", "seoul-city-wall", "olagada", "jeonmang", "sanchaek"], bonus: true },
+  { id: "gyeonghuigung-palace", location: "Gyeonghuigung Palace", mapSubtitle: "A quiet royal courtyard", title: "Find the palace of the west", description: "Walk the calm palace grounds, then follow the story toward Seodaemun.", category: "Seoul heritage", contexts: ["seoul", "hobbies", "study"], wordIds: ["gyeonghuigung", "gung", "geotda", "sajin", "munhwa"], bonus: true },
+  { id: "seoul-history-museum", location: "Seoul Museum of History", mapSubtitle: "Old Seoul, one room at a time", title: "See how Seoul changed", description: "Read a short exhibit label and spot how the city has changed over time.", category: "Seoul heritage", contexts: ["seoul", "study", "hobbies"], wordIds: ["seoul-history-museum", "yumul", "sajin", "jido", "munhwa"], bonus: true },
+  { id: "donuimun-village", location: "Donuimun Museum Village", mapSubtitle: "Preserved neighborhood lanes", title: "Explore a historic lane", description: "Follow a small lane of old Seoul and notice what feels different today.", category: "Seoul heritage", contexts: ["seoul", "hobbies", "friends"], wordIds: ["donuimun-museum-village", "golmok", "geori", "hanok", "punggyeong"], bonus: true },
+  { id: "dongnimmun-gate", location: "Dongnimmun Gate", mapSubtitle: "Independence Gate", title: "Meet by the old gate", description: "Find a landmark beside the city wall and share its story with a friend.", category: "Seoul heritage", contexts: ["seoul", "friends", "study"], wordIds: ["dongnimmun", "seoul-city-wall", "yeoksa", "jido", "sajin"], bonus: true },
+  { id: "seodaemun-park", location: "Seodaemun Independence Park", mapSubtitle: "An open-air history walk", title: "Close the loop in Seodaemun", description: "Take a quiet park walk and recap one thing you learned along the way.", category: "Seoul heritage", contexts: ["seoul", "hobbies", "study"], wordIds: ["seodaemun-independence-park", "sanchaek", "punggyeong", "munhwa", "yeoksa"], bonus: true },
+  { id: "ttukseom-riverside", location: "Ttukseom Hangang Park", mapSubtitle: "A riverside bike ride", title: "Take the river path", description: "Choose a bike or a slow walk and follow the Han River through the park.", category: "Parks & outdoors", contexts: ["seoul", "hobbies", "friends"], wordIds: ["ttukseom-hangang-park", "hangang", "jajeongeo", "sanchaek", "punggyeong"], bonus: true },
+  { id: "konkuk-lunch", location: "Konkuk University", mapSubtitle: "Lunch near campus", title: "Find a lunch spot near campus", description: "Meet a friend after class, choose a menu, and ask for a recommendation.", category: "Campus & food", contexts: ["food", "friends", "study"], wordIds: ["konkuk-university", "menyu", "chucheonhada", "gimbap", "keopi"], bonus: true },
+  { id: "childrens-grand-park", location: "Children's Grand Park", mapSubtitle: "Gardens and open paths", title: "Take a garden break", description: "Follow a leafy path, spot the flowers, and enjoy a slower afternoon.", category: "Parks & outdoors", contexts: ["seoul", "hobbies", "family"], wordIds: ["childrens-grand-park", "kkot", "jajeongeo", "sanchaek", "sajin"], bonus: true },
+  { id: "achasan-trail", location: "Achasan", mapSubtitle: "A hilltop view of Seoul", title: "Climb for the city view", description: "Take the trail at your own pace and look out across eastern Seoul.", category: "Parks & outdoors", contexts: ["seoul", "hobbies", "study"], wordIds: ["achasan", "olagada", "jeonmang", "punggyeong", "joging"], bonus: true },
+  { id: "suwon-station", location: "Suwon Station", mapSubtitle: "Start the day trip", title: "Set off for Suwon", description: "Check the station, find the right exit, and get ready for a day out.", category: "Day trips", contexts: ["seoul", "study", "friends"], wordIds: ["yeok", "pyo", "chulgu", "jido", "chulbalhada"], bonus: true },
+  { id: "paldalmun-gate", location: "Paldalmun Gate", mapSubtitle: "The south gate of Hwaseong", title: "Find the southern gate", description: "Meet near the gate and check where the fortress trail begins.", category: "Suwon heritage", contexts: ["seoul", "friends", "study"], wordIds: ["paldalmun", "hwaseong-fortress", "yeoksa", "sajin", "geotda"], bonus: true },
+  { id: "suwon-market", location: "A market in old Suwon", mapSubtitle: "A traditional market break", title: "Choose a market snack", description: "Check the price, pick something warm, and save room for the walk.", category: "Day trips & food", contexts: ["food", "friends", "seoul"], wordIds: ["sijang", "eolma", "mandu", "sada", "gimbap"], bonus: true },
+  { id: "suwon-haenggung", location: "Hwaseong Haenggung", mapSubtitle: "The temporary palace", title: "Step into the palace courtyard", description: "Explore the royal grounds and notice one detail worth remembering.", category: "Suwon heritage", contexts: ["seoul", "hobbies", "study"], wordIds: ["suwon-haenggung", "hanbok", "gung", "gwanramhada", "sajin"], bonus: true },
+  { id: "banghwasuryujeong", location: "Banghwasuryujeong Pavilion", mapSubtitle: "A pond-side pause", title: "Take in the pavilion view", description: "Slow down beside Yongyeon Pond and describe the view from the pavilion.", category: "Suwon heritage", contexts: ["seoul", "hobbies", "friends"], wordIds: ["banghwasuryujeong", "jeonmang", "punggyeong", "sanchaek", "mul"], bonus: true }
 ];
 const mapChapters = [
   {
     id: "seoul-day", title: "A day around Seoul", area: "Seongsu · Hongdae · Yeouido",
     description: "Follow the original neighborhood route from Seongsu to the Han River.",
-    image: "./assets/seoul-route-map.jpg?v=26",
+    image: "./assets/seoul-route-map.jpg?v=27",
     alt: "Watercolor Seoul map connecting neighborhood cafés, lively streets, and the Han River.",
     missionIds: ["seongsu", "coffee-order", "hongdae", "coworker-school", "yeouido"],
     points: [[35, 50], [45, 68], [57, 48], [66, 67], [83, 48]]
@@ -103,7 +117,7 @@ const mapChapters = [
   {
     id: "royal-seoul", title: "Royal Seoul", area: "Palaces · hanok lanes · stream",
     description: "Wander from palace courtyards through quiet hanok lanes and old Seoul streets.",
-    image: "./assets/royal-seoul-map.jpg?v=26",
+    image: "./assets/royal-seoul-map.jpg?v=27",
     alt: "Watercolor route through palace courtyards, hanok lanes, tea shops, gardens, and Cheonggyecheon.",
     missionIds: ["gyeongbokgung-palace", "bukchon-hanok-village", "insadong-stroll", "changdeokgung-garden", "cheonggyecheon-evening"],
     points: [[36, 51], [48, 42], [59, 55], [71, 45], [83, 51]]
@@ -111,7 +125,7 @@ const mapChapters = [
   {
     id: "old-seoul-evening", title: "Old Seoul after dark", area: "Myeongdong · markets · city wall",
     description: "Check in, find a market snack, and follow the evening lights toward Naksan.",
-    image: "./assets/downtown-seoul-map.jpg?v=26",
+    image: "./assets/downtown-seoul-map.jpg?v=27",
     alt: "Watercolor Seoul evening route past market stalls, DDP, the old city wall, and Myeongdong lights.",
     missionIds: ["myeongdong-check-in", "myeongdong-snack", "gwangjang", "ddp-after-dark", "naksan-city-wall"],
     points: [[36, 48], [47, 57], [58, 43], [70, 56], [83, 48]]
@@ -119,7 +133,7 @@ const mapChapters = [
   {
     id: "river-and-views", title: "River & city views", area: "Mangwon · Banpo · Namsan",
     description: "Follow the river from a neighborhood market toward museums and hilltop views.",
-    image: "./assets/river-seoul-map.jpg?v=26",
+    image: "./assets/river-seoul-map.jpg?v=27",
     alt: "Watercolor Seoul river route from a neighborhood market past Banpo, a museum, and Namsan.",
     missionIds: ["mangwon-market-run", "banpo-rainbow-fountain", "national-museum-day", "seoul-gallery", "namsan-sunset"],
     points: [[36, 48], [48, 57], [60, 44], [71, 56], [83, 48]]
@@ -127,7 +141,7 @@ const mapChapters = [
   {
     id: "gangnam-jamsil", title: "Gangnam to Jamsil", area: "COEX · Bongeunsa · Seokchon",
     description: "Ride across Gangnam, pause by the lake, and finish high above the city.",
-    image: "./assets/gangnam-seoul-map.jpg?v=26",
+    image: "./assets/gangnam-seoul-map.jpg?v=27",
     alt: "Watercolor route through COEX, Bongeunsa, Seokchon Lake, and the Lotte World Tower skyline.",
     missionIds: ["taxi-ride", "coex-bongeunsa", "subway-reroute", "seokchon-lake-loop", "lotte-world-tower-view"],
     points: [[36, 50], [48, 43], [60, 56], [72, 44], [84, 52]]
@@ -135,10 +149,34 @@ const mapChapters = [
   {
     id: "everyday-seoul", title: "An everyday Seoul day", area: "Your stay · corner shop · commute",
     description: "Make a few familiar stops and end the day with a call home.",
-    image: "./assets/everyday-seoul-map.jpg?v=26",
+    image: "./assets/everyday-seoul-map.jpg?v=27",
     alt: "Watercolor everyday Seoul route past a hotel, convenience store, subway, and a quiet room.",
     missionIds: ["quiet-hotel-room", "gs25-stop", "rainy-commute", "family-catchup"],
     points: [[39, 49], [53, 57], [68, 44], [83, 52]]
+  },
+  {
+    id: "seodaemun-walk", title: "Old Seoul westward", area: "Gyeonghuigung · Donuimun · Seodaemun",
+    description: "Walk from a quiet palace through old city streets toward Seodaemun.",
+    image: "./assets/seodaemun-route-map.jpg?v=27",
+    alt: "Watercolor walking route through a historic Seoul palace, hanok lanes, old city wall, and leafy museum courtyard.",
+    missionIds: ["gyeonghuigung-palace", "seoul-history-museum", "donuimun-village", "dongnimmun-gate", "seodaemun-park"],
+    points: [[36, 50], [46, 42], [57, 55], [69, 44], [82, 52]]
+  },
+  {
+    id: "eastern-parks", title: "Eastern Seoul outdoors", area: "Ttukseom · Konkuk · Achasan",
+    description: "Follow the river past neighborhood parks and finish with a view over eastern Seoul.",
+    image: "./assets/eastern-parks-map.jpg?v=27",
+    alt: "Watercolor route along the Han River in eastern Seoul, with Ttukseom lawns, a cycling path, trees, and distant rooftops.",
+    missionIds: ["ttukseom-riverside", "konkuk-lunch", "childrens-grand-park", "achasan-trail"],
+    points: [[39, 49], [53, 43], [67, 57], [82, 49]]
+  },
+  {
+    id: "suwon-day", title: "A Suwon fortress day", area: "Suwon Station · Hwaseong · Haenggung",
+    description: "Take a day trip south for Suwon's market, royal courtyard, and UNESCO-listed fortress.",
+    image: "./assets/suwon-fortress-map.jpg?v=27",
+    alt: "Watercolor route through Suwon's stone fortress walls, traditional gate, palace rooftops, and market lane.",
+    missionIds: ["suwon-station", "paldalmun-gate", "suwon-market", "suwon-haenggung", "banghwasuryujeong"],
+    points: [[35, 50], [46, 42], [57, 55], [69, 44], [82, 52]]
   }
 ];
 const mappedMissionIds = new Set(mapChapters.flatMap((chapter) => chapter.missionIds));
@@ -1172,7 +1210,7 @@ function finishMission() {
     mapImage.src = currentMap.image;
     document.querySelector(".results-hero").style.setProperty("--results-map-art", `url("${currentMap.image}")`);
   } else {
-    document.querySelector("#results-stamp .stamp-postage img").src = "./assets/seoul-route-map.jpg?v=26";
+    document.querySelector("#results-stamp .stamp-postage img").src = "./assets/seoul-route-map.jpg?v=27";
     document.querySelector(".results-hero").style.removeProperty("--results-map-art");
   }
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
@@ -1602,7 +1640,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=26", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=27", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
