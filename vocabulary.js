@@ -158,5 +158,93 @@ export const vocabulary = [
   {
     id: "gojang-nada", form: "고장 나다", romanization: "gojang nada", meaning: "To break down · stop working", partOfSpeech: "verb", level: 2, category: "Everyday help",
     example: "휴대폰이 갑자기 고장 났어요.", translation: "My phone suddenly stopped working.", note: ""
+  },
+  {
+    id: "taeksi", form: "택시", romanization: "taeksi", meaning: "Taxi", partOfSpeech: "noun", level: 1, category: "Getting around",
+    example: "택시를 타고 숙소에 가요.", translation: "I take a taxi to my accommodation.", note: ""
+  },
+  {
+    id: "mokjeokji", form: "목적지", romanization: "mokjeokji", meaning: "Destination", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "목적지를 지도에서 찾아요.", translation: "I find the destination on a map.", note: ""
+  },
+  {
+    id: "yogeum", form: "요금", romanization: "yogeum", meaning: "Fare · fee", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "택시 요금이 얼마예요?", translation: "How much is the taxi fare?", note: ""
+  },
+  {
+    id: "gisanim", form: "기사님", romanization: "gisa-nim", meaning: "Driver (polite address)", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "기사님, 여기서 내려도 될까요?", translation: "Driver, could you let me off here?", note: "A polite way to address a taxi driver."
+  },
+  {
+    id: "pyeonuijeom", form: "편의점", romanization: "pyeonuijeom", meaning: "Convenience store", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "편의점에서 물을 샀어요.", translation: "I bought water at a convenience store.", note: ""
+  },
+  {
+    id: "bongtu", form: "봉투", romanization: "bongtu", meaning: "Bag · envelope", partOfSpeech: "noun", level: 2, category: "Everyday help",
+    example: "봉투 하나 주세요.", translation: "One bag, please.", note: "At a shop, 봉투 usually means a shopping bag."
+  },
+  {
+    id: "halin", form: "할인", romanization: "halin", meaning: "Discount", partOfSpeech: "noun", level: 2, category: "Shopping",
+    example: "이 음료는 할인 중이에요.", translation: "This drink is on sale.", note: ""
+  },
+  {
+    id: "deuda", form: "데우다", romanization: "deuda", meaning: "To heat up", partOfSpeech: "verb", level: 2, category: "Food & drink",
+    example: "김밥을 데워 주세요.", translation: "Please heat up the gimbap.", note: ""
+  },
+  {
+    id: "keopi", form: "커피", romanization: "keopi", meaning: "Coffee", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "커피 한 잔 주세요.", translation: "One coffee, please.", note: ""
+  },
+  {
+    id: "aiseukeopi", form: "아이스커피", romanization: "aiseu-keopi", meaning: "Iced coffee", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "아이스커피 한 잔 주세요.", translation: "One iced coffee, please.", note: ""
+  },
+  {
+    id: "ttatteuthada", form: "따뜻하다", romanization: "ttatteuthada", meaning: "To be warm", partOfSpeech: "adjective", level: 1, category: "Food & drink",
+    example: "따뜻한 커피 한 잔 주세요.", translation: "One warm coffee, please.", note: "따뜻한 is the form used before a noun."
+  },
+  {
+    id: "sireop", form: "시럽", romanization: "sireop", meaning: "Syrup", partOfSpeech: "noun", level: 2, category: "Food & drink",
+    example: "시럽은 조금만 넣어 주세요.", translation: "Please add just a little syrup.", note: ""
+  },
+  {
+    id: "dongnyo", form: "동료", romanization: "dongnyo", meaning: "Coworker · colleague", partOfSpeech: "noun", level: 2, category: "Work & study",
+    example: "동료와 점심을 먹어요.", translation: "I have lunch with a coworker.", note: ""
+  },
+  {
+    id: "hakgyo", form: "학교", romanization: "hakgyo", meaning: "School", partOfSpeech: "noun", level: 1, category: "Work & study",
+    example: "동료와 학교 이야기를 했어요.", translation: "I talked about school with a coworker.", note: ""
+  },
+  {
+    id: "sueop", form: "수업", romanization: "sueop", meaning: "Class · lesson", partOfSpeech: "noun", level: 1, category: "Work & study",
+    example: "오늘 한국어 수업이 재미있었어요.", translation: "Korean class was fun today.", note: ""
+  },
+  {
+    id: "siheom", form: "시험", romanization: "siheom", meaning: "Test · exam", partOfSpeech: "noun", level: 1, category: "Work & study",
+    example: "다음 주에 시험이 있어요.", translation: "I have an exam next week.", note: ""
+  },
+  {
+    id: "gongbuhada", form: "공부하다", romanization: "gongbuhada", meaning: "To study", partOfSpeech: "verb", level: 1, category: "Work & study",
+    example: "카페에서 한국어를 공부해요.", translation: "I study Korean at a café.", note: ""
+  },
+  {
+    id: "gajok", form: "가족", romanization: "gajok", meaning: "Family", partOfSpeech: "noun", level: 1, category: "Family & people",
+    example: "가족과 저녁을 먹어요.", translation: "I have dinner with my family.", note: ""
+  },
+  {
+    id: "bumonim", form: "부모님", romanization: "bumonim", meaning: "Parents (honorific)", partOfSpeech: "noun", level: 1, category: "Family & people",
+    example: "부모님께 여행 사진을 보내요.", translation: "I send travel photos to my parents.", note: ""
+  },
+  {
+    id: "jumal", form: "주말", romanization: "jumal", meaning: "Weekend", partOfSpeech: "noun", level: 1, category: "Family & people",
+    example: "주말에 가족과 통화해요.", translation: "I call my family on the weekend.", note: ""
+  },
+  {
+    id: "jinaeda", form: "지내다", romanization: "jinaeda", meaning: "To spend time · get along · be doing", partOfSpeech: "verb", level: 2, category: "Family & people",
+    example: "요즘 잘 지내요?", translation: "How have you been lately?", note: "잘 지내요? is a friendly way to ask how someone is doing."
+  },
+  {
+    id: "anbu", form: "안부", romanization: "anbu", meaning: "How someone is doing · regards", partOfSpeech: "noun", level: 2, category: "Family & people",
+    example: "가족에게 안부를 물어요.", translation: "I ask how my family is doing.", note: ""
   }
 ];

@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=16";
-import { vocabulary } from "./vocabulary.js?v=16";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=16";
+import { grammar } from "./grammar.js?v=17";
+import { vocabulary } from "./vocabulary.js?v=17";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=17";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -50,13 +50,19 @@ const contextLabels = {
   work: "Work & commute",
   food: "Food",
   hobbies: "Hobbies",
-  friends: "Friends"
+  friends: "Friends",
+  family: "Family"
 };
 const defaultFreddieContexts = ["seoul", "study"];
 const routeMissions = [
   { id: "seongsu", location: "Seongsu", mapSubtitle: "Café & Culture", title: "Meet a friend in Seongsu", description: "Learn key words for getting around and meeting up near Seoul Forest.", contexts: ["seoul", "friends", "work", "study"], wordIds: ["jido", "yeok", "chulgu", "hwanseung", "dochakhada"] },
   { id: "hongdae", location: "Hongdae", mapSubtitle: "Music & People", title: "Find a favorite lunch spot", description: "Pick a place, order together, and find out how spicy it is.", contexts: ["food", "work", "friends", "study"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
   { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] },
+  { id: "taxi-ride", location: "A taxi in Seoul", title: "Tell the driver where to go", description: "Share your destination, check the fare, and get across town.", category: "Taxi & Transit", contexts: ["seoul", "work"], wordIds: ["taeksi", "mokjeokji", "yogeum", "gisanim", "juso"], bonus: true },
+  { id: "gs25-stop", location: "GS25", title: "Make a quick convenience-store stop", description: "Pick up a snack, ask for a bag, and heat it up for the walk.", category: "Shopping & Snacks", contexts: ["food", "seoul", "study"], wordIds: ["pyeonuijeom", "bongtu", "halin", "deuda", "yeongsujeung"], bonus: true },
+  { id: "coffee-order", location: "A neighborhood café", title: "Order your coffee just right", description: "Choose it warm or iced, and tell the barista how you like it.", category: "Coffee & Cafés", contexts: ["food", "study", "friends"], wordIds: ["keopi", "aiseukeopi", "ttatteuthada", "sireop", "jumunhada"], bonus: true },
+  { id: "coworker-school", location: "Lunch with a coworker", title: "Talk about school over lunch", description: "Swap a few stories about classes, studying, and the next exam.", category: "Work & Study", contexts: ["work", "study"], wordIds: ["dongnyo", "hakgyo", "sueop", "siheom", "gongbuhada"], bonus: true },
+  { id: "family-catchup", location: "A family call", title: "Catch up with your family", description: "Ask how everyone is doing and share a small story from Seoul.", category: "Family & People", contexts: ["family", "study", "seoul"], wordIds: ["gajok", "bumonim", "jumal", "jinaeda", "anbu"], bonus: true },
   { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
   { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true },
   { id: "myeongdong-check-in", location: "Myeongdong", title: "Check in near Myeongdong", description: "Find your stay, hand over your bag, and check when check-in begins.", category: "Travel & Stay", contexts: ["seoul", "study", "work"], wordIds: ["jido", "juso", "sukso", "jim", "chekeuin"], bonus: true },
@@ -579,7 +585,9 @@ function getMissionExample(item) {
 function findKoreanWordForm(item, sentence) {
   const conjugatedForms = {
     maepda: ["매웠어요", "매워요", "매웠", "매워"],
-    dowajuda: ["도와줬어요", "도와줘요", "도와줬", "도와줘"]
+    dowajuda: ["도와줬어요", "도와줘요", "도와줬", "도와줘"],
+    ttatteuthada: ["따뜻한", "따뜻해요", "따뜻해"],
+    deuda: ["데워 주세요", "데워 먹었어요", "데워서"]
   };
   const verbStem = item.partOfSpeech === "verb" || item.partOfSpeech === "adjective"
     ? item.form.replace(/하다$/, "").replace(/다$/, "")
@@ -621,9 +629,9 @@ function startMission(missionId = getSuggestedMission().id) {
   missionPlay.hidden = false;
   document.body.classList.add("is-immersive-round");
   window.scrollTo(0, 0);
-  document.querySelector("#mission-question-title").textContent = "A day around Seoul";
+  document.querySelector("#mission-question-title").textContent = mission.title;
   const missionIndex = routeMissions.findIndex((candidate) => candidate.id === mission.id);
-  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
+  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
   renderMissionQuestion();
 }
 
@@ -812,10 +820,10 @@ function finishMission() {
   const total = missionSession.items.length;
   document.querySelector("#results-score").textContent = `${missionSession.correctCount} of ${total} correct`;
   const missionIndex = routeMissions.findIndex((candidate) => candidate.id === missionSession.missionId);
-  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
+  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
   document.querySelector("#results-stamp-kicker").textContent = stampEarned ? "YOU EARNED A STAMP" : "STAMP COLLECTED";
   document.querySelector("#results-stamp-name").textContent = mission?.location || "Seoul";
-  document.querySelector("#results-stamp-meta").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
+  document.querySelector("#results-stamp-meta").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
   document.querySelector("#results-due-list").hidden = dueItems.length === 0;
   document.querySelector("#results-review-title").textContent = dueItems.length ? "These words need another look" : "All clear for now";
@@ -830,8 +838,8 @@ function finishMission() {
     setArrowButtonLabel(document.querySelector("#play-again"), "Review these words");
   } else {
     summary.textContent = routeStamps.length === routeMissions.length
-      ? "Every Seoul stamp is yours. Pick a favorite round and go again."
-      : `Next round: ${nextMission.location}. Keep your Seoul day going.`;
+      ? "Every stamp is yours. Pick a favorite round and go again."
+      : `Next round: ${nextMission.location}. Keep your Korean day going.`;
     setArrowButtonLabel(document.querySelector("#play-again"), routeStamps.length === routeMissions.length ? "Play another round" : "Start next round");
   }
   document.querySelector("#results-helpful-example").classList.toggle("has-due-words", dueItems.length > 0);
@@ -1175,7 +1183,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=16", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=17", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
