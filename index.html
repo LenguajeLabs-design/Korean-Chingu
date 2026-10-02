@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=18" />
-    <link rel="icon" href="./icon.svg?v=18" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=18" />
+    <link rel="manifest" href="./manifest.webmanifest?v=21" />
+    <link rel="icon" href="./icon.svg?v=21" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=21" />
     <script>
       try {
         const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
@@ -24,7 +24,7 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=18" />
+    <link rel="stylesheet" href="./styles.css?v=21" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -61,8 +61,21 @@
 
         <section class="intro" aria-labelledby="page-title">
           <p class="eyebrow">A LITTLE GUIDE FOR THE WAY</p>
-          <h1 id="page-title"><span id="page-title-text">Korean, one grammar point at a time</span><span class="title-period">.</span></h1>
-          <p class="intro-copy" id="intro-copy">A pocket-sized guide to the patterns that make Korean click. Search, save, and come back to it anywhere.</p>
+          <h1 id="page-title"><span id="page-title-text">Korean grammar</span><span class="title-period">.</span></h1>
+          <p class="intro-copy" id="intro-copy">Learn one pattern at a time. Mark it understood when you’re ready, then move on.</p>
+        </section>
+
+        <section class="grammar-path-card" id="grammar-path" aria-labelledby="grammar-path-form">
+          <div class="grammar-path-copy">
+            <p class="section-label" id="grammar-path-state">YOUR NEXT PATTERN · TOPIK I</p>
+            <h2 id="grammar-path-form">은 / 는</h2>
+            <p class="grammar-path-meaning" id="grammar-path-meaning">As for… · topic marker</p>
+            <div class="grammar-path-progress">
+              <div class="grammar-path-progress-label"><span id="grammar-path-count">0 of 18 patterns understood</span><span id="grammar-path-percent">0%</span></div>
+              <div class="grammar-path-track" role="progressbar" aria-label="TOPIK I grammar progress" aria-valuemin="0" aria-valuemax="18" aria-valuenow="0"><span id="grammar-path-fill"></span></div>
+            </div>
+          </div>
+          <button class="primary-button grammar-path-button" id="grammar-path-start" type="button">Start your first pattern <span aria-hidden="true">→</span></button>
         </section>
 
         <section class="library" id="library" aria-label="Grammar library">
@@ -76,8 +89,8 @@
 
           <div class="library-toolbar">
             <div class="filter-tabs" role="group" aria-label="Filter by TOPIK level">
-              <button class="filter-tab is-active" type="button" data-level="all" aria-pressed="true">All</button>
-              <button class="filter-tab" type="button" data-level="1" aria-pressed="false">TOPIK I</button>
+              <button class="filter-tab" type="button" data-level="all" aria-pressed="false">All</button>
+              <button class="filter-tab is-active" type="button" data-level="1" aria-pressed="true">TOPIK I</button>
               <button class="filter-tab" type="button" data-level="2" aria-pressed="false">TOPIK II</button>
             </div>
             <button class="saved-toggle" id="saved-toggle" type="button" aria-pressed="false">
@@ -114,7 +127,7 @@
           <div class="practice-home" id="practice-home">
             <section class="route-board" aria-labelledby="practice-title">
               <div class="route-scene">
-                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=18" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
+                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=21" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
                 <div class="route-scene-copy">
                   <p class="eyebrow">SEOUL &amp; EVERYDAY LIFE · TOPIK 1 &amp; 2</p>
                   <h1 class="practice-title" id="practice-title">A day around Seoul</h1>
@@ -213,7 +226,7 @@
                 <div><p class="section-label">HELPFUL EXAMPLE</p><p class="helpful-korean" id="results-example-korean" lang="ko"></p><p class="helpful-translation" id="results-example-translation"></p></div>
               </div>
             </div>
-            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=18" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 15 · SEOUL &amp; LIFE</em></span></div>
+            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=21" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 15 · SEOUL &amp; LIFE</em></span></div>
             <div class="results-actions">
               <button class="primary-button" id="play-again" type="button">Review these words <span aria-hidden="true">→</span></button>
               <button class="text-button" id="return-practice-home" type="button">Back to route</button>
@@ -238,6 +251,10 @@
         </div>
       </div>
       <div class="detail-content">
+        <div class="grammar-step" id="grammar-step">
+          <div><p class="section-label" id="grammar-step-level">TOPIK I PATH</p><p class="grammar-step-count" id="grammar-step-count">Pattern 1 of 18</p></div>
+          <div class="grammar-step-track" role="progressbar" id="grammar-step-progress" aria-label="Position in grammar path" aria-valuemin="1" aria-valuemax="18" aria-valuenow="1"><span id="grammar-step-fill"></span></div>
+        </div>
         <p class="detail-kicker" id="detail-category"></p>
         <h2 class="detail-form" id="detail-form"></h2>
         <p class="detail-meaning" id="detail-meaning"></p>
@@ -260,6 +277,10 @@
           <span class="note-spark" aria-hidden="true">✳</span>
           <p id="detail-note"></p>
         </div>
+      </div>
+      <div class="grammar-step-actions">
+        <p class="grammar-next-hint" id="grammar-next-hint">Next: 이 / 가 · Subject marker</p>
+        <div><button class="text-button" id="done-for-now" type="button">Done for now</button><button class="primary-button" id="continue-grammar" type="button">I understand · next pattern <span aria-hidden="true">→</span></button></div>
       </div>
     </dialog>
 
@@ -342,6 +363,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=18"></script>
+    <script type="module" src="./app.js?v=21"></script>
   </body>
 </html>

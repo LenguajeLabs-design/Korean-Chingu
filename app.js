@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=18";
-import { vocabulary } from "./vocabulary.js?v=18";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=18";
+import { grammar } from "./grammar.js?v=21";
+import { vocabulary } from "./vocabulary.js?v=21";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=21";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -26,6 +26,7 @@ const freddieToggleButtons = document.querySelectorAll(".freddie-toggle");
 const topicFilter = document.querySelector("#topic-filter");
 const pageTitle = document.querySelector("#page-title-text");
 const introCopy = document.querySelector("#intro-copy");
+const grammarPath = document.querySelector("#grammar-path");
 const offlineStatus = document.querySelector("#offline-status");
 const offlineLabel = document.querySelector("#offline-label");
 const intro = document.querySelector(".intro");
@@ -44,6 +45,7 @@ const freddieContextKey = "korean-chingu-freddie-context-v1";
 const practiceFreddieKey = "korean-chingu-practice-freddie-v1";
 const themePreferenceKey = "korean-chingu-theme-v1";
 const routeStampsKey = "korean-chingu-route-stamps-v1";
+const grammarProgressKey = "korean-chingu-grammar-progress-v1";
 const contextLabels = {
   seoul: "Travel around Seoul",
   study: "Study breaks",
@@ -77,7 +79,7 @@ const savedByMode = {
 };
 let activeMode = "grammar";
 let activeView = "grammar";
-let activeLevel = "all";
+let activeLevel = "1";
 let activeCategory = "all";
 let savedOnly = false;
 let currentGrammarId = null;
@@ -88,6 +90,7 @@ let deferredInstallPrompt = null;
 let practiceFreddieEnabled = readPracticeFreddieEnabled();
 let freddieContexts = readFreddieContexts();
 let wordProgress = readWordProgress();
+let completedGrammarIds = readGrammarProgress();
 let routeStamps = readRouteStamps();
 let missionSession = null;
 let practiceStage = "home";
@@ -202,6 +205,64 @@ function persistWordProgress() {
   }
 }
 
+function readGrammarProgress() {
+  try {
+    const value = JSON.parse(localStorage.getItem(grammarProgressKey) || "[]");
+    if (!Array.isArray(value)) return new Set();
+    return new Set(value.filter((id) => grammar.some((item) => item.id === id)));
+  } catch {
+    return new Set();
+  }
+}
+
+function persistGrammarProgress() {
+  try {
+    localStorage.setItem(grammarProgressKey, JSON.stringify([...completedGrammarIds]));
+  } catch {
+    // Grammar progress remains available for this visit if browser storage is unavailable.
+  }
+}
+
+function getGrammarPathItems(level) {
+  return grammar.filter((item) => item.level === level);
+}
+
+function getNextGrammarItem(level) {
+  const items = getGrammarPathItems(level);
+  return items.find((item) => !completedGrammarIds.has(item.id)) || items[0] || null;
+}
+
+function renderGrammarPath() {
+  const isWordMode = activeMode === "vocabulary";
+  const isBrowsing = !searchInput.value.trim() && !savedOnly;
+  grammarPath.hidden = isWordMode || !isBrowsing;
+  if (grammarPath.hidden) return;
+
+  const level = activeLevel === "2" ? 2 : 1;
+  const items = getGrammarPathItems(level);
+  const completeCount = items.filter((item) => completedGrammarIds.has(item.id)).length;
+  const complete = items.length > 0 && completeCount === items.length;
+  const nextItem = complete ? items[0] : getNextGrammarItem(level);
+  const progress = items.length ? Math.round((completeCount / items.length) * 100) : 0;
+
+  document.querySelector("#grammar-path-state").textContent = complete ? `PATH COMPLETE · TOPIK ${level}` : `YOUR NEXT PATTERN · TOPIK ${level}`;
+  const pathForm = document.querySelector("#grammar-path-form");
+  pathForm.textContent = complete ? `TOPIK ${level} complete` : nextItem?.form || "No patterns yet";
+  pathForm.lang = complete ? "en" : "ko";
+  document.querySelector("#grammar-path-meaning").textContent = complete
+    ? "You’ve marked every pattern as understood. Choose one below to review."
+    : nextItem?.meaning || "Add a grammar pattern to begin.";
+  document.querySelector("#grammar-path-count").textContent = `${completeCount} of ${items.length} patterns understood`;
+  document.querySelector("#grammar-path-percent").textContent = `${progress}%`;
+  document.querySelector("#grammar-path-fill").style.width = `${progress}%`;
+  const progressTrack = document.querySelector(".grammar-path-track");
+  progressTrack.setAttribute("aria-label", `TOPIK ${level} grammar progress`);
+  progressTrack.setAttribute("aria-valuemax", String(items.length));
+  progressTrack.setAttribute("aria-valuenow", String(completeCount));
+  const buttonLabel = complete ? "Review first pattern" : completeCount ? `Continue with ${nextItem?.form}` : "Start your first pattern";
+  document.querySelector("#grammar-path-start").innerHTML = `${buttonLabel} <span aria-hidden="true">→</span>`;
+}
+
 function persistSaved(mode) {
   try {
     localStorage.setItem(savedKeys[mode], JSON.stringify([...savedByMode[mode]]));
@@ -270,9 +331,11 @@ function makeLibraryCard(item) {
 
   const meta = document.createElement("span");
   meta.className = "card-meta";
+  meta.classList.toggle("is-level-filtered", activeLevel !== "all");
   const tag = document.createElement("span");
   tag.className = "level-tag";
   tag.textContent = `TOPIK ${item.level}`;
+  tag.hidden = activeLevel !== "all";
   const bookmark = document.createElement("button");
   bookmark.className = `bookmark-button${saved ? " is-saved" : ""}`;
   bookmark.type = "button";
@@ -342,11 +405,12 @@ function render() {
   clearSearch.hidden = !searchInput.value;
   storageNote.hidden = !savedOnly;
   topicFilter.hidden = !isWordMode;
+  renderGrammarPath();
 
-  pageTitle.textContent = isWordMode ? "Korean words for the way" : "Korean, one grammar point at a time";
+  pageTitle.textContent = isWordMode ? "Korean words for the way" : "Korean grammar";
   introCopy.textContent = isWordMode
     ? "Quick meanings, practical topics, and useful examples—ready offline."
-    : "A pocket-sized guide to the patterns that make Korean click. Search, save, and come back to it anywhere.";
+    : "Learn one pattern at a time. Mark it understood when you’re ready, then move on.";
   document.querySelector("#library").setAttribute("aria-label", isWordMode ? "Vocabulary library" : "Grammar library");
   document.querySelector("#search-input").placeholder = isWordMode ? "Search Hangul, romanization, or meaning" : "Try a form, meaning, or example";
   document.querySelector("label[for='search-input']").textContent = isWordMode ? "Search vocabulary" : "Search grammar";
@@ -913,6 +977,40 @@ function updateWordSaveButton() {
   button.innerHTML = bookmarkIcon;
 }
 
+function renderGrammarStep(item) {
+  const pathItems = getGrammarPathItems(item.level);
+  const position = pathItems.findIndex((candidate) => candidate.id === item.id);
+  if (position < 0 || pathItems.length === 0) return;
+  const nextItem = pathItems[position + 1];
+  const step = position + 1;
+  document.querySelector("#grammar-step-level").textContent = `TOPIK ${item.level} PATH`;
+  document.querySelector("#grammar-step-count").textContent = `Pattern ${step} of ${pathItems.length}`;
+  document.querySelector("#grammar-step-fill").style.width = `${(step / pathItems.length) * 100}%`;
+  const progress = document.querySelector("#grammar-step-progress");
+  progress.setAttribute("aria-valuemax", String(pathItems.length));
+  progress.setAttribute("aria-valuenow", String(step));
+  document.querySelector("#grammar-next-hint").textContent = nextItem
+    ? `Next: ${nextItem.form}`
+    : `End of TOPIK ${item.level} · review any pattern when you’re ready`;
+  document.querySelector("#continue-grammar").innerHTML = nextItem
+    ? 'I understand · next pattern <span aria-hidden="true">→</span>'
+    : `Finish TOPIK ${item.level} <span aria-hidden="true">✓</span>`;
+}
+
+function continueGrammarPath() {
+  const item = grammar.find((candidate) => candidate.id === currentGrammarId);
+  if (!item) return;
+  const pathItems = getGrammarPathItems(item.level);
+  const position = pathItems.findIndex((candidate) => candidate.id === item.id);
+  if (position < 0) return;
+  completedGrammarIds.add(item.id);
+  persistGrammarProgress();
+  render();
+  const nextItem = pathItems[position + 1];
+  if (nextItem) openDetail(nextItem.id);
+  else detailDialog.close();
+}
+
 function renderDetailExamples(item) {
   const standardExamples = item.examples || [{ korean: item.example, translation: item.translation }];
   const examples = freddieMode && freddieGrammarExamples[item.id] ? [freddieGrammarExamples[item.id]] : standardExamples;
@@ -978,6 +1076,7 @@ function openDetail(id) {
   detailExamplesExpanded = false;
   renderDetailExamples(item);
   document.querySelector("#detail-note").textContent = item.note;
+  renderGrammarStep(item);
   updateDetailSaveButton();
   detailDialog.showModal();
 }
@@ -1129,6 +1228,13 @@ surpriseButton.addEventListener("click", () => {
 document.querySelector("#detail-save").addEventListener("click", () => {
   if (currentGrammarId) toggleSaved(currentGrammarId, "grammar");
 });
+document.querySelector("#grammar-path-start").addEventListener("click", () => {
+  const level = activeLevel === "2" ? 2 : 1;
+  const nextItem = getNextGrammarItem(level);
+  if (nextItem) openDetail(nextItem.id);
+});
+document.querySelector("#continue-grammar").addEventListener("click", continueGrammarPath);
+document.querySelector("#done-for-now").addEventListener("click", () => detailDialog.close());
 document.querySelector("#word-save").addEventListener("click", () => {
   if (currentWordId) toggleSaved(currentWordId, "vocabulary");
 });
@@ -1189,7 +1295,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=18", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=21", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
