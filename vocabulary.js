@@ -306,5 +306,241 @@ export const vocabulary = [
   {
     id: "chuga-yogeum", form: "추가 요금", romanization: "chuga yogeum", meaning: "Additional charge", partOfSpeech: "noun", level: 2, category: "Places & lodging",
     example: "방을 바꾸면 추가 요금이 있어요?", translation: "Is there an extra charge to change rooms?", note: ""
+  },
+  {
+    id: "gyeongbokgung", form: "경복궁", romanization: "gyeongbokgung", meaning: "Gyeongbokgung Palace", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "경복궁에서 궁궐을 구경해요.", translation: "I look around the palace at Gyeongbokgung.", note: "Seoul's largest royal palace."
+  },
+  {
+    id: "gung", form: "궁", romanization: "gung", meaning: "Palace", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "이 궁은 아름다워요.", translation: "This palace is beautiful.", note: "궁 is often used in names of royal palaces."
+  },
+  {
+    id: "gwanghwamun", form: "광화문", romanization: "gwanghwamun", meaning: "Gwanghwamun Gate", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "광화문 앞에서 친구를 만나요.", translation: "I meet a friend in front of Gwanghwamun Gate.", note: "The main south gate of Gyeongbokgung Palace."
+  },
+  {
+    id: "hanbok", form: "한복", romanization: "hanbok", meaning: "Traditional Korean clothing", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "한복을 입고 경복궁을 걸어요.", translation: "I walk around Gyeongbokgung wearing hanbok.", note: "Visitors sometimes rent hanbok near the palaces."
+  },
+  {
+    id: "sajin", form: "사진", romanization: "sajin", meaning: "Photo · picture", partOfSpeech: "noun", level: 1, category: "Everyday help",
+    example: "경복궁에서 친구와 사진을 찍어요.", translation: "I take a photo with a friend at Gyeongbokgung.", note: "사진을 찍다 means to take a photo."
+  },
+  {
+    id: "bukchon", form: "북촌", romanization: "bukchon", meaning: "Bukchon", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "북촌은 궁궐 가까이에 있어요.", translation: "Bukchon is near the palace.", note: "A historic residential neighborhood with many hanok."
+  },
+  {
+    id: "hanok", form: "한옥", romanization: "hanok", meaning: "Traditional Korean house", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "북촌에는 오래된 한옥이 많아요.", translation: "There are many old hanok in Bukchon.", note: "Please remember that Bukchon is a residential neighborhood."
+  },
+  {
+    id: "golmok", form: "골목", romanization: "golmok", meaning: "Alley · lane", partOfSpeech: "noun", level: 1, category: "Getting around",
+    example: "조용한 골목을 천천히 걸어요.", translation: "I walk slowly along a quiet alley.", note: "A small street between buildings or houses."
+  },
+  {
+    id: "geotda", form: "걷다", romanization: "geotda", meaning: "To walk", partOfSpeech: "verb", level: 1, category: "Getting around",
+    example: "친구와 북촌을 걸어요.", translation: "I walk around Bukchon with a friend.", note: "걷다 changes to 걸어요 in the present polite form."
+  },
+  {
+    id: "insadong", form: "인사동", romanization: "insadong", meaning: "Insadong", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "인사동에서 차를 마셔요.", translation: "I drink tea in Insadong.", note: "A central Seoul neighborhood known for traditional culture and shops."
+  },
+  {
+    id: "cha", form: "차", romanization: "cha", meaning: "Tea", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "인사동 찻집에서 따뜻한 차를 마셔요.", translation: "I drink warm tea at a teahouse in Insadong.", note: "Here 차 means tea; it can also mean car in other contexts."
+  },
+  {
+    id: "gongye-pum", form: "공예품", romanization: "gongye-pum", meaning: "Handicraft · craft item", partOfSpeech: "noun", level: 2, category: "Shopping",
+    example: "인사동에서 작은 공예품을 샀어요.", translation: "I bought a small handicraft in Insadong.", note: "A handmade object created using a traditional or artistic craft."
+  },
+  {
+    id: "geori", form: "거리", romanization: "geori", meaning: "Street · distance", partOfSpeech: "noun", level: 1, category: "Getting around",
+    example: "인사동 거리를 구경해요.", translation: "I look around Insadong Street.", note: "거리 can also mean distance; context tells you which meaning fits."
+  },
+  {
+    id: "sada", form: "사다", romanization: "sada", meaning: "To buy", partOfSpeech: "verb", level: 1, category: "Shopping",
+    example: "친구에게 줄 선물을 사요.", translation: "I buy a gift for a friend.", note: "사다 changes to 사요 in the present polite form."
+  },
+  {
+    id: "cheonggyecheon", form: "청계천", romanization: "cheonggyecheon", meaning: "Cheonggyecheon Stream", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "저녁에 청계천을 따라 걸어요.", translation: "I walk along Cheonggyecheon in the evening.", note: "A restored stream that runs through central Seoul."
+  },
+  {
+    id: "sanchaek", form: "산책", romanization: "sanchaek", meaning: "Walk · stroll", partOfSpeech: "noun", level: 1, category: "Hobbies",
+    example: "저녁 산책을 하며 친구와 이야기해요.", translation: "I talk with a friend during an evening walk.", note: "산책하다 means to take a walk."
+  },
+  {
+    id: "punggyeong", form: "풍경", romanization: "punggyeong", meaning: "Scenery · view", partOfSpeech: "noun", level: 2, category: "Hobbies",
+    example: "청계천의 밤 풍경이 참 예뻐요.", translation: "The night scenery at Cheonggyecheon is lovely.", note: "A word for scenery or a view."
+  },
+  {
+    id: "bamm", form: "밤", romanization: "bam", meaning: "Night · evening", partOfSpeech: "noun", level: 1, category: "Time",
+    example: "밤에 청계천을 산책해요.", translation: "I take a walk along Cheonggyecheon at night.", note: "밤 also means chestnut; the sentence makes the meaning clear."
+  },
+  {
+    id: "namsan", form: "남산", romanization: "namsan", meaning: "Namsan Mountain", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "주말에 남산에 가요.", translation: "I go to Namsan on the weekend.", note: "A mountain and park in central Seoul."
+  },
+  {
+    id: "n-seoul-tower", form: "N서울타워", romanization: "N Seoul Tower", meaning: "N Seoul Tower", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "N서울타워에서 서울을 내려다봐요.", translation: "I look down over Seoul from N Seoul Tower.", note: "Also commonly called Namsan Seoul Tower."
+  },
+  {
+    id: "keibeulka", form: "케이블카", romanization: "keibeulka", meaning: "Cable car", partOfSpeech: "noun", level: 2, category: "Getting around",
+    example: "케이블카를 타고 남산에 올라가요.", translation: "I ride a cable car up Namsan.", note: "타다 means to ride or take a vehicle."
+  },
+  {
+    id: "jeonmang", form: "전망", romanization: "jeonmang", meaning: "View · outlook", partOfSpeech: "noun", level: 2, category: "Hobbies",
+    example: "전망이 정말 좋아서 오래 바라봤어요.", translation: "The view was so good that I looked at it for a long time.", note: "Often used in 전망이 좋다, meaning to have a good view."
+  },
+  {
+    id: "changdeokgung", form: "창덕궁", romanization: "changdeokgung", meaning: "Changdeokgung Palace", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "창덕궁의 정원을 천천히 걸어요.", translation: "I walk slowly through the garden at Changdeokgung.", note: "One of Seoul's royal palaces."
+  },
+  {
+    id: "jeongwon", form: "정원", romanization: "jeongwon", meaning: "Garden", partOfSpeech: "noun", level: 1, category: "Nature",
+    example: "궁궐 안에 아름다운 정원이 있어요.", translation: "There is a beautiful garden inside the palace.", note: "A garden around a home or building."
+  },
+  {
+    id: "munhwa", form: "문화", romanization: "munhwa", meaning: "Culture", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "박물관에서 한국의 문화를 배워요.", translation: "I learn about Korean culture at the museum.", note: ""
+  },
+  {
+    id: "yumul", form: "유물", romanization: "yumul", meaning: "Historical artifact", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "전시실에서 오래된 유물을 봤어요.", translation: "I saw an old artifact in the exhibition hall.", note: "A historical object preserved from the past."
+  },
+  {
+    id: "gwanramhada", form: "관람하다", romanization: "gwanramhada", meaning: "To view · attend an exhibition", partOfSpeech: "verb", level: 2, category: "Art & culture",
+    example: "친구와 특별 전시를 관람했어요.", translation: "I viewed a special exhibition with a friend.", note: "A somewhat formal verb often used for exhibitions, performances, and sports."
+  },
+  {
+    id: "ddp", form: "동대문디자인플라자", romanization: "Dongdaemun Design Plaza", meaning: "Dongdaemun Design Plaza (DDP)", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "동대문디자인플라자에 전시회가 있어요.", translation: "There is an exhibition at Dongdaemun Design Plaza.", note: "The site is commonly shortened to DDP."
+  },
+  {
+    id: "geonchuk", form: "건축", romanization: "geonchuk", meaning: "Architecture", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "동대문디자인플라자의 건축이 독특해요.", translation: "The architecture of DDP is distinctive.", note: ""
+  },
+  {
+    id: "national-museum", form: "국립중앙박물관", romanization: "gungnip-jungang-bangmulgwan", meaning: "National Museum of Korea", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "국립중앙박물관에서 역사 전시를 봐요.", translation: "I see a history exhibition at the National Museum of Korea.", note: "The Korean name literally means National Central Museum."
+  },
+  {
+    id: "seolmyeong", form: "설명", romanization: "seolmyeong", meaning: "Explanation · description", partOfSpeech: "noun", level: 2, category: "Art & culture",
+    example: "작품 옆의 설명을 읽었어요.", translation: "I read the description beside the artwork.", note: ""
+  },
+  {
+    id: "mangwon-sijang", form: "망원시장", romanization: "mangwon sijang", meaning: "Mangwon Market", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "망원시장에서 맛있는 간식을 골라요.", translation: "I choose a tasty snack at Mangwon Market.", note: "A traditional market in Mapo-gu."
+  },
+  {
+    id: "sijang", form: "시장", romanization: "sijang", meaning: "Market", partOfSpeech: "noun", level: 1, category: "Shopping",
+    example: "시장에서 만두를 샀어요.", translation: "I bought dumplings at the market.", note: ""
+  },
+  {
+    id: "tteokbokki", form: "떡볶이", romanization: "tteokbokki", meaning: "Spicy rice cakes", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "친구와 떡볶이를 나눠 먹어요.", translation: "I share tteokbokki with a friend.", note: "A popular Korean street-food dish."
+  },
+  {
+    id: "mandu", form: "만두", romanization: "mandu", meaning: "Dumplings", partOfSpeech: "noun", level: 1, category: "Food & drink",
+    example: "뜨거운 만두를 포장해 주세요.", translation: "Please pack the hot dumplings to go.", note: ""
+  },
+  {
+    id: "eolma", form: "얼마", romanization: "eolma", meaning: "How much · how many", partOfSpeech: "adverb", level: 1, category: "Shopping",
+    example: "이 간식은 얼마예요?", translation: "How much is this snack?", note: "A common question when shopping."
+  },
+  {
+    id: "coex", form: "코엑스", romanization: "koekseu", meaning: "COEX", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "코엑스에서 전시회를 봤어요.", translation: "I saw an exhibition at COEX.", note: "A large convention, shopping, and entertainment complex in Gangnam."
+  },
+  {
+    id: "bongeunsa", form: "봉은사", romanization: "bongeunsa", meaning: "Bongeunsa Temple", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "코엑스 옆의 봉은사에 들러요.", translation: "I stop by Bongeunsa Temple next to COEX.", note: "A Buddhist temple near the modern COEX complex."
+  },
+  {
+    id: "doseogwan", form: "도서관", romanization: "doseogwan", meaning: "Library", partOfSpeech: "noun", level: 1, category: "Study",
+    example: "도서관에서 조용히 책을 읽어요.", translation: "I read quietly in the library.", note: ""
+  },
+  {
+    id: "chaek", form: "책", romanization: "chaek", meaning: "Book", partOfSpeech: "noun", level: 1, category: "Study",
+    example: "여행 중에도 한국어 책을 읽어요.", translation: "I read a Korean book while traveling.", note: ""
+  },
+  {
+    id: "gonggan", form: "공간", romanization: "gonggan", meaning: "Space · area", partOfSpeech: "noun", level: 2, category: "Places & lodging",
+    example: "코엑스 안에는 넓은 공간이 많아요.", translation: "There are many spacious areas inside COEX.", note: ""
+  },
+  {
+    id: "lotte-world-tower", form: "롯데월드타워", romanization: "lotte woldeu tawo", meaning: "Lotte World Tower", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "롯데월드타워에 친구와 가요.", translation: "I go to Lotte World Tower with a friend.", note: "A landmark tower in Jamsil."
+  },
+  {
+    id: "seoul-sky", form: "서울스카이", romanization: "seoul seukai", meaning: "Seoul Sky observatory", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "서울스카이에서 도시를 내려다봐요.", translation: "I look down over the city from Seoul Sky.", note: "The observatory at Lotte World Tower."
+  },
+  {
+    id: "jeonmangdae", form: "전망대", romanization: "jeonmangdae", meaning: "Observatory · observation deck", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "전망대에서 서울을 바라봐요.", translation: "I look out over Seoul from the observation deck.", note: ""
+  },
+  {
+    id: "nophda", form: "높다", romanization: "nopda", meaning: "To be high · tall", partOfSpeech: "adjective", level: 2, category: "Descriptions",
+    example: "이 건물은 아주 높아요.", translation: "This building is very tall.", note: "높다 changes to 높아요 in the present polite form."
+  },
+  {
+    id: "ellebeiteo", form: "엘리베이터", romanization: "ellibeiteo", meaning: "Elevator", partOfSpeech: "noun", level: 1, category: "Getting around",
+    example: "엘리베이터를 타고 전망대에 올라가요.", translation: "I take the elevator up to the observation deck.", note: ""
+  },
+  {
+    id: "seokchon-hosu", form: "석촌호수", romanization: "seokchon hosu", meaning: "Seokchon Lake", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "석촌호수 옆을 천천히 걸어요.", translation: "I walk slowly beside Seokchon Lake.", note: "A lakeside park near Lotte World."
+  },
+  {
+    id: "hosu", form: "호수", romanization: "hosu", meaning: "Lake", partOfSpeech: "noun", level: 1, category: "Nature",
+    example: "호수 옆에서 친구와 사진을 찍어요.", translation: "I take a photo with a friend beside the lake.", note: ""
+  },
+  {
+    id: "jajeongeo", form: "자전거", romanization: "jajeongeo", meaning: "Bicycle", partOfSpeech: "noun", level: 1, category: "Hobbies",
+    example: "주말에 호수 주변에서 자전거를 타요.", translation: "I ride a bike around the lake on the weekend.", note: "자전거를 타다 means to ride a bicycle."
+  },
+  {
+    id: "joging", form: "조깅", romanization: "joging", meaning: "Jogging", partOfSpeech: "noun", level: 2, category: "Hobbies",
+    example: "아침에 호수 옆에서 조깅해요.", translation: "I jog beside the lake in the morning.", note: ""
+  },
+  {
+    id: "kkot", form: "꽃", romanization: "kkot", meaning: "Flower", partOfSpeech: "noun", level: 1, category: "Nature",
+    example: "봄에는 호수 주변에 꽃이 많이 펴요.", translation: "Many flowers bloom around the lake in spring.", note: ""
+  },
+  {
+    id: "banpo-daegyo", form: "반포대교", romanization: "banpo daegyo", meaning: "Banpo Bridge", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "반포대교 아래로 한강이 흘러요.", translation: "The Han River flows under Banpo Bridge.", note: "The bridge is known for its Moonlight Rainbow Fountain."
+  },
+  {
+    id: "banpo-hangang-park", form: "반포한강공원", romanization: "banpo hangang gongwon", meaning: "Banpo Hangang Park", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "반포한강공원에서 피크닉을 해요.", translation: "I have a picnic at Banpo Hangang Park.", note: ""
+  },
+  {
+    id: "hangang", form: "한강", romanization: "hangang", meaning: "Han River", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "한강을 바라보며 잠깐 쉬어요.", translation: "I take a short break while looking at the Han River.", note: ""
+  },
+  {
+    id: "bunsu", form: "분수", romanization: "bunsu", meaning: "Fountain", partOfSpeech: "noun", level: 2, category: "Seoul landmarks",
+    example: "반포대교의 분수가 음악에 맞춰 움직여요.", translation: "The fountain on Banpo Bridge moves to the music.", note: "The Rainbow Fountain show is seasonal and may be affected by weather."
+  },
+  {
+    id: "bich", form: "빛", romanization: "bit", meaning: "Light · glow", partOfSpeech: "noun", level: 1, category: "Nature",
+    example: "밤에 다리의 불빛이 아름다워요.", translation: "The bridge lights are beautiful at night.", note: "빛 also appears in 불빛, meaning a visible light or glow."
+  },
+  {
+    id: "naksan-park", form: "낙산공원", romanization: "naksan gongwon", meaning: "Naksan Park", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "낙산공원에서 서울 야경을 봐요.", translation: "I see Seoul's night view from Naksan Park.", note: "A hilltop park beside part of the Seoul City Wall."
+  },
+  {
+    id: "seoul-city-wall", form: "서울성곽길", romanization: "seoul seonggwak-gil", meaning: "Seoul City Wall trail", partOfSpeech: "noun", level: 1, category: "Seoul landmarks",
+    example: "서울성곽길을 따라 천천히 걸어요.", translation: "I walk slowly along the Seoul City Wall trail.", note: ""
+  },
+  {
+    id: "olagada", form: "올라가다", romanization: "ollagada", meaning: "To go up · climb", partOfSpeech: "verb", level: 1, category: "Getting around",
+    example: "낙산공원의 언덕을 천천히 올라가요.", translation: "I slowly walk up the hill at Naksan Park.", note: ""
   }
 ];

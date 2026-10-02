@@ -1,7 +1,7 @@
-import { grammar } from "./grammar.js?v=23";
-import { vocabulary } from "./vocabulary.js?v=23";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=23";
-import { examRounds } from "./exam-rounds.js?v=23";
+import { grammar } from "./grammar.js?v=24";
+import { vocabulary } from "./vocabulary.js?v=24";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=24";
+import { examRounds } from "./exam-rounds.js?v=24";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -74,7 +74,21 @@ const routeMissions = [
   { id: "myeongdong-check-in", location: "Myeongdong", title: "Check in near Myeongdong", description: "Find your stay, hand over your bag, and check when check-in begins.", category: "Travel & Stay", contexts: ["seoul", "study", "work"], wordIds: ["jido", "juso", "sukso", "jim", "chekeuin"], bonus: true },
   { id: "myeongdong-snack", location: "Myeongdong", title: "Pick a street-food favorite", description: "Get a recommendation, check the spice, and take a snack to go.", category: "Food & Culture", contexts: ["food", "friends", "seoul", "study"], wordIds: ["menyu", "chucheonhada", "maepda", "gimbap", "pojanghada"], bonus: true },
   { id: "topik1-quick-replies", location: "TOPIK I · Quick replies", title: "Choose what fits the conversation", description: "Make sense of short questions, simple replies, and everyday details.", category: "TOPIK I exam practice", contexts: ["seoul", "food", "work", "study", "family"], questions: examRounds["topik1-quick-replies"], bonus: true },
-  { id: "topik2-seoul-reading", location: "TOPIK II · Seoul reading", title: "Read between the Seoul lines", description: "Read a small chart, follow a story, and spot the main idea.", category: "TOPIK II exam practice", contexts: ["seoul", "work", "hobbies", "study"], questions: examRounds["topik2-seoul-reading"], bonus: true }
+  { id: "topik2-seoul-reading", location: "TOPIK II · Seoul reading", title: "Read between the Seoul lines", description: "Read a small chart, follow a story, and spot the main idea.", category: "TOPIK II exam practice", contexts: ["seoul", "work", "hobbies", "study"], questions: examRounds["topik2-seoul-reading"], bonus: true },
+  { id: "gyeongbokgung-palace", location: "Gyeongbokgung Palace", mapSubtitle: "Royal courtyards", title: "A morning at the palace", description: "Find Gwanghwamun, try on a hanbok, and take a photo in the palace grounds.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends", "study"], wordIds: ["gyeongbokgung", "gung", "gwanghwamun", "hanbok", "sajin"], bonus: true },
+  { id: "bukchon-hanok-village", location: "Bukchon Hanok Village", mapSubtitle: "Quiet hanok lanes", title: "A quiet hanok lane", description: "Walk through this living neighborhood gently: keep voices low and homes private.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study"], wordIds: ["bukchon", "hanok", "golmok", "geotda", "joyoteohada"], bonus: true },
+  { id: "insadong-stroll", location: "Insadong", mapSubtitle: "Tea & craft shops", title: "Find a small Seoul keepsake", description: "Stroll the lively street, stop for tea, and find a handmade gift.", category: "Seoul landmarks", contexts: ["seoul", "food", "friends", "hobbies"], wordIds: ["insadong", "cha", "gongye-pum", "geori", "sada"], bonus: true },
+  { id: "cheonggyecheon-evening", location: "Cheonggyecheon", mapSubtitle: "An evening walk", title: "Follow the stream at dusk", description: "Slow down beside the water and notice how the city changes at night.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study"], wordIds: ["cheonggyecheon", "sanchaek", "punggyeong", "bamm", "geotda"], bonus: true },
+  { id: "namsan-sunset", location: "Namsan Seoul Tower", mapSubtitle: "Cable car & skyline", title: "Catch the city at sunset", description: "Ride up Namsan, look out over Seoul, and save the view in a photo.", category: "Seoul landmarks", contexts: ["seoul", "friends", "hobbies"], wordIds: ["namsan", "n-seoul-tower", "keibeulka", "jeonmang", "sajin"], bonus: true },
+  { id: "changdeokgung-garden", location: "Changdeokgung Palace", mapSubtitle: "Palace garden", title: "Take the garden path", description: "Notice the palace garden, then share one detail that stayed with you.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study"], wordIds: ["changdeokgung", "jeongwon", "munhwa", "yumul", "gwanramhada"], bonus: true },
+  { id: "ddp-after-dark", location: "Dongdaemun Design Plaza", mapSubtitle: "Design after dark", title: "Explore DDP after dark", description: "Look around the curved landmark, then choose one exhibition or artwork to explore.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["ddp", "geonchuk", "jeonsihoe", "jakpum", "ipjangnyo"], bonus: true },
+  { id: "national-museum-day", location: "National Museum of Korea", mapSubtitle: "History & culture", title: "Choose an object with a story", description: "Find a historical object, read its description, and tell a friend what you learned.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study", "family"], wordIds: ["national-museum", "munhwa", "yumul", "gwanramhada", "seolmyeong"], bonus: true },
+  { id: "mangwon-market-run", location: "Mangwon Market", mapSubtitle: "Market snacks", title: "Pick a market snack", description: "Ask the price, choose something warm, and share a few bites as you explore.", category: "Seoul landmarks", contexts: ["seoul", "food", "friends"], wordIds: ["mangwon-sijang", "sijang", "tteokbokki", "mandu", "eolma"], bonus: true },
+  { id: "coex-bongeunsa", location: "COEX & Bongeunsa", mapSubtitle: "A city inside the city", title: "Find a quiet corner at COEX", description: "Browse the huge indoor complex, then take a peaceful pause at nearby Bongeunsa.", category: "Seoul landmarks", contexts: ["seoul", "study", "hobbies"], wordIds: ["coex", "bongeunsa", "doseogwan", "chaek", "gonggan"], bonus: true },
+  { id: "lotte-world-tower-view", location: "Lotte World Tower · Seoul Sky", mapSubtitle: "High above Seoul", title: "See Seoul from above", description: "Take the elevator up and describe the view from one of the city’s highest points.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "study"], wordIds: ["lotte-world-tower", "seoul-sky", "jeonmangdae", "nophda", "ellebeiteo"], bonus: true },
+  { id: "seokchon-lake-loop", location: "Seokchon Lake", mapSubtitle: "Lakeside loop", title: "Take the long way around the lake", description: "Choose a gentle loop, spot the flowers, and decide whether to walk or ride.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["seokchon-hosu", "hosu", "jajeongeo", "joging", "kkot"], bonus: true },
+  { id: "banpo-rainbow-fountain", location: "Banpo Hangang Park", mapSubtitle: "Bridge lights & river", title: "A river evening in Banpo", description: "Watch the bridge lights by the river. Fountain shows are seasonal and weather-dependent.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends", "food"], wordIds: ["banpo-daegyo", "banpo-hangang-park", "hangang", "bunsu", "bich"], bonus: true },
+  { id: "naksan-city-wall", location: "Naksan Park & Seoul City Wall", mapSubtitle: "A hilltop night view", title: "Follow the old city wall", description: "Take a steady walk along the wall and pause for a view over downtown Seoul.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["naksan-park", "seoul-city-wall", "olagada", "jeonmang", "sanchaek"], bonus: true }
 ];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
@@ -533,18 +547,19 @@ function getMissionsByDifficulty(missions = routeMissions) {
   return [...missions].sort((a, b) => getMissionDifficulty(a) - getMissionDifficulty(b) || routeMissions.indexOf(a) - routeMissions.indexOf(b));
 }
 
-const routeMapPositions = [
-  { top: 35, left: 50 }, { top: 66, left: 49 }, { top: 84, left: 48 },
-  { top: 38, left: 18 }, { top: 39, left: 82 }, { top: 47, left: 21 }, { top: 48, left: 79 },
-  { top: 55, left: 18 }, { top: 56, left: 82 }, { top: 63, left: 17 }, { top: 64, left: 83 },
-  { top: 72, left: 18 }, { top: 73, left: 82 }, { top: 80, left: 19 }, { top: 81, left: 81 },
-  { top: 88, left: 25 }, { top: 89, left: 76 }
+const routeMapAnchors = [
+  { top: 35, left: 50 }, { top: 66, left: 49 }, { top: 84, left: 48 }
 ];
 
 function getRouteMapPosition(index) {
-  if (routeMapPositions[index]) return routeMapPositions[index];
-  const overflow = index - routeMapPositions.length;
-  return { top: 36 + ((overflow * 13) % 53), left: 16 + ((overflow * 29) % 68) };
+  if (routeMapAnchors[index]) return routeMapAnchors[index];
+  const columns = [14, 38, 62, 86];
+  const overflow = index - routeMapAnchors.length;
+  const rows = Math.ceil((routeMissions.length - routeMapAnchors.length) / columns.length);
+  const row = Math.floor(overflow / columns.length);
+  const column = row % 2 === 0 ? overflow % columns.length : columns.length - 1 - (overflow % columns.length);
+  const top = rows > 1 ? 40 + row * (49 / (rows - 1)) : 64.5;
+  return { top: Number(top.toFixed(1)), left: columns[column] };
 }
 
 function getSuggestedMission() {
@@ -580,7 +595,7 @@ function renderRouteOverview() {
     const difficulty = getMissionDifficulty(mission);
     const position = getRouteMapPosition(index);
     const row = document.createElement("li");
-    row.className = `route-stop${mission.bonus ? " is-bonus" : " is-main-route"}${position.left > 50 ? " label-left" : ""}${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
+    row.className = `route-stop${mission.bonus ? " is-bonus" : ""}${position.left > 50 ? " label-left" : ""}${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
     row.dataset.level = String(difficulty);
     row.style.setProperty("--stop-top", `${position.top}%`);
     row.style.setProperty("--stop-left", `${position.left}%`);
@@ -706,6 +721,7 @@ function getMissionExample(item) {
 
 function findKoreanWordForm(item, sentence) {
   const conjugatedForms = {
+    geotda: ["걸었어요", "걸어요", "걸으며", "걷기"],
     maepda: ["매웠어요", "매워요", "매웠", "매워"],
     dowajuda: ["도와줬어요", "도와줘요", "도와줬", "도와줘"],
     ttatteuthada: ["따뜻한", "따뜻해요", "따뜻해"],
@@ -1433,7 +1449,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=23", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=24", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
