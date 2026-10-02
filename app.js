@@ -1,7 +1,7 @@
-import { grammar } from "./grammar.js?v=22";
-import { vocabulary } from "./vocabulary.js?v=22";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=22";
-import { examRounds } from "./exam-rounds.js?v=22";
+import { grammar } from "./grammar.js?v=23";
+import { vocabulary } from "./vocabulary.js?v=23";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=23";
+import { examRounds } from "./exam-rounds.js?v=23";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -521,6 +521,32 @@ function renderPracticeHome() {
   renderRouteOverview();
 }
 
+function getMissionDifficulty(mission) {
+  if (mission.questions?.length) return Number(mission.questions[0].level) === 2 ? 2 : 1;
+  const levels = (mission.wordIds || []).map((id) => vocabulary.find((item) => item.id === id)?.level);
+  const topikOneCount = levels.filter((level) => level === 1).length;
+  const topikTwoCount = levels.filter((level) => level === 2).length;
+  return topikTwoCount > topikOneCount ? 2 : 1;
+}
+
+function getMissionsByDifficulty(missions = routeMissions) {
+  return [...missions].sort((a, b) => getMissionDifficulty(a) - getMissionDifficulty(b) || routeMissions.indexOf(a) - routeMissions.indexOf(b));
+}
+
+const routeMapPositions = [
+  { top: 35, left: 50 }, { top: 66, left: 49 }, { top: 84, left: 48 },
+  { top: 38, left: 18 }, { top: 39, left: 82 }, { top: 47, left: 21 }, { top: 48, left: 79 },
+  { top: 55, left: 18 }, { top: 56, left: 82 }, { top: 63, left: 17 }, { top: 64, left: 83 },
+  { top: 72, left: 18 }, { top: 73, left: 82 }, { top: 80, left: 19 }, { top: 81, left: 81 },
+  { top: 88, left: 25 }, { top: 89, left: 76 }
+];
+
+function getRouteMapPosition(index) {
+  if (routeMapPositions[index]) return routeMapPositions[index];
+  const overflow = index - routeMapPositions.length;
+  return { top: 36 + ((overflow * 13) % 53), left: 16 + ((overflow * 29) % 68) };
+}
+
 function getSuggestedMission() {
   const remainingMainRoute = routeMissions.filter((mission) => !mission.bonus && !routeStamps.includes(mission.id));
   const remaining = routeMissions.filter((mission) => !routeStamps.includes(mission.id));
@@ -529,20 +555,18 @@ function getSuggestedMission() {
     : remaining.length ? remaining : routeMissions;
   const selected = new Set(freddieContexts);
   const score = (mission) => mission.contexts.filter((context) => selected.has(context)).length;
-  const nextInRoute = candidates[0];
-  if (score(nextInRoute) > 0) return nextInRoute;
-  const bestFit = [...candidates].sort((a, b) => {
-    return score(b) - score(a) || routeMissions.indexOf(a) - routeMissions.indexOf(b);
+  return [...candidates].sort((a, b) => {
+    return getMissionDifficulty(a) - getMissionDifficulty(b) || score(b) - score(a) || routeMissions.indexOf(a) - routeMissions.indexOf(b);
   })[0];
-  return score(bestFit) > 0 ? bestFit : nextInRoute;
 }
 
 function renderRouteOverview() {
   const stopList = document.querySelector("#route-stops");
   const bonusList = document.querySelector("#bonus-mission-list");
+  const orderedMissions = getMissionsByDifficulty();
   const suggested = getSuggestedMission();
   document.querySelector("#route-stamp-count").textContent = `${routeStamps.length} / ${routeMissions.length}`;
-  const suggestedIndex = routeMissions.findIndex((mission) => mission.id === suggested.id);
+  const suggestedIndex = orderedMissions.findIndex((mission) => mission.id === suggested.id);
   document.querySelector("#featured-mission-count").textContent = `MISSION ${suggestedIndex + 1} OF ${routeMissions.length}`;
   document.querySelector("#featured-mission-title").textContent = suggested.title;
   document.querySelector("#featured-mission-description").textContent = suggested.description;
@@ -550,17 +574,22 @@ function renderRouteOverview() {
     ? (suggested.bonus ? "Replay round" : "Revisit stop")
     : (suggested.bonus ? "Start bonus round" : "Start mission");
   setArrowButtonLabel(document.querySelector("#start-mission"), featuredAction);
-  stopList.replaceChildren(...routeMissions.filter((mission) => !mission.bonus).map((mission) => {
-    const index = routeMissions.indexOf(mission);
+  stopList.replaceChildren(...orderedMissions.map((mission, index) => {
     const complete = routeStamps.includes(mission.id);
     const isSuggested = mission.id === suggested.id;
+    const difficulty = getMissionDifficulty(mission);
+    const position = getRouteMapPosition(index);
     const row = document.createElement("li");
-    row.className = `route-stop${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
+    row.className = `route-stop${mission.bonus ? " is-bonus" : " is-main-route"}${position.left > 50 ? " label-left" : ""}${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
+    row.dataset.level = String(difficulty);
+    row.style.setProperty("--stop-top", `${position.top}%`);
+    row.style.setProperty("--stop-left", `${position.left}%`);
     const button = document.createElement("button");
     button.className = "route-stop-button";
     button.type = "button";
     button.dataset.missionId = mission.id;
-    button.setAttribute("aria-label", `${complete ? "Replay" : "Play"} ${mission.location}: ${mission.title}`);
+    button.setAttribute("aria-label", `TOPIK ${difficulty}. ${complete ? "Replay" : "Play"} ${mission.title} at ${mission.location}`);
+    button.title = `TOPIK ${difficulty} · ${mission.location}: ${mission.title}`;
     const marker = document.createElement("span");
     marker.className = "route-stop-marker";
     marker.setAttribute("aria-hidden", "true");
@@ -572,43 +601,66 @@ function renderRouteOverview() {
     title.textContent = mission.location;
     const subtitle = document.createElement("small");
     subtitle.className = "route-stop-subtitle";
-    subtitle.textContent = mission.mapSubtitle;
+    subtitle.textContent = `TOPIK ${difficulty} · ${mission.mapSubtitle || mission.category}`;
     copy.append(title, subtitle);
     button.append(marker, copy);
     button.setAttribute("aria-current", isSuggested ? "step" : "false");
     row.append(button);
     return row;
   }));
-  bonusList.replaceChildren(...routeMissions.filter((mission) => mission.bonus).map((mission) => {
-    const index = routeMissions.indexOf(mission);
-    const complete = routeStamps.includes(mission.id);
-    const card = document.createElement("article");
-    card.className = `bonus-mission-card${complete ? " is-complete" : ""}`;
-    const number = document.createElement("span");
-    number.className = "bonus-mission-number";
-    number.setAttribute("aria-hidden", "true");
-    number.textContent = complete ? "✓" : String(index + 1).padStart(2, "0");
-    const copy = document.createElement("div");
-    copy.className = "bonus-mission-copy";
-    const meta = document.createElement("p");
-    meta.className = "section-label";
-    meta.textContent = `ROUND ${index + 1} · ${mission.category.toUpperCase()}`;
-    const title = document.createElement("h3");
-    title.textContent = mission.title;
-    const description = document.createElement("p");
-    description.textContent = mission.description;
-    const duration = document.createElement("small");
-    duration.textContent = mission.questions ? `3 minutes · TOPIK ${mission.questions[0]?.level || "I"}` : "3 minutes · 5 words";
-    copy.append(meta, title, description, duration);
-    const button = document.createElement("button");
-    button.className = "bonus-mission-button";
-    button.type = "button";
-    button.dataset.missionId = mission.id;
-    button.setAttribute("aria-label", `${complete ? "Replay" : "Start"} ${mission.title}, ${mission.location}`);
-    setArrowButtonLabel(button, complete ? "Replay round" : "Start round");
-    card.append(number, copy, button);
-    return card;
-  }));
+  const bonusMissions = getMissionsByDifficulty(routeMissions.filter((mission) => mission.bonus));
+  const groups = [1, 2].map((difficulty) => {
+    const missions = bonusMissions.filter((mission) => getMissionDifficulty(mission) === difficulty);
+    if (!missions.length) return null;
+    const group = document.createElement("section");
+    group.className = `bonus-difficulty-group topik-${difficulty}-group`;
+    group.dataset.level = String(difficulty);
+    const heading = document.createElement("div");
+    heading.className = "bonus-difficulty-heading";
+    const levelLabel = document.createElement("p");
+    levelLabel.className = "section-label";
+    levelLabel.textContent = `TOPIK ${difficulty}`;
+    const levelTitle = document.createElement("h3");
+    levelTitle.textContent = difficulty === 1 ? "Build your everyday base" : "Take the next step";
+    const count = document.createElement("span");
+    count.textContent = `${missions.length} ${missions.length === 1 ? "round" : "rounds"}`;
+    heading.append(levelLabel, levelTitle, count);
+    const cards = document.createElement("div");
+    cards.className = "bonus-mission-level-list";
+    missions.forEach((mission) => {
+      const index = orderedMissions.findIndex((candidate) => candidate.id === mission.id);
+      const complete = routeStamps.includes(mission.id);
+      const card = document.createElement("article");
+      card.className = `bonus-mission-card${complete ? " is-complete" : ""}`;
+      const number = document.createElement("span");
+      number.className = "bonus-mission-number";
+      number.setAttribute("aria-hidden", "true");
+      number.textContent = complete ? "✓" : String(index + 1).padStart(2, "0");
+      const copy = document.createElement("div");
+      copy.className = "bonus-mission-copy";
+      const meta = document.createElement("p");
+      meta.className = "section-label";
+      meta.textContent = `ROUND ${index + 1} · ${mission.category.toUpperCase()}`;
+      const title = document.createElement("h3");
+      title.textContent = mission.title;
+      const description = document.createElement("p");
+      description.textContent = mission.description;
+      const duration = document.createElement("small");
+      duration.textContent = mission.questions ? "3 minutes · 5 questions" : "3 minutes · 5 words";
+      copy.append(meta, title, description, duration);
+      const button = document.createElement("button");
+      button.className = "bonus-mission-button";
+      button.type = "button";
+      button.dataset.missionId = mission.id;
+      button.setAttribute("aria-label", `TOPIK ${difficulty}. ${complete ? "Replay" : "Start"} ${mission.title}, ${mission.location}`);
+      setArrowButtonLabel(button, complete ? "Replay round" : "Start round");
+      card.append(number, copy, button);
+      cards.append(card);
+    });
+    group.append(heading, cards);
+    return group;
+  }).filter(Boolean);
+  bonusList.replaceChildren(...groups);
 }
 
 function setArrowButtonLabel(button, label) {
@@ -704,7 +756,7 @@ function startMission(missionId = getSuggestedMission().id) {
   document.body.classList.add("is-immersive-round");
   window.scrollTo(0, 0);
   document.querySelector("#mission-question-title").textContent = mission.title;
-  const missionIndex = routeMissions.findIndex((candidate) => candidate.id === mission.id);
+  const missionIndex = getMissionsByDifficulty().findIndex((candidate) => candidate.id === mission.id);
   document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
   renderMissionQuestion();
 }
@@ -971,7 +1023,7 @@ function finishMission() {
   const dueItems = getNeedsPracticeItems();
   const total = missionSession.items.length;
   document.querySelector("#results-score").textContent = `${missionSession.correctCount} of ${total} correct`;
-  const missionIndex = routeMissions.findIndex((candidate) => candidate.id === missionSession.missionId);
+  const missionIndex = getMissionsByDifficulty().findIndex((candidate) => candidate.id === missionSession.missionId);
   document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
   document.querySelector("#results-stamp-kicker").textContent = stampEarned ? "YOU EARNED A STAMP" : "STAMP COLLECTED";
   document.querySelector("#results-stamp-name").textContent = mission?.location || "Seoul";
@@ -1381,7 +1433,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=22", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=23", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));

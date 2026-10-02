@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=22" />
-    <link rel="icon" href="./icon.svg?v=22" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=22" />
+    <link rel="manifest" href="./manifest.webmanifest?v=23" />
+    <link rel="icon" href="./icon.svg?v=23" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=23" />
     <script>
       try {
         const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
@@ -27,7 +27,7 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=22" />
+    <link rel="stylesheet" href="./styles.css?v=23" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -130,7 +130,7 @@
           <div class="practice-home" id="practice-home">
             <section class="route-board" aria-labelledby="practice-title">
               <div class="route-scene">
-                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=22" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
+                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=23" alt="Illustrated Seoul scene with city buildings, park trees, the Han River, and a tiger with a backpack." />
                 <div class="route-scene-copy">
                   <p class="eyebrow">SEOUL &amp; EVERYDAY LIFE · TOPIK 1 &amp; 2</p>
                   <h1 class="practice-title" id="practice-title">A day around Seoul</h1>
@@ -148,13 +148,17 @@
                   <button class="primary-button" id="start-mission" type="button">Start mission <span aria-hidden="true">→</span></button>
                 </div>
               </article>
-              <p class="route-footnote">Tap a stop or try a bonus round · stamps save on this device</p>
+              <div class="route-map-legend" aria-label="Round difficulty legend">
+                <span><i class="difficulty-dot topik-one-dot" aria-hidden="true"></i>TOPIK I <small>Start here</small></span>
+                <span><i class="difficulty-dot topik-two-dot" aria-hidden="true"></i>TOPIK II <small>Next step</small></span>
+              </div>
+              <p class="route-footnote">Tap any numbered stop to play · your stamps save on this device</p>
             </section>
 
             <section class="bonus-rounds" aria-labelledby="bonus-rounds-title">
               <div class="bonus-rounds-heading">
                 <div><p class="section-label">EVERYDAY SCENES · TOPIK PRACTICE</p><h2 id="bonus-rounds-title">More scenes to play</h2></div>
-                <span>3 min each</span>
+                <span>Ordered by difficulty</span>
               </div>
               <div class="bonus-mission-list" id="bonus-mission-list" aria-label="Choose an everyday bonus mission"></div>
             </section>
@@ -237,7 +241,7 @@
                 <div><p class="section-label">HELPFUL EXAMPLE</p><p class="helpful-korean" id="results-example-korean" lang="ko"></p><p class="helpful-translation" id="results-example-translation"></p></div>
               </div>
             </div>
-            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=22" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 17 · SEOUL &amp; LIFE</em></span></div>
+            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=23" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 17 · SEOUL &amp; LIFE</em></span></div>
             <div class="results-actions">
               <button class="primary-button" id="play-again" type="button">Review these words <span aria-hidden="true">→</span></button>
               <button class="text-button" id="return-practice-home" type="button">Back to route</button>
@@ -374,6 +378,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=22"></script>
+    <script type="module" src="./app.js?v=23"></script>
   </body>
 </html>
