@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=7";
-import { vocabulary } from "./vocabulary.js?v=7";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=7";
+import { grammar } from "./grammar.js?v=8";
+import { vocabulary } from "./vocabulary.js?v=8";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=8";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -28,15 +28,42 @@ const pageTitle = document.querySelector("#page-title-text");
 const introCopy = document.querySelector("#intro-copy");
 const offlineStatus = document.querySelector("#offline-status");
 const offlineLabel = document.querySelector("#offline-label");
+const intro = document.querySelector(".intro");
+const practiceView = document.querySelector("#practice-view");
+const practiceHome = document.querySelector("#practice-home");
+const missionPlay = document.querySelector("#mission-play");
+const missionResults = document.querySelector("#mission-results");
+const contextDialog = document.querySelector("#freddie-context-dialog");
 
 const bookmarkIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>`;
 const savedKeys = { grammar: "korean-chingu-saved-v1", vocabulary: "korean-chingu-saved-words-v1" };
 const freddieModeKey = "korean-chingu-freddie-mode-v1";
+const wordProgressKey = "korean-chingu-word-progress-v1";
+const freddieContextKey = "korean-chingu-freddie-context-v1";
+const practiceFreddieKey = "korean-chingu-practice-freddie-v1";
+const contextLabels = {
+  seoul: "Travel around Seoul",
+  study: "Study breaks",
+  work: "Work & commute",
+  food: "Food",
+  hobbies: "Hobbies",
+  friends: "Friends"
+};
+const contextVocabularyIds = {
+  seoul: ["jido", "yeok", "chulgu", "beoseu", "jihacheol", "pyo", "sukso", "yeyakhada", "juso", "yeogwon", "hwajangsil", "oenjjok", "gyotongkadeu", "hwanseung", "chulbalhada", "dochakhada", "chekeuin", "jim", "annae-deseukeu", "bunsilmul", "yakguk"],
+  study: ["gimbap", "mul", "menyu", "jumunhada", "maepda", "yeongsujeung", "hwajangsil", "jido", "jihacheol"],
+  work: ["jihacheol", "beoseu", "yeok", "gyotongkadeu", "hwanseung", "makhida", "chulbalhada", "dochakhada", "menyu", "gyesanseo", "gimbap", "pojanghada", "jido"],
+  food: ["gimbap", "mul", "menyu", "jumunhada", "maepda", "pojanghada", "jaeryo", "chucheonhada", "allereugi", "gyesanseo"],
+  hobbies: ["pyo", "jido", "yeok", "juso", "sukso", "chulbalhada", "dochakhada", "jaeryo", "mul"],
+  friends: ["gimbap", "menyu", "jido", "yeok", "chulgu", "pyo", "sukso", "juso", "hwanseung", "dochakhada", "chucheonhada", "gyesanseo"]
+};
+const defaultFreddieContexts = ["seoul", "study"];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
   vocabulary: readSaved(savedKeys.vocabulary)
 };
 let activeMode = "grammar";
+let activeView = "grammar";
 let activeLevel = "all";
 let activeCategory = "all";
 let savedOnly = false;
@@ -45,6 +72,13 @@ let currentWordId = null;
 let detailExamplesExpanded = false;
 let freddieMode = readFreddieMode();
 let deferredInstallPrompt = null;
+let practiceFreddieEnabled = readPracticeFreddieEnabled();
+let freddieContexts = readFreddieContexts();
+let wordProgress = readWordProgress();
+let missionSession = null;
+let practiceStage = "home";
+
+const starterMissionIds = ["jido", "chulgu", "hwanseung", "yeok", "dochakhada"];
 
 function readSaved(key) {
   try {
@@ -60,6 +94,44 @@ function readFreddieMode() {
     return localStorage.getItem(freddieModeKey) === "true";
   } catch {
     return false;
+  }
+}
+
+function readPracticeFreddieEnabled() {
+  try {
+    const value = localStorage.getItem(practiceFreddieKey);
+    return value === null ? true : value === "true";
+  } catch {
+    return true;
+  }
+}
+
+function readFreddieContexts() {
+  try {
+    const value = localStorage.getItem(freddieContextKey);
+    if (value === null) return [...defaultFreddieContexts];
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((context) => Object.hasOwn(contextLabels, context)) : [...defaultFreddieContexts];
+  } catch {
+    return [...defaultFreddieContexts];
+  }
+}
+
+function readWordProgress() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(wordProgressKey) || "{}");
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return Object.fromEntries(Object.entries(parsed).filter(([id, progress]) => vocabulary.some((item) => item.id === id) && progress && typeof progress === "object"));
+  } catch {
+    return {};
+  }
+}
+
+function persistWordProgress() {
+  try {
+    localStorage.setItem(wordProgressKey, JSON.stringify(wordProgress));
+  } catch {
+    // Practice still works for the current session when browser storage is unavailable.
   }
 }
 
@@ -252,6 +324,284 @@ function render() {
   }
 }
 
+function getNeedsPracticeItems() {
+  return vocabulary
+    .filter((item) => wordProgress[item.id]?.needsPractice)
+    .sort((a, b) => (wordProgress[a.id].lastPracticedAt || 0) - (wordProgress[b.id].lastPracticedAt || 0));
+}
+
+function makeProgressWord(item) {
+  const row = document.createElement("li");
+  const form = document.createElement("b");
+  form.lang = "ko";
+  form.textContent = item.form;
+  const meaning = document.createElement("span");
+  meaning.textContent = item.meaning;
+  row.append(form, meaning);
+  return row;
+}
+
+function renderReviewOverview() {
+  const dueItems = getNeedsPracticeItems();
+  const practicedCount = Object.values(wordProgress).filter((progress) => progress.attempts > 0).length;
+  document.querySelector("#practiced-count").textContent = String(practicedCount);
+
+  const due = document.querySelector("#review-due");
+  due.replaceChildren();
+  const heading = document.createElement("p");
+  heading.className = "review-due-heading";
+  const list = document.createElement("ul");
+  list.className = "review-word-list";
+  if (dueItems.length) {
+    heading.textContent = `Words to revisit · ${dueItems.length}`;
+    dueItems.slice(0, 8).forEach((item) => list.append(makeProgressWord(item)));
+    due.append(heading, list);
+    if (dueItems.length > 8) {
+      const more = document.createElement("p");
+      more.className = "review-storage-note";
+      more.textContent = `${dueItems.length - 8} more will return in later rounds.`;
+      due.append(more);
+    }
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "review-empty";
+    empty.textContent = practicedCount
+      ? "Nothing is waiting for another look. New words you miss will show up here."
+      : "Words you miss in a round will return here for another look.";
+    due.append(empty);
+  }
+}
+
+function updateFreddieContextSummary() {
+  const selected = freddieContexts.map((context) => contextLabels[context]).filter(Boolean);
+  const summary = selected.length
+    ? `${selected.join(" · ")}. These topics shape the words in your next round; change them any time.`
+    : "No topics selected. Your round can draw from all the Seoul and everyday words.";
+  document.querySelector("#context-summary").textContent = `${summary} Personal details are optional.`;
+  document.querySelector("#practice-freddie-toggle").checked = practiceFreddieEnabled;
+}
+
+function renderPracticeHome() {
+  renderReviewOverview();
+  updateFreddieContextSummary();
+}
+
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function getPracticePool() {
+  if (freddieContexts.length === 0) return vocabulary;
+  const selectedIds = new Set(freddieContexts.flatMap((context) => contextVocabularyIds[context] || []));
+  const pool = vocabulary.filter((item) => selectedIds.has(item.id));
+  return pool.length ? pool : vocabulary.filter((item) => starterMissionIds.includes(item.id));
+}
+
+function getMissionItems() {
+  const dueIds = getNeedsPracticeItems().map((item) => item.id);
+  const preferredIds = shuffle(getPracticePool().map((item) => item.id).filter((id) => !dueIds.includes(id)));
+  const allOtherIds = shuffle(vocabulary.map((item) => item.id).filter((id) => !dueIds.includes(id) && !preferredIds.includes(id)));
+  const selectedIds = [...dueIds, ...preferredIds, ...allOtherIds].slice(0, 5);
+  return selectedIds.map((id) => vocabulary.find((item) => item.id === id)).filter(Boolean);
+}
+
+function makeAnswerOptions(item) {
+  const sameCategory = vocabulary.filter((candidate) => candidate.id !== item.id && candidate.level === item.level && candidate.category === item.category);
+  const sameLevel = vocabulary.filter((candidate) => candidate.id !== item.id && candidate.level === item.level);
+  const allOther = vocabulary.filter((candidate) => candidate.id !== item.id);
+  const candidates = shuffle([...sameCategory, ...sameLevel, ...allOther]);
+  const options = [{ id: item.id, meaning: item.meaning }];
+  const meanings = new Set([item.meaning.toLocaleLowerCase()]);
+  for (const candidate of candidates) {
+    const key = candidate.meaning.toLocaleLowerCase();
+    if (meanings.has(key)) continue;
+    meanings.add(key);
+    options.push({ id: candidate.id, meaning: candidate.meaning });
+    if (options.length === 4) break;
+  }
+  return shuffle(options);
+}
+
+function getMissionExample(item) {
+  return practiceFreddieEnabled && freddieVocabularyExamples[item.id]
+    ? freddieVocabularyExamples[item.id]
+    : { korean: item.example, translation: item.translation };
+}
+
+function startMission() {
+  const items = getMissionItems();
+  missionSession = { items, index: 0, correctCount: 0, answered: false, options: [] };
+  practiceStage = "play";
+  practiceHome.hidden = true;
+  missionResults.hidden = true;
+  missionPlay.hidden = false;
+  renderMissionQuestion();
+}
+
+function renderMissionQuestion() {
+  if (!missionSession) return;
+  const item = missionSession.items[missionSession.index];
+  const example = getMissionExample(item);
+  const position = missionSession.index + 1;
+  document.querySelector("#question-count").textContent = `Question ${position} of ${missionSession.items.length}`;
+  document.querySelector("#mission-progress").max = missionSession.items.length;
+  document.querySelector("#mission-progress").value = position;
+  document.querySelector("#question-level").textContent = `TOPIK ${item.level}`;
+  document.querySelector("#question-word").textContent = item.form;
+  document.querySelector("#question-romanization").textContent = item.romanization;
+  document.querySelector("#question-example").textContent = example.korean;
+
+  const options = makeAnswerOptions(item);
+  missionSession.options = options;
+  missionSession.answered = false;
+  const optionContainer = document.querySelector("#answer-options");
+  optionContainer.replaceChildren(...options.map((option) => {
+    const button = document.createElement("button");
+    button.className = "answer-option";
+    button.type = "button";
+    button.dataset.choiceId = option.id;
+    button.setAttribute("aria-pressed", "false");
+    const label = document.createElement("span");
+    label.textContent = option.meaning;
+    button.append(label);
+    return button;
+  }));
+
+  const feedback = document.querySelector("#answer-feedback");
+  feedback.hidden = true;
+  feedback.classList.remove("is-incorrect");
+  document.querySelector("#feedback-title").textContent = "";
+  document.querySelector("#feedback-copy").textContent = "";
+  document.querySelector("#feedback-translation").textContent = "";
+  const next = document.querySelector("#next-question");
+  next.disabled = true;
+  next.textContent = "Choose an answer";
+}
+
+function recordWordAnswer(item, isCorrect) {
+  const previous = wordProgress[item.id] || { attempts: 0, correct: 0, misses: 0, needsPractice: false, correctReviews: 0 };
+  const progress = {
+    ...previous,
+    attempts: (previous.attempts || 0) + 1,
+    correct: (previous.correct || 0) + (isCorrect ? 1 : 0),
+    misses: (previous.misses || 0) + (isCorrect ? 0 : 1),
+    lastPracticedAt: Date.now()
+  };
+  if (isCorrect && previous.needsPractice) {
+    progress.correctReviews = (previous.correctReviews || 0) + 1;
+    progress.needsPractice = progress.correctReviews < 2;
+  } else if (!isCorrect) {
+    progress.needsPractice = true;
+    progress.correctReviews = 0;
+  }
+  wordProgress[item.id] = progress;
+  persistWordProgress();
+}
+
+function answerQuestion(selectedId) {
+  if (!missionSession || missionSession.answered) return;
+  const item = missionSession.items[missionSession.index];
+  const example = getMissionExample(item);
+  const isCorrect = selectedId === item.id;
+  missionSession.answered = true;
+  if (isCorrect) missionSession.correctCount += 1;
+  recordWordAnswer(item, isCorrect);
+
+  document.querySelectorAll(".answer-option").forEach((button) => {
+    const isAnswer = button.dataset.choiceId === item.id;
+    const wasSelected = button.dataset.choiceId === selectedId;
+    button.disabled = true;
+    button.setAttribute("aria-pressed", String(wasSelected));
+    if (isAnswer) {
+      button.classList.add("is-correct");
+      const mark = document.createElement("span");
+      mark.className = "choice-mark";
+      mark.setAttribute("aria-hidden", "true");
+      mark.textContent = "✓";
+      button.append(mark);
+    } else if (wasSelected) {
+      button.classList.add("is-incorrect");
+      const mark = document.createElement("span");
+      mark.className = "choice-mark";
+      mark.setAttribute("aria-hidden", "true");
+      mark.textContent = "↺";
+      button.append(mark);
+    }
+  });
+
+  const feedback = document.querySelector("#answer-feedback");
+  feedback.hidden = false;
+  feedback.classList.toggle("is-incorrect", !isCorrect);
+  const updatedProgress = wordProgress[item.id];
+  document.querySelector("#feedback-title").textContent = isCorrect
+    ? (updatedProgress.needsPractice ? "Good recall · one more correct review clears this word." : "That’s right.")
+    : "Worth another look · this word will return in a later round.";
+  document.querySelector("#feedback-copy").textContent = `${item.form} means “${item.meaning}.”${item.note ? ` ${item.note}` : ""}`;
+  document.querySelector("#feedback-translation").textContent = `In this sentence: ${example.translation}`;
+  const next = document.querySelector("#next-question");
+  next.disabled = false;
+  next.textContent = missionSession.index === missionSession.items.length - 1 ? "See your round" : "Next word →";
+}
+
+function makeResultsWord(item) {
+  const row = makeProgressWord(item);
+  const progress = wordProgress[item.id];
+  const status = document.createElement("span");
+  status.textContent = progress.correctReviews === 1 ? "1 good review" : "needs another look";
+  row.append(status);
+  return row;
+}
+
+function finishMission() {
+  if (!missionSession) return;
+  practiceStage = "results";
+  missionPlay.hidden = true;
+  practiceHome.hidden = true;
+  missionResults.hidden = false;
+  const dueItems = getNeedsPracticeItems();
+  const total = missionSession.items.length;
+  document.querySelector("#results-score").textContent = `${missionSession.correctCount} of ${total} correct`;
+  document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
+  const summary = document.querySelector("#results-summary");
+  if (dueItems.length) {
+    summary.textContent = `${dueItems.length} ${dueItems.length === 1 ? "word is" : "words are"} on your revisit list. They’ll lead your next round; two correct reviews clear a word from this list.`;
+  } else {
+    summary.textContent = "Nothing is waiting for another look. You can come back for another round whenever you have a moment.";
+  }
+  document.querySelector("#results-due-list").hidden = dueItems.length === 0;
+  renderPracticeHome();
+}
+
+function returnToPracticeHome() {
+  missionSession = null;
+  practiceStage = "home";
+  missionPlay.hidden = true;
+  missionResults.hidden = true;
+  practiceHome.hidden = false;
+  renderPracticeHome();
+}
+
+function saveFreddieContexts(contexts) {
+  freddieContexts = contexts.filter((context) => Object.hasOwn(contextLabels, context));
+  try {
+    localStorage.setItem(freddieContextKey, JSON.stringify(freddieContexts));
+  } catch {
+    // The current round can still use these choices if browser storage is unavailable.
+  }
+  updateFreddieContextSummary();
+}
+
+function syncContextDialog() {
+  document.querySelectorAll("#context-options input[type='checkbox']").forEach((input) => {
+    input.checked = freddieContexts.includes(input.value);
+  });
+}
+
 function toggleSaved(id, mode = activeMode) {
   const saved = savedByMode[mode];
   if (saved.has(id)) saved.delete(id);
@@ -375,19 +725,71 @@ function openWordDetail(id) {
   wordDialog.showModal();
 }
 
+function switchStudyView(view) {
+  activeView = view;
+  document.querySelectorAll(".mode-tab").forEach((tab) => {
+    const active = tab.dataset.view === view;
+    tab.classList.toggle("is-active", active);
+    tab.setAttribute("aria-pressed", String(active));
+  });
+  const showPractice = view === "practice";
+  intro.hidden = showPractice;
+  document.querySelector("#library").hidden = showPractice;
+  practiceView.hidden = !showPractice;
+  if (showPractice && practiceStage === "home") renderPracticeHome();
+}
+
 document.querySelectorAll(".mode-tab").forEach((button) => {
   button.addEventListener("click", () => {
-    activeMode = button.dataset.mode;
-    savedOnly = false;
-    activeCategory = "all";
-    document.querySelectorAll(".mode-tab").forEach((tab) => {
-      const active = tab === button;
-      tab.classList.toggle("is-active", active);
-      tab.setAttribute("aria-pressed", String(active));
-    });
-    syncTopicFilters();
-    render();
+    const view = button.dataset.view;
+    if (view === "grammar" || view === "vocabulary") {
+      activeMode = view;
+      savedOnly = false;
+      activeCategory = "all";
+      syncTopicFilters();
+      render();
+    }
+    switchStudyView(view);
   });
+});
+
+document.querySelector("#start-mission").addEventListener("click", startMission);
+document.querySelector("#leave-mission").addEventListener("click", returnToPracticeHome);
+document.querySelector("#next-question").addEventListener("click", () => {
+  if (!missionSession || !missionSession.answered) return;
+  if (missionSession.index === missionSession.items.length - 1) {
+    finishMission();
+    return;
+  }
+  missionSession.index += 1;
+  renderMissionQuestion();
+});
+document.querySelector("#answer-options").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-choice-id]");
+  if (button) answerQuestion(button.dataset.choiceId);
+});
+document.querySelector("#play-again").addEventListener("click", startMission);
+document.querySelector("#return-practice-home").addEventListener("click", returnToPracticeHome);
+document.querySelector("#practice-freddie-toggle").addEventListener("change", (event) => {
+  practiceFreddieEnabled = event.target.checked;
+  try {
+    localStorage.setItem(practiceFreddieKey, String(practiceFreddieEnabled));
+  } catch {
+    // The preference still applies during this visit.
+  }
+});
+document.querySelector("#edit-freddie-context").addEventListener("click", () => {
+  syncContextDialog();
+  contextDialog.showModal();
+});
+document.querySelector("#close-context-dialog").addEventListener("click", () => contextDialog.close());
+document.querySelector("#clear-context-topics").addEventListener("click", () => {
+  document.querySelectorAll("#context-options input[type='checkbox']").forEach((input) => { input.checked = false; });
+});
+document.querySelector("#save-context-topics").addEventListener("click", () => {
+  const contexts = [...document.querySelectorAll("#context-options input[type='checkbox']:checked")].map((input) => input.value);
+  saveFreddieContexts(contexts);
+  contextDialog.close();
 });
 
 renderTopicFilters();
@@ -497,7 +899,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=7", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=8", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));

@@ -1,7 +1,7 @@
 {
-  "name": "Korean Chingu — Grammar Pocket Guide",
+  "name": "Korean Chingu — TOPIK Study",
   "short_name": "Chingu",
-  "description": "A pocket-sized Korean grammar guide for TOPIK I and II. Works offline after your first visit.",
+  "description": "A pocket-sized TOPIK I and II grammar, vocabulary, and practice guide. Works offline after your first visit.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
@@ -10,6 +10,6 @@
   "background_color": "#f6f6f3",
   "theme_color": "#f6f6f3",
   "icons": [
-    { "src": "./icon.svg?v=7", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "./icon.svg?v=8", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }

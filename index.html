@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#f6f6f3" />
-    <meta name="description" content="A calm, searchable Korean grammar and vocabulary guide for TOPIK I and II. Works offline after your first visit." />
+    <meta name="description" content="A calm TOPIK I and II grammar, vocabulary, and practice guide. Study offline after your first visit." />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=7" />
-    <link rel="icon" href="./icon.svg?v=7" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=7" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
-    <title>Korean Chingu · Grammar & vocabulary</title>
+    <link rel="manifest" href="./manifest.webmanifest?v=8" />
+    <link rel="icon" href="./icon.svg?v=8" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=8" />
+    <link rel="stylesheet" href="./styles.css?v=8" />
+    <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
     <div class="app-shell">
@@ -35,6 +35,12 @@
       </div>
 
       <main>
+        <nav class="study-nav" role="group" aria-label="Choose a study activity">
+          <button class="mode-tab is-active" type="button" data-view="grammar" aria-pressed="true">Grammar</button>
+          <button class="mode-tab" type="button" data-view="vocabulary" aria-pressed="false">Words</button>
+          <button class="mode-tab" type="button" data-view="practice" aria-pressed="false">Play</button>
+        </nav>
+
         <section class="intro" aria-labelledby="page-title">
           <p class="eyebrow">A LITTLE GUIDE FOR THE WAY</p>
           <h1 id="page-title"><span id="page-title-text">Korean, one grammar point at a time</span><span class="title-period">.</span></h1>
@@ -42,10 +48,6 @@
         </section>
 
         <section class="library" id="library" aria-label="Grammar library">
-          <div class="mode-switch" role="group" aria-label="Choose a study guide">
-            <button class="mode-tab is-active" type="button" data-mode="grammar" aria-pressed="true">Grammar</button>
-            <button class="mode-tab" type="button" data-mode="vocabulary" aria-pressed="false">Vocabulary</button>
-          </div>
           <form class="search-box" id="search-form" role="search">
             <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.3 4.3" /></svg>
             <label class="sr-only" for="search-input">Search grammar</label>
@@ -88,6 +90,94 @@
             <span><b id="surprise-title">Pick one for me</b><small id="surprise-subtitle">A quick grammar break</small></span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
           </button>
+        </section>
+
+        <section class="practice-view" id="practice-view" aria-labelledby="practice-title" hidden>
+          <div class="practice-home" id="practice-home">
+            <p class="eyebrow">A SMALL SEOUL MISSION</p>
+            <h1 class="practice-title" id="practice-title">A day around Seoul.</h1>
+            <p class="practice-lead">Five useful words, one short round. Read a real-life example, choose its meaning, and get a clear clue when you miss one.</p>
+
+            <article class="mission-launch-card">
+              <div class="mission-card-copy">
+                <span class="mission-mark" aria-hidden="true">✳</span>
+                <div>
+                  <p class="section-label">SEOUL · DAILY LIFE</p>
+                  <h2>Find your way, one word at a time.</h2>
+                  <p>Subway stops, meeting places, study breaks, and the little moments in between.</p>
+                </div>
+              </div>
+              <div class="mission-card-footer">
+                <span>5 questions <i aria-hidden="true">·</i> about 3 min <i aria-hidden="true">·</i> works offline</span>
+                <button class="primary-button" id="start-mission" type="button">Start mission <span aria-hidden="true">→</span></button>
+              </div>
+            </article>
+
+            <section class="freddie-context-card" aria-labelledby="freddie-context-title">
+              <div class="context-card-heading">
+                <div>
+                  <p class="section-label">OPTIONAL · STORED ON THIS DEVICE</p>
+                  <h2 id="freddie-context-title">Freddie context</h2>
+                </div>
+                <button class="text-button context-edit-button" id="edit-freddie-context" type="button">Edit topics</button>
+              </div>
+              <p class="context-summary" id="context-summary"></p>
+              <label class="practice-toggle">
+                <input id="practice-freddie-toggle" type="checkbox" />
+                <span class="toggle-track" aria-hidden="true"><span></span></span>
+                <span class="toggle-copy"><b>Use Freddie examples</b><small>Everyday sentences work right away; no profile needed.</small></span>
+              </label>
+            </section>
+
+            <section class="review-overview" aria-labelledby="review-overview-title">
+              <div class="review-overview-heading">
+                <div>
+                  <p class="section-label">YOUR WORDS</p>
+                  <h2 id="review-overview-title">A gentle review loop</h2>
+                </div>
+                <p class="review-stat"><strong id="practiced-count">0</strong><span>words tried</span></p>
+              </div>
+              <div class="review-due" id="review-due"></div>
+              <p class="review-storage-note">Word history, Freddie topics, and saved entries stay in this browser on this device. They do not sync, and clearing site data may remove them.</p>
+            </section>
+          </div>
+
+          <section class="mission-play" id="mission-play" aria-labelledby="mission-question-title" hidden>
+            <button class="back-button" id="leave-mission" type="button">End round</button>
+            <div class="mission-progress-heading">
+              <div>
+                <p class="section-label">SEOUL · DAILY LIFE</p>
+                <h1 id="mission-question-title">A day around Seoul.</h1>
+              </div>
+              <span class="question-count" id="question-count" aria-live="polite">Question 1 of 5</span>
+            </div>
+            <progress class="mission-progress" id="mission-progress" max="5" value="1" aria-label="Mission progress"></progress>
+            <article class="question-card" aria-live="polite">
+              <div class="question-word-meta"><span class="level-pill" id="question-level">TOPIK 1</span><span id="question-romanization"></span></div>
+              <h2 class="question-word" id="question-word" lang="ko"></h2>
+              <p class="question-prompt">What does this word mean in the sentence?</p>
+              <p class="question-example" id="question-example" lang="ko"></p>
+              <div class="answer-options" id="answer-options" role="group" aria-label="Choose the word meaning"></div>
+              <div class="answer-feedback" id="answer-feedback" role="status" aria-live="polite" hidden>
+                <p class="feedback-title" id="feedback-title"></p>
+                <p class="feedback-copy" id="feedback-copy"></p>
+                <p class="feedback-translation" id="feedback-translation"></p>
+              </div>
+              <button class="primary-button next-question-button" id="next-question" type="button" disabled>Choose an answer</button>
+            </article>
+          </section>
+
+          <section class="mission-results" id="mission-results" aria-labelledby="results-title" hidden>
+            <p class="eyebrow">ROUND COMPLETE</p>
+            <h1 class="practice-title" id="results-title">A little more Korean, done.</h1>
+            <p class="results-score" id="results-score"></p>
+            <p class="results-summary" id="results-summary"></p>
+            <ul class="results-due-list" id="results-due-list"></ul>
+            <div class="results-actions">
+              <button class="primary-button" id="play-again" type="button">Play another round <span aria-hidden="true">→</span></button>
+              <button class="text-button" id="return-practice-home" type="button">Back to mission home</button>
+            </div>
+          </section>
         </section>
       </main>
 
@@ -185,6 +275,31 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=7"></script>
+    <dialog class="install-dialog context-dialog" id="freddie-context-dialog" aria-labelledby="context-dialog-title">
+      <div class="dialog-topline">
+        <span class="level-pill">YOUR STUDY LENS</span>
+        <button class="icon-button close-button" id="close-context-dialog" type="button" aria-label="Close Freddie context settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+      </div>
+      <div class="install-content">
+        <span class="install-illustration" aria-hidden="true">✳</span>
+        <h2 id="context-dialog-title">Choose familiar topics.</h2>
+        <p class="install-lead">Pick the parts of everyday life you want to see in a round. You can change these any time; personal details are optional.</p>
+        <div class="context-options" id="context-options">
+          <label><input type="checkbox" value="seoul" /><span><b>Travel around Seoul</b><small>Stations, routes, places, and getting help</small></span></label>
+          <label><input type="checkbox" value="study" /><span><b>Study breaks</b><small>Cafés, food, and small daily routines</small></span></label>
+          <label><input type="checkbox" value="work" /><span><b>Work & commute</b><small>Colleagues, transit, and after-work plans</small></span></label>
+          <label><input type="checkbox" value="food" /><span><b>Food</b><small>Ordering, ingredients, and meals with friends</small></span></label>
+          <label><input type="checkbox" value="hobbies" /><span><b>Hobbies</b><small>Shows, walks, and exploring a neighborhood</small></span></label>
+          <label><input type="checkbox" value="friends" /><span><b>Friends</b><small>Meeting up and finding your way together</small></span></label>
+        </div>
+        <p class="context-storage-note">Your topic choices stay in this browser on this device. You can clear them here at any time.</p>
+        <div class="context-dialog-actions">
+          <button class="text-button" id="clear-context-topics" type="button">Clear topics</button>
+          <button class="primary-button" id="save-context-topics" type="button">Save topics</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="./app.js?v=8"></script>
   </body>
 </html>
