@@ -60,6 +60,42 @@ main { flex: 1; }
 .practice-view { padding: 45px 0 54px; }
 .practice-title { margin: 13px 0 11px; color: var(--ink); font-family: ui-serif, Georgia, "Times New Roman", serif; font-size: clamp(36px, 5.3vw, 52px); font-weight: 500; letter-spacing: -.055em; line-height: 1.04; }
 .practice-lead { max-width: 515px; margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
+.route-board { margin-top: 25px; padding: 20px; overflow: hidden; border: 1px solid rgba(37, 51, 44, .075); border-radius: 22px; background: linear-gradient(150deg, #fffefa 0%, #f5f6ef 100%); box-shadow: 0 13px 36px rgba(35, 51, 44, .055); }
+.route-board-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.route-board-heading h2 { margin: 7px 0 0; font-family: ui-serif, Georgia, serif; font-size: 24px; font-weight: 500; letter-spacing: -.04em; }
+.stamp-counter { min-height: 36px; padding: 0 10px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(185, 117, 67, .15); border-radius: 999px; background: #fbf2e9; color: #89592f; }
+.stamp-counter > span { font-size: 17px; }
+.stamp-counter strong { font-size: 10px; font-weight: 750; white-space: nowrap; }
+.route-map { height: 145px; position: relative; margin: 15px -4px 8px; overflow: hidden; border: 1px solid rgba(37, 51, 44, .055); border-radius: 16px; background: radial-gradient(ellipse at 14% 84%, rgba(210, 221, 206, .8) 0 10%, transparent 10.5%), radial-gradient(ellipse at 60% 12%, rgba(235, 226, 207, .75) 0 16%, transparent 16.5%), linear-gradient(135deg, #eef2e9, #f5f2e9 48%, #e9eee7); }
+.route-map svg { width: 100%; height: 100%; display: block; }
+.map-street { fill: none; stroke: rgba(255, 255, 250, .88); stroke-width: 8; stroke-linecap: round; }
+.map-route-line { fill: none; stroke: #b97749; stroke-width: 3; stroke-dasharray: 3 7; stroke-linecap: round; }
+.map-stop-dot { fill: #fffefa; stroke: #b97749; stroke-width: 3; }
+.map-stop-center { fill: #b97749; }
+.map-label { position: absolute; top: 75%; color: #59645d; font-size: 8px; font-weight: 800; letter-spacing: .09em; transform: translateX(-50%); white-space: nowrap; }
+.map-label-one { left: 19%; }
+.map-label-two { left: 49%; top: 65%; }
+.map-label-three { left: 81%; top: 53%; }
+.map-compass { position: absolute; top: 9px; right: 11px; color: #657267; font-family: ui-serif, Georgia, serif; font-size: 10px; font-weight: 700; }
+.map-guide { width: 41px; height: 41px; position: absolute; right: 8px; bottom: 8px; display: grid; place-items: center; border: 1px solid rgba(37, 51, 44, .08); border-radius: 50%; background: rgba(255, 255, 250, .9); box-shadow: 0 3px 10px rgba(35, 45, 38, .07); }
+.map-guide svg { width: 34px; height: 34px; }
+.route-stops { margin: 11px 0 0; padding: 0; display: grid; gap: 8px; list-style: none; }
+.route-stop { min-width: 0; }
+.route-stop-button { width: 100%; min-height: 77px; padding: 10px 12px; display: grid; grid-template-columns: 36px minmax(0, 1fr) 22px; align-items: center; gap: 11px; border: 1px solid rgba(37, 51, 44, .085); border-radius: 14px; background: rgba(255, 255, 252, .88); text-align: left; cursor: pointer; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.route-stop-button:hover { border-color: rgba(62, 108, 80, .32); background: #fff; transform: translateY(-1px); }
+.route-stop.is-suggested .route-stop-button { border-color: rgba(62, 108, 80, .23); background: #f1f5ee; }
+.route-stop-marker { width: 35px; height: 35px; display: grid; place-items: center; border: 1px solid rgba(37, 51, 44, .1); border-radius: 50%; background: #f4f5f0; color: #6e786f; font-size: 10px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.route-stop.is-suggested .route-stop-marker { border-color: transparent; background: var(--green); color: #fffefa; }
+.route-stop.is-complete .route-stop-marker { border-color: rgba(185, 117, 67, .16); background: #fbf0e6; color: #9b6337; font-size: 15px; }
+.route-stop-copy { min-width: 0; display: block; }
+.route-stop-topline { display: flex; align-items: center; gap: 7px; }
+.route-stop-location { color: var(--green-dark); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.route-suggested-label { color: #9b6337; font-size: 8px; font-weight: 800; letter-spacing: .08em; }
+.route-stop-title, .route-stop-description { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.route-stop-title { margin-top: 3px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.route-stop-description { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.route-stop-action { color: var(--green); font-size: 18px; font-weight: 500; text-align: center; }
+.route-footnote { margin: 11px 0 0; color: var(--muted); font-size: 9px; text-align: center; }
 .mission-launch-card { margin-top: 26px; padding: 23px 24px 18px; border: 1px solid rgba(37, 51, 44, .075); border-radius: 22px; background: linear-gradient(145deg, #fffefa 5%, #f5f6ef 100%); box-shadow: 0 13px 36px rgba(35, 51, 44, .055); }
 .mission-card-copy { display: flex; align-items: flex-start; gap: 15px; }
 .mission-mark { width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center; border-radius: 14px; background: var(--green-wash); color: var(--green); font-size: 20px; }
@@ -113,8 +149,10 @@ main { flex: 1; }
 .question-word-meta { display: flex; align-items: center; gap: 9px; }
 .question-word-meta > span:last-child { color: var(--muted); font-size: 11px; }
 .question-word { margin: 17px 0 3px; font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, sans-serif; font-size: clamp(31px, 8vw, 42px); font-weight: 650; letter-spacing: -.05em; }
+.question-word.is-english { max-width: 100%; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; font-size: clamp(25px, 6vw, 34px); letter-spacing: -.045em; line-height: 1.15; }
 .question-prompt { margin: 0; color: var(--ink-soft); font-size: 12px; }
 .question-example { margin: 20px 0 18px; padding: 14px 15px; border-radius: 13px; background: #f0f2ec; font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, sans-serif; font-size: 16px; font-weight: 550; letter-spacing: -.03em; line-height: 1.6; }
+.question-example.is-english { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0; }
 .answer-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
 .answer-option { min-height: 53px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid rgba(37, 51, 44, .11); border-radius: 12px; background: #fffefa; text-align: left; font-size: 12px; line-height: 1.4; cursor: pointer; transition: border .16s ease, background .16s ease, color .16s ease; }
 .answer-option:hover:not(:disabled) { border-color: rgba(64, 108, 82, .45); background: #f7f9f4; }
@@ -133,6 +171,11 @@ main { flex: 1; }
 .mission-results .practice-title { font-size: clamp(33px, 6vw, 43px); }
 .results-score { margin: 18px 0 5px; color: var(--green-dark); font-size: 20px; font-weight: 700; letter-spacing: -.025em; }
 .results-summary { margin: 0 0 13px; color: var(--ink-soft); font-size: 12px; line-height: 1.6; }
+.stamp-reveal { min-height: 67px; margin: 15px 0; padding: 10px 14px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(185, 117, 67, .17); border-radius: 15px; background: linear-gradient(115deg, #fbf1e6, #fffaf3); }
+.stamp-seal { width: 44px; height: 44px; flex: 0 0 44px; display: grid; place-items: center; border: 1px solid rgba(185, 117, 67, .34); border-radius: 50%; background: #f5e3d1; color: #996137; font-size: 23px; }
+.stamp-reveal small, .stamp-reveal strong { display: block; }
+.stamp-reveal small { color: #98653d; font-size: 8px; font-weight: 800; letter-spacing: .1em; }
+.stamp-reveal strong { margin-top: 4px; color: #473729; font-family: ui-serif, Georgia, serif; font-size: 18px; font-weight: 600; }
 .results-actions { margin-top: 19px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .results-actions .text-button { margin-top: 0; }
 .context-dialog { max-width: 470px; }
@@ -275,6 +318,13 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
   .practice-view { padding: 35px 0 42px; }
   .practice-title { font-size: clamp(36px, 10vw, 45px); }
   .practice-lead { font-size: 13px; }
+  .route-board { margin-top: 20px; padding: 15px; border-radius: 18px; }
+  .route-board-heading h2 { font-size: 21px; }
+  .route-map { height: 128px; margin-right: -3px; margin-left: -3px; }
+  .route-stop-button { min-height: 73px; padding: 9px 10px; grid-template-columns: 33px minmax(0, 1fr) 19px; gap: 9px; }
+  .route-stop-marker { width: 32px; height: 32px; }
+  .route-stop-title { font-size: 11px; }
+  .route-stop-description { font-size: 9px; }
   .mission-launch-card { margin-top: 20px; padding: 18px 16px 15px; border-radius: 18px; }
   .mission-card-copy { gap: 11px; }
   .mission-mark { width: 37px; height: 37px; flex-basis: 37px; border-radius: 12px; }
