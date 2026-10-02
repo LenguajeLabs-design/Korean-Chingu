@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=11";
-import { vocabulary } from "./vocabulary.js?v=11";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=11";
+import { grammar } from "./grammar.js?v=12";
+import { vocabulary } from "./vocabulary.js?v=12";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=12";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -54,7 +54,9 @@ const defaultFreddieContexts = ["seoul", "study"];
 const routeMissions = [
   { id: "seongsu", location: "Seongsu", mapSubtitle: "Café & Culture", title: "Meet a friend in Seongsu", description: "Learn key words for getting around and meeting up near Seoul Forest.", contexts: ["seoul", "friends", "work", "study"], wordIds: ["jido", "yeok", "chulgu", "hwanseung", "dochakhada"] },
   { id: "hongdae", location: "Hongdae", mapSubtitle: "Music & People", title: "Find a favorite lunch spot", description: "Pick a place, order together, and find out how spicy it is.", contexts: ["food", "work", "friends", "study"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
-  { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] }
+  { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] },
+  { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
+  { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true }
 ];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
@@ -404,8 +406,11 @@ function renderPracticeHome() {
 }
 
 function getSuggestedMission() {
+  const remainingMainRoute = routeMissions.filter((mission) => !mission.bonus && !routeStamps.includes(mission.id));
   const remaining = routeMissions.filter((mission) => !routeStamps.includes(mission.id));
-  const candidates = remaining.length ? remaining : routeMissions;
+  const candidates = remainingMainRoute.length
+    ? remainingMainRoute
+    : remaining.length ? remaining : routeMissions;
   const selected = new Set(freddieContexts);
   const score = (mission) => mission.contexts.filter((context) => selected.has(context)).length;
   const nextInRoute = candidates[0];
@@ -418,14 +423,19 @@ function getSuggestedMission() {
 
 function renderRouteOverview() {
   const stopList = document.querySelector("#route-stops");
+  const bonusList = document.querySelector("#bonus-mission-list");
   const suggested = getSuggestedMission();
   document.querySelector("#route-stamp-count").textContent = `${routeStamps.length} / ${routeMissions.length}`;
   const suggestedIndex = routeMissions.findIndex((mission) => mission.id === suggested.id);
   document.querySelector("#featured-mission-count").textContent = `MISSION ${suggestedIndex + 1} OF ${routeMissions.length}`;
   document.querySelector("#featured-mission-title").textContent = suggested.title;
   document.querySelector("#featured-mission-description").textContent = suggested.description;
-  setArrowButtonLabel(document.querySelector("#start-mission"), routeStamps.includes(suggested.id) ? "Revisit stop" : "Start mission");
-  stopList.replaceChildren(...routeMissions.map((mission, index) => {
+  const featuredAction = routeStamps.includes(suggested.id)
+    ? (suggested.bonus ? "Replay round" : "Revisit stop")
+    : (suggested.bonus ? "Start bonus round" : "Start mission");
+  setArrowButtonLabel(document.querySelector("#start-mission"), featuredAction);
+  stopList.replaceChildren(...routeMissions.filter((mission) => !mission.bonus).map((mission) => {
+    const index = routeMissions.indexOf(mission);
     const complete = routeStamps.includes(mission.id);
     const isSuggested = mission.id === suggested.id;
     const row = document.createElement("li");
@@ -452,6 +462,36 @@ function renderRouteOverview() {
     button.setAttribute("aria-current", isSuggested ? "step" : "false");
     row.append(button);
     return row;
+  }));
+  bonusList.replaceChildren(...routeMissions.filter((mission) => mission.bonus).map((mission) => {
+    const index = routeMissions.indexOf(mission);
+    const complete = routeStamps.includes(mission.id);
+    const card = document.createElement("article");
+    card.className = `bonus-mission-card${complete ? " is-complete" : ""}`;
+    const number = document.createElement("span");
+    number.className = "bonus-mission-number";
+    number.setAttribute("aria-hidden", "true");
+    number.textContent = complete ? "✓" : String(index + 1).padStart(2, "0");
+    const copy = document.createElement("div");
+    copy.className = "bonus-mission-copy";
+    const meta = document.createElement("p");
+    meta.className = "section-label";
+    meta.textContent = `ROUND ${index + 1} · ${mission.category.toUpperCase()}`;
+    const title = document.createElement("h3");
+    title.textContent = mission.title;
+    const description = document.createElement("p");
+    description.textContent = mission.description;
+    const duration = document.createElement("small");
+    duration.textContent = "3 minutes · 5 words";
+    copy.append(meta, title, description, duration);
+    const button = document.createElement("button");
+    button.className = "bonus-mission-button";
+    button.type = "button";
+    button.dataset.missionId = mission.id;
+    button.setAttribute("aria-label", `${complete ? "Replay" : "Start"} ${mission.title}, ${mission.location}`);
+    setArrowButtonLabel(button, complete ? "Replay round" : "Start round");
+    card.append(number, copy, button);
+    return card;
   }));
 }
 
@@ -748,9 +788,9 @@ function finishMission() {
     setArrowButtonLabel(document.querySelector("#play-again"), "Review these words");
   } else {
     summary.textContent = routeStamps.length === routeMissions.length
-      ? "All three Seoul stamps are yours. Pick a favorite stop and go again."
-      : `Next stop: ${nextMission.location}. Keep your Seoul day going.`;
-    setArrowButtonLabel(document.querySelector("#play-again"), routeStamps.length === routeMissions.length ? "Play another round" : "Start next stop");
+      ? "Every Seoul stamp is yours. Pick a favorite round and go again."
+      : `Next round: ${nextMission.location}. Keep your Seoul day going.`;
+    setArrowButtonLabel(document.querySelector("#play-again"), routeStamps.length === routeMissions.length ? "Play another round" : "Start next round");
   }
   document.querySelector("#results-helpful-example").classList.toggle("has-due-words", dueItems.length > 0);
   renderPracticeHome();
@@ -940,6 +980,10 @@ document.querySelector("#route-stops").addEventListener("click", (event) => {
   const button = event.target.closest("[data-mission-id]");
   if (button) startMission(button.dataset.missionId);
 });
+document.querySelector("#bonus-mission-list").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-mission-id]");
+  if (button) startMission(button.dataset.missionId);
+});
 document.querySelector("#start-mission").addEventListener("click", () => startMission(getSuggestedMission().id));
 document.querySelector("#leave-mission").addEventListener("click", returnToPracticeHome);
 document.querySelector("#next-question").addEventListener("click", () => {
@@ -1089,7 +1133,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=11", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=12", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
