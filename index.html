@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=25" />
-    <link rel="icon" href="./icon.svg?v=25" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=25" />
+    <link rel="manifest" href="./manifest.webmanifest?v=26" />
+    <link rel="icon" href="./icon.svg?v=26" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=26" />
     <script>
       try {
         const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
@@ -27,7 +27,7 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=25" />
+    <link rel="stylesheet" href="./styles.css?v=26" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -129,18 +129,23 @@
         <section class="practice-view" id="practice-view" aria-labelledby="practice-title" hidden>
           <div class="practice-home" id="practice-home">
             <section class="route-board" aria-labelledby="practice-title">
+              <nav class="map-chapter-picker" id="map-chapter-picker" aria-label="Choose an illustrated Seoul route" tabindex="0"></nav>
               <div class="route-scene">
-                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=25" alt="Illustrated Seoul scene with city buildings, park trees, the Han River, and a tiger with a backpack." />
+                <img class="route-scene-art" id="route-scene-art" src="./assets/seoul-route-map.jpg?v=26" alt="Illustrated Seoul scene with city buildings, park trees, the Han River, and a tiger with a backpack." />
                 <div class="route-scene-copy">
-                  <p class="eyebrow">SEOUL &amp; EVERYDAY LIFE · TOPIK 1 &amp; 2</p>
+                  <p class="eyebrow" id="route-map-eyebrow">SEOUL ROUTE · MAP 01 OF 06</p>
                   <h1 class="practice-title" id="practice-title">A day around Seoul</h1>
-                  <p class="practice-lead">Learn useful words while exploring the city, one stop at a time.</p>
+                  <p class="practice-lead">Learn useful words along one small Seoul route.</p>
                 </div>
-                <div class="stamp-counter" aria-label="Seoul and everyday mission stamps collected"><span aria-hidden="true">✳</span><strong id="route-stamp-count">0 / 31</strong></div>
+                <div class="stamp-counter" id="route-stamp-counter" aria-label="A day around Seoul: 0 of 5 stops complete"><span aria-hidden="true">✳</span><strong id="route-stamp-count">0 / 5</strong></div>
+                <svg class="route-path-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="route-path-halo" id="route-path-halo" d="" />
+                  <path class="route-path-line" id="route-path-line" d="" />
+                </svg>
                 <ol class="route-stops" id="route-stops" aria-label="Choose a Seoul mission"></ol>
               </div>
               <article class="featured-mission">
-                <div class="featured-mission-heading"><span class="featured-pin" aria-hidden="true">⌖</span><span class="section-label" id="featured-mission-count">MISSION 1 OF 31</span></div>
+                <div class="featured-mission-heading"><span class="featured-pin" aria-hidden="true">⌖</span><span class="section-label" id="featured-mission-count">STOP 1 OF 5 · MAP 01</span></div>
                 <h2 id="featured-mission-title">Meet a friend in Seongsu</h2>
                 <p id="featured-mission-description">Find your way around Seoul Forest.</p>
                 <div class="featured-mission-footer">
@@ -152,15 +157,15 @@
                 <span><i class="difficulty-dot topik-one-dot" aria-hidden="true"></i>TOPIK I <small>Start here</small></span>
                 <span><i class="difficulty-dot topik-two-dot" aria-hidden="true"></i>TOPIK II <small>Next step</small></span>
               </div>
-              <p class="route-footnote">Schematic route · tap any numbered stop · stamps save on this device</p>
+              <p class="route-footnote">Illustrated, not to scale · 4–5 stops each · progress saves on this device</p>
             </section>
 
             <section class="bonus-rounds" aria-labelledby="bonus-rounds-title">
               <div class="bonus-rounds-heading">
-                <div><p class="section-label">EVERYDAY SCENES · TOPIK PRACTICE</p><h2 id="bonus-rounds-title">More scenes to play</h2></div>
-                <span>Ordered by difficulty</span>
+                <div><p class="section-label">TOPIK I &amp; II · STANDALONE DRILLS</p><h2 id="bonus-rounds-title">Exam practice</h2></div>
+                <span>Ordered by level</span>
               </div>
-              <div class="bonus-mission-list" id="bonus-mission-list" aria-label="Choose an everyday bonus mission"></div>
+              <div class="bonus-mission-list" id="bonus-mission-list" aria-label="Choose a TOPIK exam practice round"></div>
             </section>
 
             <section class="freddie-context-card" aria-labelledby="freddie-context-title">
@@ -241,7 +246,7 @@
                 <div><p class="section-label">HELPFUL EXAMPLE</p><p class="helpful-korean" id="results-example-korean" lang="ko"></p><p class="helpful-translation" id="results-example-translation"></p></div>
               </div>
             </div>
-            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=25" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 31 · SEOUL &amp; LIFE</em></span></div>
+            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=26" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MAP 01 · STOP 1 OF 5</em></span></div>
             <div class="results-actions">
               <button class="primary-button" id="play-again" type="button">Review these words <span aria-hidden="true">→</span></button>
               <button class="text-button" id="return-practice-home" type="button">Back to route</button>
@@ -378,6 +383,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=25"></script>
+    <script type="module" src="./app.js?v=26"></script>
   </body>
 </html>

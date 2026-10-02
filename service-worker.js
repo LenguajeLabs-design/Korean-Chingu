@@ -1,15 +1,20 @@
-const CACHE_NAME = "korean-chingu-v25";
+const CACHE_NAME = "korean-chingu-v26";
 const APP_FILES = [
-  "./index.html?v=25",
-  "./styles.css?v=25",
-  "./app.js?v=25",
-  "./grammar.js?v=25",
-  "./vocabulary.js?v=25",
-  "./freddie-examples.js?v=25",
-  "./exam-rounds.js?v=25",
-  "./manifest.webmanifest?v=25",
-  "./icon.svg?v=25",
-  "./assets/seoul-route-map.jpg?v=25"
+  "./index.html?v=26",
+  "./styles.css?v=26",
+  "./app.js?v=26",
+  "./grammar.js?v=26",
+  "./vocabulary.js?v=26",
+  "./freddie-examples.js?v=26",
+  "./exam-rounds.js?v=26",
+  "./manifest.webmanifest?v=26",
+  "./icon.svg?v=26",
+  "./assets/seoul-route-map.jpg?v=26",
+  "./assets/royal-seoul-map.jpg?v=26",
+  "./assets/downtown-seoul-map.jpg?v=26",
+  "./assets/river-seoul-map.jpg?v=26",
+  "./assets/gangnam-seoul-map.jpg?v=26",
+  "./assets/everyday-seoul-map.jpg?v=26"
 ];
 
 self.addEventListener("install", (event) => {
@@ -33,7 +38,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=25")));
+    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=26")));
     return;
   }
 

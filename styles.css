@@ -92,6 +92,16 @@ main { flex: 1; }
 .practice-title { margin: 11px 0 9px; color: var(--ink); font-family: ui-serif, Georgia, "Times New Roman", serif; font-size: clamp(35px, 8vw, 48px); font-weight: 500; letter-spacing: -.055em; line-height: 1.02; }
 .practice-lead { max-width: 280px; margin: 0; color: #48564d; font-size: 12px; line-height: 1.55; }
 .route-board { margin: 0; padding: 0; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.map-chapter-picker { width: min(100%, 420px); margin: 0 auto 12px; padding: 2px 2px 9px; display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.map-chapter-picker::-webkit-scrollbar { display: none; }
+.map-chapter-tab { min-width: 148px; min-height: 78px; flex: 0 0 63%; padding: 9px 12px; display: grid; gap: 2px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); text-align: left; cursor: pointer; scroll-snap-align: start; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.map-chapter-tab:hover { border-color: rgba(62, 108, 80, .4); }
+.map-chapter-tab.is-active { border-color: rgba(62, 108, 80, .42); background: var(--green-wash); }
+.map-chapter-tab.is-complete .map-chapter-number::after { content: " · COMPLETE"; color: var(--green); }
+.map-chapter-number { color: var(--muted); font-size: 8px; font-weight: 800; letter-spacing: .11em; }
+.map-chapter-tab strong { overflow: hidden; color: var(--ink); font-family: ui-serif, Georgia, serif; font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.map-chapter-area { overflow: hidden; color: var(--ink-soft); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.map-chapter-progress { color: var(--ink-soft); font-size: 10px; }
 .route-scene { width: min(100%, 420px); position: relative; aspect-ratio: 2 / 3; margin: 0 auto; overflow: hidden; border: 1px solid rgba(65, 69, 53, .1); border-radius: 22px; background: #e8e6d9; box-shadow: 0 15px 36px rgba(51, 48, 37, .15); isolation: isolate; }
 .route-scene::after { position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, rgba(255, 250, 238, .92) 0%, rgba(255, 250, 238, .69) 18%, rgba(255, 250, 238, .06) 39%, transparent 62%); content: ""; pointer-events: none; }
 .route-scene-art { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -102,6 +112,11 @@ main { flex: 1; }
 .stamp-counter { min-height: 34px; position: absolute; z-index: 2; top: 8px; right: 14px; padding: 0 9px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(185, 117, 67, .2); border-radius: 999px; background: rgba(255, 250, 241, .9); color: #89592f; backdrop-filter: blur(8px); }
 .stamp-counter > span { font-size: 15px; }
 .stamp-counter strong { font-size: 9px; font-weight: 750; white-space: nowrap; }
+.route-path-overlay { width: 100%; height: 100%; position: absolute; z-index: 2; inset: 0; overflow: visible; pointer-events: none; }
+.route-path-halo, .route-path-line { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.route-path-halo { stroke: rgba(255, 252, 240, .92); stroke-width: 10px; }
+.route-path-line { stroke: #264f3c; stroke-width: 5px; filter: drop-shadow(0 2px 2px rgba(28, 43, 33, .18)); }
+.route-scene[data-map-id="seoul-day"] .route-path-overlay { display: none; }
 .route-stops { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
 .route-stop { position: absolute; top: var(--stop-top); left: var(--stop-left); width: 34px; height: 34px; transform: translate(-50%, -50%); pointer-events: auto; }
 .route-stop-button { width: 34px; height: 34px; position: relative; padding: 0; display: block; border: 0; background: transparent; cursor: pointer; }
@@ -244,7 +259,7 @@ body.is-immersive-round .practice-view { padding: max(15px, env(safe-area-inset-
 .feedback-translation { margin: 4px 0 0; color: var(--ink-soft); font-size: 10px; line-height: 1.5; }
 .next-question-button { width: 100%; margin-top: 13px; justify-content: space-between; border-radius: 999px; }
 .mission-results { max-width: 460px; margin: 0 auto; padding: 0 0 12px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-.results-hero { min-height: 240px; position: relative; padding: 24px 22px 34px; overflow: hidden; border-radius: 0 0 22px 22px; background-image: linear-gradient(180deg, rgba(255, 248, 235, .45), rgba(255, 248, 235, .58)), url("./assets/seoul-route-map.jpg?v=25"); background-position: center 76%; background-size: cover; }
+.results-hero { min-height: 240px; position: relative; padding: 24px 22px 34px; overflow: hidden; border-radius: 0 0 22px 22px; background-image: linear-gradient(180deg, rgba(255, 248, 235, .45), rgba(255, 248, 235, .58)), var(--results-map-art, url("./assets/seoul-route-map.jpg?v=26")); background-position: center 76%; background-size: cover; }
 .results-hero .eyebrow { font-size: 8px; }
 .results-hero h1 { margin: 12px 0 2px; color: #153c2e; font-family: ui-serif, Georgia, serif; font-size: 39px; font-weight: 550; letter-spacing: -.045em; }
 .results-score { margin: 3px 0 5px; color: #163b2e; font-family: ui-serif, Georgia, serif; font-size: 21px; font-weight: 600; letter-spacing: -.025em; }
@@ -538,6 +553,11 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 :root[data-theme="dark"] .route-scene-copy .eyebrow { color: #c9d5ff; }
 :root[data-theme="dark"] .route-scene-copy .practice-title { color: #f4f3ef; }
 :root[data-theme="dark"] .route-scene-copy .practice-lead { color: #dcdfdc; }
+:root[data-theme="dark"] .map-chapter-tab { border-color: var(--line); background: var(--surface); }
+:root[data-theme="dark"] .map-chapter-tab.is-active { border-color: rgba(139, 168, 255, .5); background: var(--green-wash); }
+:root[data-theme="dark"] .map-chapter-number { color: var(--muted); }
+:root[data-theme="dark"] .route-path-halo { stroke: rgba(243, 245, 248, .82); }
+:root[data-theme="dark"] .route-path-line { stroke: #8ba8ff; }
 :root[data-theme="dark"] .stamp-counter { border-color: rgba(242, 198, 111, .32); background: rgba(31, 32, 34, .94); color: #f4d48f; }
 :root[data-theme="dark"] .route-stop-copy { border-color: rgba(223, 225, 222, .15); background: rgba(31, 33, 35, .95); box-shadow: 0 4px 12px rgba(0, 0, 0, .25); }
 :root[data-theme="dark"] .route-stop-title { color: #f0f1ee; }
@@ -612,7 +632,7 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 :root[data-theme="dark"] .answer-feedback { border-color: #46577e; background: #252d40; }
 :root[data-theme="dark"] .answer-feedback.is-incorrect { border-color: #5b4034; background: #332821; }
 :root[data-theme="dark"] .answer-feedback.is-incorrect .feedback-title { color: #e1b38e; }
-:root[data-theme="dark"] .results-hero { background-image: linear-gradient(180deg, rgba(20, 21, 23, .82), rgba(20, 21, 23, .66)), url("./assets/seoul-route-map.jpg?v=25"); }
+:root[data-theme="dark"] .results-hero { background-image: linear-gradient(180deg, rgba(20, 21, 23, .82), rgba(20, 21, 23, .66)), var(--results-map-art, url("./assets/seoul-route-map.jpg?v=26")); }
 :root[data-theme="dark"] .results-hero h1,
 :root[data-theme="dark"] .results-score { color: #f3f1e8; }
 :root[data-theme="dark"] .results-summary { color: #d5ddd2; }

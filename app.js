@@ -1,7 +1,7 @@
-import { grammar } from "./grammar.js?v=25";
-import { vocabulary } from "./vocabulary.js?v=25";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=25";
-import { examRounds } from "./exam-rounds.js?v=25";
+import { grammar } from "./grammar.js?v=26";
+import { vocabulary } from "./vocabulary.js?v=26";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=26";
+import { examRounds } from "./exam-rounds.js?v=26";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -46,6 +46,7 @@ const freddieContextKey = "korean-chingu-freddie-context-v1";
 const practiceFreddieKey = "korean-chingu-practice-freddie-v1";
 const themePreferenceKey = "korean-chingu-theme-v1";
 const routeStampsKey = "korean-chingu-route-stamps-v1";
+const activeMapKey = "korean-chingu-active-map-v1";
 const grammarProgressKey = "korean-chingu-grammar-progress-v1";
 const contextLabels = {
   seoul: "Travel around Seoul",
@@ -61,13 +62,13 @@ const routeMissions = [
   { id: "seongsu", location: "Seongsu", mapSubtitle: "Café & Culture", title: "Meet a friend in Seongsu", description: "Learn key words for getting around and meeting up near Seoul Forest.", contexts: ["seoul", "friends", "work", "study"], wordIds: ["jido", "yeok", "chulgu", "hwanseung", "dochakhada"] },
   { id: "hongdae", location: "Hongdae", mapSubtitle: "Music & People", title: "Find a favorite lunch spot", description: "Pick a place, order together, and find out how spicy it is.", contexts: ["food", "work", "friends", "study"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
   { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] },
-  { id: "taxi-ride", location: "A taxi in Seoul", title: "Tell the driver where to go", description: "Share your destination, check the fare, and get across town.", category: "Taxi & Transit", contexts: ["seoul", "work"], wordIds: ["taeksi", "mokjeokji", "yogeum", "gisanim", "juso"], bonus: true },
+  { id: "taxi-ride", location: "A taxi to COEX", mapSubtitle: "Ride across Gangnam", title: "Tell the driver where to go", description: "Share your destination, check the fare, and get across town.", category: "Taxi & Transit", contexts: ["seoul", "work"], wordIds: ["taeksi", "mokjeokji", "yogeum", "gisanim", "juso"], bonus: true },
   { id: "gs25-stop", location: "GS25", title: "Make a quick convenience-store stop", description: "Pick up a snack, ask for a bag, and heat it up for the walk.", category: "Shopping & Snacks", contexts: ["food", "seoul", "study"], wordIds: ["pyeonuijeom", "bongtu", "halin", "deuda", "yeongsujeung"], bonus: true },
-  { id: "coffee-order", location: "A neighborhood café", title: "Order your coffee just right", description: "Choose it warm or iced, and tell the barista how you like it.", category: "Coffee & Cafés", contexts: ["food", "study", "friends"], wordIds: ["keopi", "aiseukeopi", "ttatteuthada", "sireop", "jumunhada"], bonus: true },
-  { id: "coworker-school", location: "Lunch with a coworker", title: "Talk about school over lunch", description: "Swap a few stories about classes, studying, and the next exam.", category: "Work & Study", contexts: ["work", "study"], wordIds: ["dongnyo", "hakgyo", "sueop", "siheom", "gongbuhada"], bonus: true },
+  { id: "coffee-order", location: "A café in Seongsu", mapSubtitle: "Coffee stop", title: "Order your coffee just right", description: "Choose it warm or iced, and tell the barista how you like it.", category: "Coffee & Cafés", contexts: ["food", "study", "friends"], wordIds: ["keopi", "aiseukeopi", "ttatteuthada", "sireop", "jumunhada"], bonus: true },
+  { id: "coworker-school", location: "Lunch in Hongdae", mapSubtitle: "Talk about school", title: "Talk about school over lunch", description: "Swap a few stories about classes, studying, and the next exam.", category: "Work & Study", contexts: ["work", "study"], wordIds: ["dongnyo", "hakgyo", "sueop", "siheom", "gongbuhada"], bonus: true },
   { id: "family-catchup", location: "A family call", title: "Catch up with your family", description: "Ask how everyone is doing and share a small story from Seoul.", category: "Family & People", contexts: ["family", "study", "seoul"], wordIds: ["gajok", "bumonim", "jumal", "jinaeda", "anbu"], bonus: true },
   { id: "subway-reroute", location: "Seoul subway", title: "Reroute a changing commute", description: "Check a delay, switch lines, and see if you can still catch the last train.", category: "Transit plans", contexts: ["seoul", "work", "study"], wordIds: ["jiyeondoeda", "noseon", "galatada", "makcha", "unhaenghada"], bonus: true },
-  { id: "seoul-gallery", location: "A Seoul gallery", title: "Find an exhibition for the weekend", description: "Check the entrance fee, pick a favorite work, and take your time looking.", category: "Art & culture", contexts: ["hobbies", "seoul", "friends"], wordIds: ["jeonsihoe", "ipjangnyo", "jakpum", "jeonsihada", "gamsanghada"], bonus: true },
+  { id: "seoul-gallery", location: "A Yongsan gallery", mapSubtitle: "Weekend art", title: "Find an exhibition for the weekend", description: "Check the entrance fee, pick a favorite work, and take your time looking.", category: "Art & culture", contexts: ["hobbies", "seoul", "friends"], wordIds: ["jeonsihoe", "ipjangnyo", "jakpum", "jeonsihada", "gamsanghada"], bonus: true },
   { id: "quiet-hotel-room", location: "Your Seoul stay", title: "Ask for a quieter room", description: "Make a polite request, check what is possible, and ask about extra fees.", category: "Travel & stay", contexts: ["seoul", "study", "family"], wordIds: ["joyoteohada", "bakkuda", "yocheonghada", "ganeunghada", "chuga-yogeum"], bonus: true },
   { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
   { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true },
@@ -90,6 +91,57 @@ const routeMissions = [
   { id: "banpo-rainbow-fountain", location: "Banpo Hangang Park", mapSubtitle: "Bridge lights & river", title: "A river evening in Banpo", description: "Watch the bridge lights by the river. Fountain shows are seasonal and weather-dependent.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends", "food"], wordIds: ["banpo-daegyo", "banpo-hangang-park", "hangang", "bunsu", "bich"], bonus: true },
   { id: "naksan-city-wall", location: "Naksan Park & Seoul City Wall", mapSubtitle: "A hilltop night view", title: "Follow the old city wall", description: "Take a steady walk along the wall and pause for a view over downtown Seoul.", category: "Seoul landmarks", contexts: ["seoul", "hobbies", "friends"], wordIds: ["naksan-park", "seoul-city-wall", "olagada", "jeonmang", "sanchaek"], bonus: true }
 ];
+const mapChapters = [
+  {
+    id: "seoul-day", title: "A day around Seoul", area: "Seongsu · Hongdae · Yeouido",
+    description: "Follow the original neighborhood route from Seongsu to the Han River.",
+    image: "./assets/seoul-route-map.jpg?v=26",
+    alt: "Watercolor Seoul map connecting neighborhood cafés, lively streets, and the Han River.",
+    missionIds: ["seongsu", "coffee-order", "hongdae", "coworker-school", "yeouido"],
+    points: [[35, 50], [45, 68], [57, 48], [66, 67], [83, 48]]
+  },
+  {
+    id: "royal-seoul", title: "Royal Seoul", area: "Palaces · hanok lanes · stream",
+    description: "Wander from palace courtyards through quiet hanok lanes and old Seoul streets.",
+    image: "./assets/royal-seoul-map.jpg?v=26",
+    alt: "Watercolor route through palace courtyards, hanok lanes, tea shops, gardens, and Cheonggyecheon.",
+    missionIds: ["gyeongbokgung-palace", "bukchon-hanok-village", "insadong-stroll", "changdeokgung-garden", "cheonggyecheon-evening"],
+    points: [[36, 51], [48, 42], [59, 55], [71, 45], [83, 51]]
+  },
+  {
+    id: "old-seoul-evening", title: "Old Seoul after dark", area: "Myeongdong · markets · city wall",
+    description: "Check in, find a market snack, and follow the evening lights toward Naksan.",
+    image: "./assets/downtown-seoul-map.jpg?v=26",
+    alt: "Watercolor Seoul evening route past market stalls, DDP, the old city wall, and Myeongdong lights.",
+    missionIds: ["myeongdong-check-in", "myeongdong-snack", "gwangjang", "ddp-after-dark", "naksan-city-wall"],
+    points: [[36, 48], [47, 57], [58, 43], [70, 56], [83, 48]]
+  },
+  {
+    id: "river-and-views", title: "River & city views", area: "Mangwon · Banpo · Namsan",
+    description: "Follow the river from a neighborhood market toward museums and hilltop views.",
+    image: "./assets/river-seoul-map.jpg?v=26",
+    alt: "Watercolor Seoul river route from a neighborhood market past Banpo, a museum, and Namsan.",
+    missionIds: ["mangwon-market-run", "banpo-rainbow-fountain", "national-museum-day", "seoul-gallery", "namsan-sunset"],
+    points: [[36, 48], [48, 57], [60, 44], [71, 56], [83, 48]]
+  },
+  {
+    id: "gangnam-jamsil", title: "Gangnam to Jamsil", area: "COEX · Bongeunsa · Seokchon",
+    description: "Ride across Gangnam, pause by the lake, and finish high above the city.",
+    image: "./assets/gangnam-seoul-map.jpg?v=26",
+    alt: "Watercolor route through COEX, Bongeunsa, Seokchon Lake, and the Lotte World Tower skyline.",
+    missionIds: ["taxi-ride", "coex-bongeunsa", "subway-reroute", "seokchon-lake-loop", "lotte-world-tower-view"],
+    points: [[36, 50], [48, 43], [60, 56], [72, 44], [84, 52]]
+  },
+  {
+    id: "everyday-seoul", title: "An everyday Seoul day", area: "Your stay · corner shop · commute",
+    description: "Make a few familiar stops and end the day with a call home.",
+    image: "./assets/everyday-seoul-map.jpg?v=26",
+    alt: "Watercolor everyday Seoul route past a hotel, convenience store, subway, and a quiet room.",
+    missionIds: ["quiet-hotel-room", "gs25-stop", "rainy-commute", "family-catchup"],
+    points: [[39, 49], [53, 57], [68, 44], [83, 52]]
+  }
+];
+const mappedMissionIds = new Set(mapChapters.flatMap((chapter) => chapter.missionIds));
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
   vocabulary: readSaved(savedKeys.vocabulary)
@@ -109,6 +161,7 @@ let freddieContexts = readFreddieContexts();
 let wordProgress = readWordProgress();
 let completedGrammarIds = readGrammarProgress();
 let routeStamps = readRouteStamps();
+let activeMapId = readActiveMapId();
 let missionSession = null;
 let practiceStage = "home";
 let themePreference = readThemePreference();
@@ -547,58 +600,129 @@ function getMissionsByDifficulty(missions = routeMissions) {
   return [...missions].sort((a, b) => getMissionDifficulty(a) - getMissionDifficulty(b) || routeMissions.indexOf(a) - routeMissions.indexOf(b));
 }
 
-const routeMapAnchors = [
-  { top: 35, left: 50 }, { top: 66, left: 49 }, { top: 84, left: 48 }
-];
-
-function getRouteMapPosition(index) {
-  if (routeMapAnchors[index]) return routeMapAnchors[index];
-  const columns = [14, 38, 62, 86];
-  const overflow = index - routeMapAnchors.length;
-  const rows = Math.ceil((routeMissions.length - routeMapAnchors.length) / columns.length);
-  const row = Math.floor(overflow / columns.length);
-  const column = row % 2 === 0 ? overflow % columns.length : columns.length - 1 - (overflow % columns.length);
-  const top = rows > 1 ? 40 + row * (49 / (rows - 1)) : 64.5;
-  return { top: Number(top.toFixed(1)), left: columns[column] };
+function readActiveMapId() {
+  try {
+    const savedMapId = localStorage.getItem(activeMapKey);
+    return mapChapters.some((chapter) => chapter.id === savedMapId) ? savedMapId : mapChapters[0].id;
+  } catch {
+    return mapChapters[0].id;
+  }
 }
 
-function getSuggestedMission() {
-  const remainingMainRoute = routeMissions.filter((mission) => !mission.bonus && !routeStamps.includes(mission.id));
-  const remaining = routeMissions.filter((mission) => !routeStamps.includes(mission.id));
-  const candidates = remainingMainRoute.length
-    ? remainingMainRoute
-    : remaining.length ? remaining : routeMissions;
-  const selected = new Set(freddieContexts);
-  const score = (mission) => mission.contexts.filter((context) => selected.has(context)).length;
-  return [...candidates].sort((a, b) => {
-    return getMissionDifficulty(a) - getMissionDifficulty(b) || score(b) - score(a) || routeMissions.indexOf(a) - routeMissions.indexOf(b);
-  })[0];
+function persistActiveMapId() {
+  try {
+    localStorage.setItem(activeMapKey, activeMapId);
+  } catch {
+    // Map selection still applies for this visit if browser storage is unavailable.
+  }
+}
+
+function getMapMissions(mapId = activeMapId) {
+  const chapter = mapChapters.find((candidate) => candidate.id === mapId);
+  return chapter ? chapter.missionIds.map((id) => routeMissions.find((mission) => mission.id === id)).filter(Boolean) : [];
+}
+
+function getMissionMapLabel(mission) {
+  const chapter = mapChapters.find((candidate) => candidate.missionIds.includes(mission.id));
+  if (!chapter) return `TOPIK ${getMissionDifficulty(mission)} · EXAM PRACTICE`;
+  const mapIndex = mapChapters.indexOf(chapter) + 1;
+  const stopIndex = chapter.missionIds.indexOf(mission.id) + 1;
+  return `MAP ${String(mapIndex).padStart(2, "0")} · STOP ${stopIndex} OF ${chapter.missionIds.length}`;
+}
+
+function getSuggestedMission(mapId = activeMapId) {
+  const missions = getMapMissions(mapId);
+  return missions.find((mission) => !routeStamps.includes(mission.id)) || missions[0] || routeMissions[0];
+}
+
+function renderMapChapterPicker() {
+  const picker = document.querySelector("#map-chapter-picker");
+  const scrollLeft = picker.scrollLeft;
+  picker.replaceChildren(...mapChapters.map((chapter, index) => {
+    const missions = getMapMissions(chapter.id);
+    const completed = missions.filter((mission) => routeStamps.includes(mission.id)).length;
+    const button = document.createElement("button");
+    button.className = `map-chapter-tab${chapter.id === activeMapId ? " is-active" : ""}${completed === missions.length ? " is-complete" : ""}`;
+    button.type = "button";
+    button.dataset.mapId = chapter.id;
+    button.setAttribute("aria-pressed", String(chapter.id === activeMapId));
+    button.setAttribute("aria-label", `Map ${index + 1}: ${chapter.title}, ${completed} of ${missions.length} stops complete`);
+    const number = document.createElement("small");
+    number.className = "map-chapter-number";
+    number.textContent = `MAP ${String(index + 1).padStart(2, "0")}`;
+    const title = document.createElement("strong");
+    title.textContent = chapter.title;
+    const area = document.createElement("span");
+    area.className = "map-chapter-area";
+    area.textContent = chapter.area;
+    const progress = document.createElement("span");
+    progress.className = "map-chapter-progress";
+    progress.textContent = `${completed} / ${missions.length} stops`;
+    button.append(number, title, area, progress);
+    return button;
+  }));
+  picker.scrollLeft = scrollLeft;
+}
+
+function makeRoutePath(points) {
+  if (points.length < 2) return "";
+  const coordinates = points.map(([top, left]) => [left, top]);
+  let path = `M ${coordinates[0][0]} ${coordinates[0][1]}`;
+  for (let index = 0; index < coordinates.length - 1; index += 1) {
+    const previous = coordinates[index - 1] || coordinates[index];
+    const current = coordinates[index];
+    const next = coordinates[index + 1];
+    const following = coordinates[index + 2] || next;
+    const controlOne = [current[0] + (next[0] - previous[0]) / 6, current[1] + (next[1] - previous[1]) / 6];
+    const controlTwo = [next[0] - (following[0] - current[0]) / 6, next[1] - (following[1] - current[1]) / 6];
+    path += ` C ${controlOne[0]} ${controlOne[1]} ${controlTwo[0]} ${controlTwo[1]} ${next[0]} ${next[1]}`;
+  }
+  return path;
 }
 
 function renderRouteOverview() {
   const stopList = document.querySelector("#route-stops");
   const bonusList = document.querySelector("#bonus-mission-list");
-  const orderedMissions = getMissionsByDifficulty();
-  const suggested = getSuggestedMission();
-  document.querySelector("#route-stamp-count").textContent = `${routeStamps.length} / ${routeMissions.length}`;
-  const suggestedIndex = orderedMissions.findIndex((mission) => mission.id === suggested.id);
-  document.querySelector("#featured-mission-count").textContent = `MISSION ${suggestedIndex + 1} OF ${routeMissions.length}`;
-  document.querySelector("#featured-mission-title").textContent = suggested.title;
-  document.querySelector("#featured-mission-description").textContent = suggested.description;
-  const featuredAction = routeStamps.includes(suggested.id)
-    ? (suggested.bonus ? "Replay round" : "Revisit stop")
-    : (suggested.bonus ? "Start bonus round" : "Start mission");
+  const chapter = mapChapters.find((candidate) => candidate.id === activeMapId) || mapChapters[0];
+  const mapIndex = mapChapters.indexOf(chapter);
+  const missions = getMapMissions(chapter.id);
+  const suggested = getSuggestedMission(chapter.id);
+  const completedStops = missions.filter((mission) => routeStamps.includes(mission.id)).length;
+  renderMapChapterPicker();
+  const routeScene = document.querySelector(".route-scene");
+  const routeArt = document.querySelector("#route-scene-art");
+  routeScene.dataset.mapId = chapter.id;
+  routeArt.src = chapter.image;
+  routeArt.alt = chapter.alt;
+  document.querySelector("#route-map-eyebrow").textContent = `SEOUL ROUTE · MAP ${String(mapIndex + 1).padStart(2, "0")} OF ${String(mapChapters.length).padStart(2, "0")}`;
+  document.querySelector("#practice-title").textContent = chapter.title;
+  document.querySelector("#practice-lead").textContent = chapter.description;
+  document.querySelector("#route-stamp-count").textContent = `${completedStops} / ${missions.length}`;
+  document.querySelector("#route-stamp-counter").setAttribute("aria-label", `${chapter.title}: ${completedStops} of ${missions.length} stops complete`);
+  const suggestedIndex = missions.findIndex((mission) => mission.id === suggested.id);
+  const mapComplete = completedStops === missions.length;
+  document.querySelector("#featured-mission-count").textContent = mapComplete
+    ? `MAP ${String(mapIndex + 1).padStart(2, "0")} · COMPLETE`
+    : `STOP ${suggestedIndex + 1} OF ${missions.length} · MAP ${String(mapIndex + 1).padStart(2, "0")}`;
+  document.querySelector("#featured-mission-title").textContent = mapComplete ? "You explored this map" : suggested.title;
+  document.querySelector("#featured-mission-description").textContent = mapComplete
+    ? "Every stop is complete. Choose another illustrated route or revisit a favorite."
+    : suggested.description;
+  const featuredAction = mapComplete ? "Replay first stop" : (routeStamps.includes(suggested.id) ? "Replay round" : "Start next stop");
   setArrowButtonLabel(document.querySelector("#start-mission"), featuredAction);
-  stopList.replaceChildren(...orderedMissions.map((mission, index) => {
+  const routePath = makeRoutePath(chapter.points.slice(0, missions.length));
+  document.querySelector("#route-path-halo").setAttribute("d", routePath);
+  document.querySelector("#route-path-line").setAttribute("d", routePath);
+  stopList.replaceChildren(...missions.map((mission, index) => {
     const complete = routeStamps.includes(mission.id);
     const isSuggested = mission.id === suggested.id;
     const difficulty = getMissionDifficulty(mission);
-    const position = getRouteMapPosition(index);
+    const [top, left] = chapter.points[index];
     const row = document.createElement("li");
-    row.className = `route-stop${mission.bonus ? " is-bonus" : ""}${position.left > 50 ? " label-left" : ""}${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
+    row.className = `route-stop${left > 52 ? " label-left" : ""}${complete ? " is-complete" : ""}${isSuggested ? " is-suggested" : ""}`;
     row.dataset.level = String(difficulty);
-    row.style.setProperty("--stop-top", `${position.top}%`);
-    row.style.setProperty("--stop-left", `${position.left}%`);
+    row.style.setProperty("--stop-top", `${top}%`);
+    row.style.setProperty("--stop-left", `${left}%`);
     const button = document.createElement("button");
     button.className = "route-stop-button";
     button.type = "button";
@@ -623,7 +747,7 @@ function renderRouteOverview() {
     row.append(button);
     return row;
   }));
-  const bonusMissions = getMissionsByDifficulty(routeMissions.filter((mission) => mission.bonus));
+  const bonusMissions = getMissionsByDifficulty(routeMissions.filter((mission) => !mappedMissionIds.has(mission.id)));
   const groups = [1, 2].map((difficulty) => {
     const missions = bonusMissions.filter((mission) => getMissionDifficulty(mission) === difficulty);
     if (!missions.length) return null;
@@ -643,7 +767,7 @@ function renderRouteOverview() {
     const cards = document.createElement("div");
     cards.className = "bonus-mission-level-list";
     missions.forEach((mission) => {
-      const index = orderedMissions.findIndex((candidate) => candidate.id === mission.id);
+      const index = bonusMissions.findIndex((candidate) => candidate.id === mission.id);
       const complete = routeStamps.includes(mission.id);
       const card = document.createElement("article");
       card.className = `bonus-mission-card${complete ? " is-complete" : ""}`;
@@ -655,7 +779,7 @@ function renderRouteOverview() {
       copy.className = "bonus-mission-copy";
       const meta = document.createElement("p");
       meta.className = "section-label";
-      meta.textContent = `ROUND ${index + 1} · ${mission.category.toUpperCase()}`;
+      meta.textContent = mission.questions?.length ? `EXAM PRACTICE · TOPIK ${difficulty}` : `ROUND ${index + 1} · ${mission.category.toUpperCase()}`;
       const title = document.createElement("h3");
       title.textContent = mission.title;
       const description = document.createElement("p");
@@ -772,8 +896,7 @@ function startMission(missionId = getSuggestedMission().id) {
   document.body.classList.add("is-immersive-round");
   window.scrollTo(0, 0);
   document.querySelector("#mission-question-title").textContent = mission.title;
-  const missionIndex = getMissionsByDifficulty().findIndex((candidate) => candidate.id === mission.id);
-  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
+  document.querySelector("#results-mission-label").textContent = getMissionMapLabel(mission);
   renderMissionQuestion();
 }
 
@@ -1027,6 +1150,7 @@ function makeResultsWord(item) {
 function finishMission() {
   if (!missionSession) return;
   const mission = routeMissions.find((candidate) => candidate.id === missionSession.missionId);
+  const currentMap = mapChapters.find((chapter) => chapter.missionIds.includes(mission?.id));
   const stampEarned = Boolean(mission && !routeStamps.includes(mission.id));
   if (stampEarned) {
     routeStamps.push(mission.id);
@@ -1039,11 +1163,18 @@ function finishMission() {
   const dueItems = getNeedsPracticeItems();
   const total = missionSession.items.length;
   document.querySelector("#results-score").textContent = `${missionSession.correctCount} of ${total} correct`;
-  const missionIndex = getMissionsByDifficulty().findIndex((candidate) => candidate.id === missionSession.missionId);
-  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
+  document.querySelector("#results-mission-label").textContent = getMissionMapLabel(mission);
   document.querySelector("#results-stamp-kicker").textContent = stampEarned ? "YOU EARNED A STAMP" : "STAMP COLLECTED";
   document.querySelector("#results-stamp-name").textContent = mission?.location || "Seoul";
-  document.querySelector("#results-stamp-meta").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL & LIFE`;
+  document.querySelector("#results-stamp-meta").textContent = getMissionMapLabel(mission);
+  if (currentMap) {
+    const mapImage = document.querySelector("#results-stamp .stamp-postage img");
+    mapImage.src = currentMap.image;
+    document.querySelector(".results-hero").style.setProperty("--results-map-art", `url("${currentMap.image}")`);
+  } else {
+    document.querySelector("#results-stamp .stamp-postage img").src = "./assets/seoul-route-map.jpg?v=26";
+    document.querySelector(".results-hero").style.removeProperty("--results-map-art");
+  }
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
   document.querySelector("#results-due-list").hidden = dueItems.length === 0;
   document.querySelector("#results-review-title").textContent = dueItems.length ? "These words need another look" : "All clear for now";
@@ -1057,13 +1188,22 @@ function finishMission() {
   document.querySelector("#results-example-translation").textContent = helpfulExample.translation;
   const summary = document.querySelector("#results-summary");
   const nextMission = getSuggestedMission();
+  const examMissions = getMissionsByDifficulty(routeMissions.filter((candidate) => !mappedMissionIds.has(candidate.id)));
+  const nextExamMission = examMissions.find((candidate) => !routeStamps.includes(candidate.id));
+  const currentMapComplete = currentMap && getMapMissions(currentMap.id).every((candidate) => routeStamps.includes(candidate.id));
   if (dueItems.length) {
     summary.textContent = `${dueItems.length} ${dueItems.length === 1 ? "word needs" : "words need"} another look. Two correct reviews clear a word from your revisit list.`;
     setArrowButtonLabel(document.querySelector("#play-again"), "Review these words");
+  } else if (currentMapComplete) {
+    summary.textContent = `That was the last stop on ${currentMap.title}. Choose another map when you’re ready.`;
+    setArrowButtonLabel(document.querySelector("#play-again"), "Replay first stop");
+  } else if (mission?.questions?.length && nextExamMission) {
+    summary.textContent = `Next exam set: ${nextExamMission.location}. Your illustrated maps are always open too.`;
+    setArrowButtonLabel(document.querySelector("#play-again"), "Start next exam set");
   } else {
     summary.textContent = routeStamps.length === routeMissions.length
       ? "Every stamp is yours. Pick a favorite round and go again."
-      : `Next round: ${nextMission.location}. Keep your Korean day going.`;
+      : `Next stop: ${nextMission.location}. Keep your Korean day going.`;
     setArrowButtonLabel(document.querySelector("#play-again"), routeStamps.length === routeMissions.length ? "Play another round" : "Start next round");
   }
   document.querySelector("#results-helpful-example").classList.toggle("has-due-words", dueItems.length > 0);
@@ -1285,6 +1425,13 @@ document.querySelectorAll(".mode-tab").forEach((button) => {
   });
 });
 
+document.querySelector("#map-chapter-picker").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-map-id]");
+  if (!button) return;
+  activeMapId = button.dataset.mapId;
+  persistActiveMapId();
+  renderRouteOverview();
+});
 document.querySelector("#route-stops").addEventListener("click", (event) => {
   const button = event.target.closest("[data-mission-id]");
   if (button) startMission(button.dataset.missionId);
@@ -1309,7 +1456,13 @@ document.querySelector("#answer-options").addEventListener("click", (event) => {
   if (button) answerQuestion(button.dataset.choiceId);
 });
 document.querySelector("#play-again").addEventListener("click", () => {
-  const missionId = getNeedsPracticeItems().length ? missionSession?.missionId : getSuggestedMission().id;
+  const examMissions = getMissionsByDifficulty(routeMissions.filter((candidate) => !mappedMissionIds.has(candidate.id)));
+  const nextExamMission = examMissions.find((candidate) => !routeStamps.includes(candidate.id));
+  const missionId = getNeedsPracticeItems().length
+    ? missionSession?.missionId
+    : missionSession?.mode === "exam" && nextExamMission
+      ? nextExamMission.id
+      : getSuggestedMission().id;
   startMission(missionId);
 });
 document.querySelector("#return-practice-home").addEventListener("click", returnToPracticeHome);
@@ -1449,7 +1602,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=25", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=26", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
