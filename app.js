@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=9";
-import { vocabulary } from "./vocabulary.js?v=9";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=9";
+import { grammar } from "./grammar.js?v=11";
+import { vocabulary } from "./vocabulary.js?v=11";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=11";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -52,9 +52,9 @@ const contextLabels = {
 };
 const defaultFreddieContexts = ["seoul", "study"];
 const routeMissions = [
-  { id: "seongsu", location: "Seongsu", title: "Meet a friend in Seongsu", description: "Find your way around Seoul Forest.", contexts: ["seoul", "friends", "work"], wordIds: ["jido", "yeok", "chulgu", "hwanseung", "dochakhada"] },
-  { id: "euljiro", location: "Euljiro", title: "Take a lunch break", description: "Pick a place and order together.", contexts: ["food", "work", "friends"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
-  { id: "seoul-station", location: "Seoul Station", title: "Check in & settle in", description: "Arrive, drop your bag, find your room.", contexts: ["seoul", "study", "hobbies"], wordIds: ["sukso", "yeyakhada", "jim", "chekeuin", "bang"] }
+  { id: "seongsu", location: "Seongsu", mapSubtitle: "Café & Culture", title: "Meet a friend in Seongsu", description: "Learn key words for getting around and meeting up near Seoul Forest.", contexts: ["seoul", "friends", "work", "study"], wordIds: ["jido", "yeok", "chulgu", "hwanseung", "dochakhada"] },
+  { id: "hongdae", location: "Hongdae", mapSubtitle: "Music & People", title: "Find a favorite lunch spot", description: "Pick a place, order together, and find out how spicy it is.", contexts: ["food", "work", "friends", "study"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
+  { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] }
 ];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
@@ -80,7 +80,9 @@ let practiceStage = "home";
 function readRouteStamps() {
   try {
     const value = JSON.parse(localStorage.getItem(routeStampsKey) || "[]");
-    return Array.isArray(value) ? [...new Set(value.filter((id) => routeMissions.some((mission) => mission.id === id)))] : [];
+    if (!Array.isArray(value)) return [];
+    const migratedIds = value.map((id) => ({ euljiro: "hongdae", "seoul-station": "yeouido" })[id] || id);
+    return [...new Set(migratedIds.filter((id) => routeMissions.some((mission) => mission.id === id)))];
   } catch {
     return [];
   }
@@ -405,18 +407,24 @@ function getSuggestedMission() {
   const remaining = routeMissions.filter((mission) => !routeStamps.includes(mission.id));
   const candidates = remaining.length ? remaining : routeMissions;
   const selected = new Set(freddieContexts);
-  return [...candidates].sort((a, b) => {
-    const scoreA = a.contexts.filter((context) => selected.has(context)).length;
-    const scoreB = b.contexts.filter((context) => selected.has(context)).length;
-    return scoreB - scoreA || routeMissions.indexOf(a) - routeMissions.indexOf(b);
+  const score = (mission) => mission.contexts.filter((context) => selected.has(context)).length;
+  const nextInRoute = candidates[0];
+  if (score(nextInRoute) > 0) return nextInRoute;
+  const bestFit = [...candidates].sort((a, b) => {
+    return score(b) - score(a) || routeMissions.indexOf(a) - routeMissions.indexOf(b);
   })[0];
+  return score(bestFit) > 0 ? bestFit : nextInRoute;
 }
 
 function renderRouteOverview() {
   const stopList = document.querySelector("#route-stops");
   const suggested = getSuggestedMission();
-  const allComplete = routeStamps.length === routeMissions.length;
   document.querySelector("#route-stamp-count").textContent = `${routeStamps.length} / ${routeMissions.length}`;
+  const suggestedIndex = routeMissions.findIndex((mission) => mission.id === suggested.id);
+  document.querySelector("#featured-mission-count").textContent = `MISSION ${suggestedIndex + 1} OF ${routeMissions.length}`;
+  document.querySelector("#featured-mission-title").textContent = suggested.title;
+  document.querySelector("#featured-mission-description").textContent = suggested.description;
+  setArrowButtonLabel(document.querySelector("#start-mission"), routeStamps.includes(suggested.id) ? "Revisit stop" : "Start mission");
   stopList.replaceChildren(...routeMissions.map((mission, index) => {
     const complete = routeStamps.includes(mission.id);
     const isSuggested = mission.id === suggested.id;
@@ -433,33 +441,25 @@ function renderRouteOverview() {
     marker.textContent = complete ? "✓" : String(index + 1).padStart(2, "0");
     const copy = document.createElement("span");
     copy.className = "route-stop-copy";
-    const topLine = document.createElement("span");
-    topLine.className = "route-stop-topline";
-    const location = document.createElement("span");
-    location.className = "route-stop-location";
-    location.textContent = mission.location;
-    topLine.append(location);
-    if (isSuggested) {
-      const suggestedLabel = document.createElement("span");
-      suggestedLabel.className = "route-suggested-label";
-      suggestedLabel.textContent = allComplete ? "REVISIT" : "FOR YOU";
-      topLine.append(suggestedLabel);
-    }
     const title = document.createElement("strong");
     title.className = "route-stop-title";
-    title.textContent = mission.title;
-    const description = document.createElement("span");
-    description.className = "route-stop-description";
-    description.textContent = mission.description;
-    copy.append(topLine, title, description);
-    const action = document.createElement("span");
-    action.className = "route-stop-action";
-    action.setAttribute("aria-hidden", "true");
-    action.textContent = complete ? "↺" : "→";
-    button.append(marker, copy, action);
+    title.textContent = mission.location;
+    const subtitle = document.createElement("small");
+    subtitle.className = "route-stop-subtitle";
+    subtitle.textContent = mission.mapSubtitle;
+    copy.append(title, subtitle);
+    button.append(marker, copy);
+    button.setAttribute("aria-current", isSuggested ? "step" : "false");
     row.append(button);
     return row;
   }));
+}
+
+function setArrowButtonLabel(button, label) {
+  const arrow = document.createElement("span");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "→";
+  button.replaceChildren(document.createTextNode(`${label} `), arrow);
 }
 
 function shuffle(items) {
@@ -496,6 +496,38 @@ function getMissionExample(item) {
     : { korean: item.example, translation: item.translation };
 }
 
+function findKoreanWordForm(item, sentence) {
+  const conjugatedForms = {
+    maepda: ["매웠어요", "매워요", "매웠", "매워"],
+    dowajuda: ["도와줬어요", "도와줘요", "도와줬", "도와줘"]
+  };
+  const verbStem = item.partOfSpeech === "verb" || item.partOfSpeech === "adjective"
+    ? item.form.replace(/하다$/, "").replace(/다$/, "")
+    : "";
+  const forms = [...new Set([item.form, verbStem, ...(conjugatedForms[item.id] || [])])]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length);
+  return forms.find((form) => sentence.includes(form)) || "";
+}
+
+function showKoreanSentence(container, sentence, item) {
+  const targetWord = findKoreanWordForm(item, sentence);
+  const start = targetWord ? sentence.indexOf(targetWord) : -1;
+  if (start < 0) {
+    container.textContent = sentence;
+    return;
+  }
+  const highlighted = document.createElement("span");
+  highlighted.className = "word-highlight";
+  highlighted.lang = "ko";
+  highlighted.textContent = targetWord;
+  container.replaceChildren(
+    document.createTextNode(sentence.slice(0, start)),
+    highlighted,
+    document.createTextNode(sentence.slice(start + targetWord.length))
+  );
+}
+
 function startMission(missionId = getSuggestedMission().id) {
   const mission = routeMissions.find((candidate) => candidate.id === missionId) || getSuggestedMission();
   const routeItems = mission.wordIds.map((id) => vocabulary.find((item) => item.id === id)).filter(Boolean);
@@ -507,8 +539,11 @@ function startMission(missionId = getSuggestedMission().id) {
   practiceHome.hidden = true;
   missionResults.hidden = true;
   missionPlay.hidden = false;
-  document.querySelector("#mission-stop-label").textContent = `${mission.location.toLocaleUpperCase()} · SEOUL WORD QUEST`;
-  document.querySelector("#mission-question-title").textContent = mission.title;
+  document.body.classList.add("is-immersive-round");
+  window.scrollTo(0, 0);
+  document.querySelector("#mission-question-title").textContent = "A day around Seoul";
+  const missionIndex = routeMissions.findIndex((candidate) => candidate.id === mission.id);
+  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
   renderMissionQuestion();
 }
 
@@ -518,38 +553,54 @@ function renderMissionQuestion() {
   const example = getMissionExample(item);
   const position = missionSession.index + 1;
   const schedule = ["meaning", "reverse", "cloze", "reverse", "meaning"];
-  const clozeAvailable = example.korean.includes(item.form);
+  const clozeWord = findKoreanWordForm(item, example.korean);
+  const clozeAvailable = Boolean(clozeWord);
   const requestedType = schedule[missionSession.index % schedule.length];
-  const questionType = requestedType === "cloze" && !clozeAvailable ? "meaning" : requestedType;
+  const questionType = requestedType === "cloze" && !clozeAvailable ? "reverse" : requestedType;
   missionSession.questionType = questionType;
-  document.querySelector("#question-count").textContent = `Question ${position} of ${missionSession.items.length}`;
-  document.querySelector("#mission-progress").max = missionSession.items.length;
-  document.querySelector("#mission-progress").value = position;
+  document.querySelector("#question-count").textContent = `${position} / ${missionSession.items.length}`;
+  const progressDots = document.querySelector("#mission-step-dots");
+  progressDots.setAttribute("aria-valuemax", String(missionSession.items.length));
+  progressDots.setAttribute("aria-valuenow", String(position));
+  progressDots.replaceChildren(...missionSession.items.map((_, index) => {
+    const dot = document.createElement("span");
+    dot.className = `mission-step-dot${index < position ? " is-complete" : ""}`;
+    dot.setAttribute("aria-hidden", "true");
+    return dot;
+  }));
   document.querySelector("#question-level").textContent = `TOPIK ${item.level}`;
   const questionWord = document.querySelector("#question-word");
   const questionExample = document.querySelector("#question-example");
+  const questionTranslation = document.querySelector("#question-translation");
   const romanization = document.querySelector("#question-romanization");
   const prompt = document.querySelector("#question-prompt");
+  const stageLabel = document.querySelector("#question-stage-label");
+  const progress = wordProgress[item.id];
+  stageLabel.textContent = progress?.needsPractice ? "ANOTHER LOOK" : progress?.attempts ? "QUICK REVIEW" : "NEW WORD";
   questionWord.textContent = questionType === "meaning" ? item.form : item.meaning;
   questionWord.lang = questionType === "meaning" ? "ko" : "en";
   questionWord.classList.toggle("is-english", questionType !== "meaning");
   romanization.textContent = questionType === "meaning" ? item.romanization : "";
   romanization.hidden = questionType !== "meaning";
+  questionTranslation.hidden = false;
   if (questionType === "meaning") {
-    prompt.textContent = "Choose the meaning that fits.";
+    prompt.textContent = "What does it mean?";
     questionExample.textContent = example.korean;
     questionExample.lang = "ko";
     questionExample.classList.remove("is-english");
+    questionTranslation.textContent = example.translation;
   } else if (questionType === "reverse") {
     prompt.textContent = "Which Korean word matches this meaning?";
     questionExample.textContent = example.translation;
     questionExample.lang = "en";
     questionExample.classList.add("is-english");
+    questionTranslation.hidden = true;
   } else {
-    prompt.textContent = "Fill the blank with the right word.";
-    questionExample.textContent = example.korean.replaceAll(item.form, "＿＿＿");
+    prompt.textContent = clozeWord === item.form ? "Fill the blank with the right word." : "Which dictionary form is hidden?";
+    questionExample.textContent = example.korean.replace(clozeWord, "＿＿＿");
     questionExample.lang = "ko";
     questionExample.classList.remove("is-english");
+    questionTranslation.textContent = example.translation;
   }
 
   const options = makeAnswerOptions(item, questionType);
@@ -578,6 +629,7 @@ function renderMissionQuestion() {
   const next = document.querySelector("#next-question");
   next.disabled = true;
   next.textContent = "Choose an answer";
+  window.scrollTo(0, 0);
 }
 
 function recordWordAnswer(item, isCorrect) {
@@ -635,11 +687,19 @@ function answerQuestion(selectedId) {
   feedback.hidden = false;
   feedback.classList.toggle("is-incorrect", !isCorrect);
   const updatedProgress = wordProgress[item.id];
-  document.querySelector("#feedback-title").textContent = isCorrect
-    ? (updatedProgress.needsPractice ? "Good recall · one more correct review clears this word." : "That’s right.")
-    : "Worth another look · this word will return in a later round.";
-  document.querySelector("#feedback-copy").textContent = `${item.form} means “${item.meaning}.”${item.note ? ` ${item.note}` : ""}`;
+  document.querySelector("#feedback-title").textContent = isCorrect ? "정답이에요!" : "Let’s try that one again.";
+  const answerMeaning = `${item.form} means “${item.meaning}.”${item.note ? ` ${item.note}` : ""}`;
+  document.querySelector("#feedback-copy").textContent = isCorrect
+    ? `${updatedProgress.needsPractice ? "Good recall. One more correct review clears this word. " : "That’s right! "}${answerMeaning}`
+    : `${answerMeaning} It’ll return for another look.`;
   document.querySelector("#feedback-translation").textContent = `In this sentence: ${example.translation}`;
+  const questionExample = document.querySelector("#question-example");
+  questionExample.lang = "ko";
+  questionExample.classList.remove("is-english");
+  showKoreanSentence(questionExample, example.korean, item);
+  const questionTranslation = document.querySelector("#question-translation");
+  questionTranslation.textContent = example.translation;
+  questionTranslation.hidden = false;
   const next = document.querySelector("#next-question");
   next.disabled = false;
   next.textContent = missionSession.index === missionSession.items.length - 1 ? "See your round" : "Next word →";
@@ -669,31 +729,43 @@ function finishMission() {
   const dueItems = getNeedsPracticeItems();
   const total = missionSession.items.length;
   document.querySelector("#results-score").textContent = `${missionSession.correctCount} of ${total} correct`;
-  const stampReveal = document.querySelector("#results-stamp");
-  stampReveal.hidden = !stampEarned;
-  if (stampEarned && mission) document.querySelector("#results-stamp-name").textContent = mission.location;
+  const missionIndex = routeMissions.findIndex((candidate) => candidate.id === missionSession.missionId);
+  document.querySelector("#results-mission-label").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
+  document.querySelector("#results-stamp-kicker").textContent = stampEarned ? "YOU EARNED A STAMP" : "STAMP COLLECTED";
+  document.querySelector("#results-stamp-name").textContent = mission?.location || "Seoul";
+  document.querySelector("#results-stamp-meta").textContent = `MISSION ${missionIndex + 1} OF ${routeMissions.length} · SEOUL ROUTE`;
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
+  document.querySelector("#results-due-list").hidden = dueItems.length === 0;
+  document.querySelector("#results-review-title").textContent = dueItems.length ? "These words need another look" : "All clear for now";
+  const helpfulItem = dueItems[0] || missionSession.items[0];
+  const helpfulExample = getMissionExample(helpfulItem);
+  document.querySelector("#results-example-korean").textContent = helpfulExample.korean;
+  document.querySelector("#results-example-translation").textContent = helpfulExample.translation;
   const summary = document.querySelector("#results-summary");
   const nextMission = getSuggestedMission();
-  const nextStopNote = routeStamps.length === routeMissions.length
-    ? "All three Seoul stamps are yours. Pick any stop for another round."
-    : `Next suggested stop: ${nextMission.location}.`;
   if (dueItems.length) {
-    summary.textContent = `${dueItems.length} ${dueItems.length === 1 ? "word is" : "words are"} on your revisit list. They’ll lead your next round; two correct reviews clear a word from this list. ${nextStopNote}`;
+    summary.textContent = `${dueItems.length} ${dueItems.length === 1 ? "word needs" : "words need"} another look. Two correct reviews clear a word from your revisit list.`;
+    setArrowButtonLabel(document.querySelector("#play-again"), "Review these words");
   } else {
-    summary.textContent = `Nothing is waiting for another look. ${nextStopNote}`;
+    summary.textContent = routeStamps.length === routeMissions.length
+      ? "All three Seoul stamps are yours. Pick a favorite stop and go again."
+      : `Next stop: ${nextMission.location}. Keep your Seoul day going.`;
+    setArrowButtonLabel(document.querySelector("#play-again"), routeStamps.length === routeMissions.length ? "Play another round" : "Start next stop");
   }
-  document.querySelector("#results-due-list").hidden = dueItems.length === 0;
+  document.querySelector("#results-helpful-example").classList.toggle("has-due-words", dueItems.length > 0);
   renderPracticeHome();
+  window.scrollTo(0, 0);
 }
 
 function returnToPracticeHome() {
   missionSession = null;
   practiceStage = "home";
+  document.body.classList.remove("is-immersive-round");
   missionPlay.hidden = true;
   missionResults.hidden = true;
   practiceHome.hidden = false;
   renderPracticeHome();
+  window.scrollTo(0, 0);
 }
 
 function saveFreddieContexts(contexts) {
@@ -868,6 +940,7 @@ document.querySelector("#route-stops").addEventListener("click", (event) => {
   const button = event.target.closest("[data-mission-id]");
   if (button) startMission(button.dataset.missionId);
 });
+document.querySelector("#start-mission").addEventListener("click", () => startMission(getSuggestedMission().id));
 document.querySelector("#leave-mission").addEventListener("click", returnToPracticeHome);
 document.querySelector("#next-question").addEventListener("click", () => {
   if (!missionSession || !missionSession.answered) return;
@@ -882,7 +955,10 @@ document.querySelector("#answer-options").addEventListener("click", (event) => {
   const button = event.target.closest("[data-choice-id]");
   if (button) answerQuestion(button.dataset.choiceId);
 });
-document.querySelector("#play-again").addEventListener("click", () => startMission(missionSession?.missionId));
+document.querySelector("#play-again").addEventListener("click", () => {
+  const missionId = getNeedsPracticeItems().length ? missionSession?.missionId : getSuggestedMission().id;
+  startMission(missionId);
+});
 document.querySelector("#return-practice-home").addEventListener("click", returnToPracticeHome);
 document.querySelector("#practice-freddie-toggle").addEventListener("change", (event) => {
   practiceFreddieEnabled = event.target.checked;
@@ -1013,7 +1089,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=9", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=11", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
