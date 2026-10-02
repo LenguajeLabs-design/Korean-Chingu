@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=6";
-import { vocabulary } from "./vocabulary.js?v=6";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=6";
+import { grammar } from "./grammar.js?v=7";
+import { vocabulary } from "./vocabulary.js?v=7";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=7";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -497,7 +497,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=6", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=7", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));

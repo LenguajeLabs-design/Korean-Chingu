@@ -9,7 +9,7 @@ The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the
 - **iPhone:** Open the HTTPS site in Safari, tap Share, then **Add to Home Screen**.
 - **Android:** Open the HTTPS site in Chrome, open the menu, then **Install app** or **Add to Home screen**.
 
-The app uses no remote fonts, APIs, or images. Vocabulary is grouped into practical travel topics and can be searched by Hangul, romanization, and English meaning. Freddie mode adds first-person everyday study and travel examples. Saved grammar, words, and Freddie mode are stored in the current browser on this device and do not sync. Level labels are study guidance, not an official TOPIK syllabus.
+The app uses no remote fonts, APIs, or images. Vocabulary is grouped into practical travel topics and can be searched by Hangul, romanization, and English meaning. Freddie mode adds first-person examples about work, hobbies, commuting, meals, friends, and travel around Seoul. Saved grammar, words, and Freddie mode are stored in the current browser on this device and do not sync. Level labels are study guidance, not an official TOPIK syllabus.
 
 ## Local preview
 
