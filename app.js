@@ -37,6 +37,7 @@ const missionPlay = document.querySelector("#mission-play");
 const missionResults = document.querySelector("#mission-results");
 const contextDialog = document.querySelector("#freddie-context-dialog");
 const themeToggle = document.querySelector("#theme-toggle");
+const koreanSizeToggle = document.querySelector("#korean-size-toggle");
 
 const bookmarkIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>`;
 const savedKeys = { grammar: "korean-chingu-saved-v1", vocabulary: "korean-chingu-saved-words-v1" };
@@ -45,6 +46,7 @@ const wordProgressKey = "korean-chingu-word-progress-v1";
 const freddieContextKey = "korean-chingu-freddie-context-v1";
 const practiceFreddieKey = "korean-chingu-practice-freddie-v1";
 const themePreferenceKey = "korean-chingu-theme-v1";
+const koreanTextSizeKey = "korean-chingu-korean-text-size-v1";
 const routeStampsKey = "korean-chingu-route-stamps-v1";
 const activeMapKey = "korean-chingu-active-map-v1";
 const grammarProgressKey = "korean-chingu-grammar-progress-v1";
@@ -203,6 +205,36 @@ let activeMapId = readActiveMapId();
 let missionSession = null;
 let practiceStage = "home";
 let themePreference = readThemePreference();
+let koreanTextLarge = readKoreanTextPreference();
+
+function readKoreanTextPreference() {
+  try {
+    return localStorage.getItem(koreanTextSizeKey) === "large";
+  } catch {
+    return false;
+  }
+}
+
+function applyKoreanTextPreference() {
+  document.documentElement.dataset.koreanTextSize = koreanTextLarge ? "large" : "standard";
+  koreanSizeToggle.setAttribute("aria-pressed", String(koreanTextLarge));
+  koreanSizeToggle.setAttribute("aria-label", koreanTextLarge ? "Return Korean text to standard size" : "Make Korean text larger");
+  koreanSizeToggle.title = `${koreanTextLarge ? "Standard" : "Larger"} Korean text. Preference is saved in this browser on this device.`;
+  koreanSizeToggle.querySelector("span").textContent = koreanTextLarge ? "가−" : "가+";
+}
+
+koreanSizeToggle.addEventListener("click", () => {
+  koreanTextLarge = !koreanTextLarge;
+  try {
+    localStorage.setItem(koreanTextSizeKey, koreanTextLarge ? "large" : "standard");
+  } catch {
+    // The selected size still applies for this visit if browser storage is unavailable.
+  }
+  applyKoreanTextPreference();
+  document.querySelector("#korean-size-status").textContent = `Korean text ${koreanTextLarge ? "enlarged" : "returned to standard size"}. This preference is saved on this device.`;
+});
+
+applyKoreanTextPreference();
 
 function readThemePreference() {
   try {
@@ -1647,7 +1679,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=28", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=29", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));

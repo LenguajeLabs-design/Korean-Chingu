@@ -1,8 +1,8 @@
-const CACHE_NAME = "korean-chingu-v28";
+const CACHE_NAME = "korean-chingu-v29";
 const APP_FILES = [
-  "./index.html?v=28",
-  "./styles.css?v=28",
-  "./app.js?v=28",
+  "./index.html?v=29",
+  "./styles.css?v=29",
+  "./app.js?v=29",
   "./grammar.js?v=28",
   "./vocabulary.js?v=28",
   "./freddie-examples.js?v=28",
@@ -41,7 +41,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=28")));
+    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=29")));
     return;
   }
 

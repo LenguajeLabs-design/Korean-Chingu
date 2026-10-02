@@ -14,6 +14,9 @@
     <script>
       try {
         const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
+        if (localStorage.getItem("korean-chingu-korean-text-size-v1") === "large") {
+          document.documentElement.dataset.koreanTextSize = "large";
+        }
         const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (savedTheme === "dark" || (savedTheme !== "light" && systemPrefersDark)) {
           document.documentElement.dataset.theme = "dark";
@@ -27,7 +30,7 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=28" />
+    <link rel="stylesheet" href="./styles.css?v=29" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -208,7 +211,14 @@
             <div class="mission-step-dots" id="mission-step-dots" role="progressbar" aria-label="Mission progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"></div>
             <article class="question-card" aria-live="polite">
               <div class="question-content">
-                <div class="question-word-meta"><span class="level-pill" id="question-level">TOPIK 1</span><span class="question-stage-label" id="question-stage-label">NEW WORD</span></div>
+                <div class="question-word-meta">
+                  <span class="level-pill" id="question-level">TOPIK 1</span>
+                  <span class="question-stage-label" id="question-stage-label">NEW WORD</span>
+                  <button class="korean-size-toggle" id="korean-size-toggle" type="button" aria-pressed="false" aria-label="Make Korean text larger" title="Make Korean text larger. Preference is saved in this browser on this device.">
+                    <span aria-hidden="true">가+</span>
+                  </button>
+                  <span class="sr-only" id="korean-size-status" role="status" aria-live="polite"></span>
+                </div>
                 <h2 class="question-word" id="question-word" lang="ko"></h2>
                 <p class="question-romanization" id="question-romanization"></p>
                 <p class="question-prompt" id="question-prompt">What does it mean?</p>
@@ -385,6 +395,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=28"></script>
+    <script type="module" src="./app.js?v=29"></script>
   </body>
 </html>
