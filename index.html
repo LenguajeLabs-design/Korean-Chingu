@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=21" />
-    <link rel="icon" href="./icon.svg?v=21" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=21" />
+    <link rel="manifest" href="./manifest.webmanifest?v=22" />
+    <link rel="icon" href="./icon.svg?v=22" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=22" />
     <script>
       try {
         const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
@@ -22,9 +22,12 @@
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
           document.documentElement.dataset.theme = "dark";
         }
+        if (document.documentElement.dataset.theme === "dark") {
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#181a1c");
+        }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=21" />
+    <link rel="stylesheet" href="./styles.css?v=22" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -127,17 +130,17 @@
           <div class="practice-home" id="practice-home">
             <section class="route-board" aria-labelledby="practice-title">
               <div class="route-scene">
-                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=21" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
+                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=22" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
                 <div class="route-scene-copy">
                   <p class="eyebrow">SEOUL &amp; EVERYDAY LIFE · TOPIK 1 &amp; 2</p>
                   <h1 class="practice-title" id="practice-title">A day around Seoul</h1>
                   <p class="practice-lead">Learn useful words while exploring the city, one stop at a time.</p>
                 </div>
-                <div class="stamp-counter" aria-label="Seoul and everyday mission stamps collected"><span aria-hidden="true">✳</span><strong id="route-stamp-count">0 / 15</strong></div>
+                <div class="stamp-counter" aria-label="Seoul and everyday mission stamps collected"><span aria-hidden="true">✳</span><strong id="route-stamp-count">0 / 17</strong></div>
                 <ol class="route-stops" id="route-stops" aria-label="Choose a Seoul mission"></ol>
               </div>
               <article class="featured-mission">
-                <div class="featured-mission-heading"><span class="featured-pin" aria-hidden="true">⌖</span><span class="section-label" id="featured-mission-count">MISSION 1 OF 15</span></div>
+                <div class="featured-mission-heading"><span class="featured-pin" aria-hidden="true">⌖</span><span class="section-label" id="featured-mission-count">MISSION 1 OF 17</span></div>
                 <h2 id="featured-mission-title">Meet a friend in Seongsu</h2>
                 <p id="featured-mission-description">Find your way around Seoul Forest.</p>
                 <div class="featured-mission-footer">
@@ -150,7 +153,7 @@
 
             <section class="bonus-rounds" aria-labelledby="bonus-rounds-title">
               <div class="bonus-rounds-heading">
-                <div><p class="section-label">SHORT, EVERYDAY CHAPTERS</p><h2 id="bonus-rounds-title">More scenes to play</h2></div>
+                <div><p class="section-label">EVERYDAY SCENES · TOPIK PRACTICE</p><h2 id="bonus-rounds-title">More scenes to play</h2></div>
                 <span>3 min each</span>
               </div>
               <div class="bonus-mission-list" id="bonus-mission-list" aria-label="Choose an everyday bonus mission"></div>
@@ -199,6 +202,14 @@
                 <p class="question-romanization" id="question-romanization"></p>
                 <p class="question-prompt" id="question-prompt">What does it mean?</p>
                 <div class="question-sentence-block"><p class="question-example" id="question-example" lang="ko"></p><p class="question-translation" id="question-translation"></p></div>
+                <div class="exam-question-block" id="exam-question-block" hidden>
+                  <p class="exam-passage" id="exam-passage" lang="ko"></p>
+                  <div class="exam-chart" id="exam-chart" hidden>
+                    <p class="exam-chart-title" id="exam-chart-title" lang="ko"></p>
+                    <ul class="exam-chart-rows" id="exam-chart-rows"></ul>
+                  </div>
+                  <p class="exam-translation" id="exam-translation" hidden></p>
+                </div>
               </div>
               <div class="question-response">
                 <div class="answer-options" id="answer-options" role="group" aria-label="Choose the word meaning"></div>
@@ -213,7 +224,7 @@
 
           <section class="mission-results" id="mission-results" aria-labelledby="results-title" hidden>
             <div class="results-hero">
-              <p class="eyebrow" id="results-mission-label">MISSION 1 OF 15 · SEOUL &amp; LIFE</p>
+              <p class="eyebrow" id="results-mission-label">MISSION 1 OF 17 · SEOUL &amp; LIFE</p>
               <h1 id="results-title">Nice work!</h1>
               <p class="results-score" id="results-score"></p>
               <p class="results-summary" id="results-summary"></p>
@@ -226,7 +237,7 @@
                 <div><p class="section-label">HELPFUL EXAMPLE</p><p class="helpful-korean" id="results-example-korean" lang="ko"></p><p class="helpful-translation" id="results-example-translation"></p></div>
               </div>
             </div>
-            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=21" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 15 · SEOUL &amp; LIFE</em></span></div>
+            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=22" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 17 · SEOUL &amp; LIFE</em></span></div>
             <div class="results-actions">
               <button class="primary-button" id="play-again" type="button">Review these words <span aria-hidden="true">→</span></button>
               <button class="text-button" id="return-practice-home" type="button">Back to route</button>
@@ -363,6 +374,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=21"></script>
+    <script type="module" src="./app.js?v=22"></script>
   </body>
 </html>

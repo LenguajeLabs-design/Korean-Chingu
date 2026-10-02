@@ -1,14 +1,15 @@
-const CACHE_NAME = "korean-chingu-v21";
+const CACHE_NAME = "korean-chingu-v22";
 const APP_FILES = [
-  "./index.html?v=21",
-  "./styles.css?v=21",
-  "./app.js?v=21",
-  "./grammar.js?v=21",
-  "./vocabulary.js?v=21",
-  "./freddie-examples.js?v=21",
-  "./manifest.webmanifest?v=21",
-  "./icon.svg?v=21",
-  "./assets/seoul-route-map.jpg?v=21"
+  "./index.html?v=22",
+  "./styles.css?v=22",
+  "./app.js?v=22",
+  "./grammar.js?v=22",
+  "./vocabulary.js?v=22",
+  "./freddie-examples.js?v=22",
+  "./exam-rounds.js?v=22",
+  "./manifest.webmanifest?v=22",
+  "./icon.svg?v=22",
+  "./assets/seoul-route-map.jpg?v=22"
 ];
 
 self.addEventListener("install", (event) => {
@@ -32,7 +33,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=21")));
+    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=22")));
     return;
   }
 

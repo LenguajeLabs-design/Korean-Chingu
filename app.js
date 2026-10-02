@@ -1,6 +1,7 @@
-import { grammar } from "./grammar.js?v=21";
-import { vocabulary } from "./vocabulary.js?v=21";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=21";
+import { grammar } from "./grammar.js?v=22";
+import { vocabulary } from "./vocabulary.js?v=22";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=22";
+import { examRounds } from "./exam-rounds.js?v=22";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -71,7 +72,9 @@ const routeMissions = [
   { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
   { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true },
   { id: "myeongdong-check-in", location: "Myeongdong", title: "Check in near Myeongdong", description: "Find your stay, hand over your bag, and check when check-in begins.", category: "Travel & Stay", contexts: ["seoul", "study", "work"], wordIds: ["jido", "juso", "sukso", "jim", "chekeuin"], bonus: true },
-  { id: "myeongdong-snack", location: "Myeongdong", title: "Pick a street-food favorite", description: "Get a recommendation, check the spice, and take a snack to go.", category: "Food & Culture", contexts: ["food", "friends", "seoul", "study"], wordIds: ["menyu", "chucheonhada", "maepda", "gimbap", "pojanghada"], bonus: true }
+  { id: "myeongdong-snack", location: "Myeongdong", title: "Pick a street-food favorite", description: "Get a recommendation, check the spice, and take a snack to go.", category: "Food & Culture", contexts: ["food", "friends", "seoul", "study"], wordIds: ["menyu", "chucheonhada", "maepda", "gimbap", "pojanghada"], bonus: true },
+  { id: "topik1-quick-replies", location: "TOPIK I · Quick replies", title: "Choose what fits the conversation", description: "Make sense of short questions, simple replies, and everyday details.", category: "TOPIK I exam practice", contexts: ["seoul", "food", "work", "study", "family"], questions: examRounds["topik1-quick-replies"], bonus: true },
+  { id: "topik2-seoul-reading", location: "TOPIK II · Seoul reading", title: "Read between the Seoul lines", description: "Read a small chart, follow a story, and spot the main idea.", category: "TOPIK II exam practice", contexts: ["seoul", "work", "hobbies", "study"], questions: examRounds["topik2-seoul-reading"], bonus: true }
 ];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
@@ -113,7 +116,7 @@ function applyThemePreference() {
   themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "day" : "night"} mode`);
   document.querySelector("#theme-label").textContent = isDark ? "Day" : "Night";
   themeToggle.title = `Switch to ${isDark ? "day" : "night"} mode. Preference is saved in this browser on this device.`;
-  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#131815" : "#f6f6f3");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#181a1c" : "#f6f6f3");
 }
 
 themeToggle.addEventListener("click", () => {
@@ -595,7 +598,7 @@ function renderRouteOverview() {
     const description = document.createElement("p");
     description.textContent = mission.description;
     const duration = document.createElement("small");
-    duration.textContent = "3 minutes · 5 words";
+    duration.textContent = mission.questions ? `3 minutes · TOPIK ${mission.questions[0]?.level || "I"}` : "3 minutes · 5 words";
     copy.append(meta, title, description, duration);
     const button = document.createElement("button");
     button.className = "bonus-mission-button";
@@ -688,11 +691,12 @@ function showKoreanSentence(container, sentence, item) {
 
 function startMission(missionId = getSuggestedMission().id) {
   const mission = routeMissions.find((candidate) => candidate.id === missionId) || getSuggestedMission();
-  const routeItems = mission.wordIds.map((id) => vocabulary.find((item) => item.id === id)).filter(Boolean);
+  const isExam = Array.isArray(mission.questions);
+  const routeItems = (mission.wordIds || []).map((id) => vocabulary.find((item) => item.id === id)).filter(Boolean);
   const routeIds = new Set(routeItems.map((item) => item.id));
-  const dueOutsideMission = getNeedsPracticeItems().filter((item) => !routeIds.has(item.id)).slice(0, 2);
-  const items = [...dueOutsideMission, ...routeItems].slice(0, 5);
-  missionSession = { missionId: mission.id, items, index: 0, correctCount: 0, answered: false, options: [] };
+  const dueOutsideMission = isExam ? [] : getNeedsPracticeItems().filter((item) => !routeIds.has(item.id)).slice(0, 2);
+  const items = isExam ? mission.questions : [...dueOutsideMission, ...routeItems].slice(0, 5);
+  missionSession = { missionId: mission.id, mode: isExam ? "exam" : "vocabulary", items, index: 0, correctCount: 0, answered: false, options: [] };
   practiceStage = "play";
   practiceHome.hidden = true;
   missionResults.hidden = true;
@@ -705,16 +709,48 @@ function startMission(missionId = getSuggestedMission().id) {
   renderMissionQuestion();
 }
 
+function renderExamChart(question) {
+  const chart = document.querySelector("#exam-chart");
+  const rows = document.querySelector("#exam-chart-rows");
+  const chartRows = question.chartRows || [];
+  chart.hidden = chartRows.length === 0;
+  rows.replaceChildren();
+  if (!chartRows.length) return;
+  document.querySelector("#exam-chart-title").textContent = question.chartTitle || "Survey results";
+  const highestValue = Math.max(...chartRows.map((row) => row.value));
+  chartRows.forEach((row) => {
+    const listItem = document.createElement("li");
+    const label = document.createElement("span");
+    label.className = "exam-chart-label";
+    label.lang = "ko";
+    label.textContent = row.label;
+    const track = document.createElement("span");
+    track.className = "exam-chart-track";
+    track.setAttribute("aria-hidden", "true");
+    const bar = document.createElement("span");
+    bar.className = "exam-chart-bar";
+    bar.style.width = `${Math.round((row.value / highestValue) * 100)}%`;
+    track.append(bar);
+    const value = document.createElement("span");
+    value.className = "exam-chart-value";
+    value.textContent = `${row.value}%`;
+    listItem.append(label, track, value);
+    rows.append(listItem);
+  });
+}
+
 function renderMissionQuestion() {
   if (!missionSession) return;
-  const item = missionSession.items[missionSession.index];
-  const example = getMissionExample(item);
+  const isExam = missionSession.mode === "exam";
+  const question = missionSession.items[missionSession.index];
+  const item = isExam ? vocabulary.find((candidate) => candidate.id === question.focusWordId) : question;
+  const example = isExam ? null : getMissionExample(item);
   const position = missionSession.index + 1;
   const schedule = ["meaning", "reverse", "cloze", "reverse", "meaning"];
-  const clozeWord = findKoreanWordForm(item, example.korean);
+  const clozeWord = isExam ? "" : findKoreanWordForm(item, example.korean);
   const clozeAvailable = Boolean(clozeWord);
   const requestedType = schedule[missionSession.index % schedule.length];
-  const questionType = requestedType === "cloze" && !clozeAvailable ? "reverse" : requestedType;
+  const questionType = isExam ? "exam" : requestedType === "cloze" && !clozeAvailable ? "reverse" : requestedType;
   missionSession.questionType = questionType;
   document.querySelector("#question-count").textContent = `${position} / ${missionSession.items.length}`;
   const progressDots = document.querySelector("#mission-step-dots");
@@ -726,34 +762,64 @@ function renderMissionQuestion() {
     dot.setAttribute("aria-hidden", "true");
     return dot;
   }));
-  document.querySelector("#question-level").textContent = `TOPIK ${item.level}`;
+  document.querySelector("#question-level").textContent = `TOPIK ${isExam ? question.level : item.level}`;
   const questionWord = document.querySelector("#question-word");
   const questionExample = document.querySelector("#question-example");
   const questionTranslation = document.querySelector("#question-translation");
   const romanization = document.querySelector("#question-romanization");
   const prompt = document.querySelector("#question-prompt");
   const stageLabel = document.querySelector("#question-stage-label");
-  const progress = wordProgress[item.id];
-  stageLabel.textContent = progress?.needsPractice ? "ANOTHER LOOK" : progress?.attempts ? "QUICK REVIEW" : "NEW WORD";
-  questionWord.textContent = questionType === "meaning" ? item.form : item.meaning;
-  questionWord.lang = questionType === "meaning" ? "ko" : "en";
-  questionWord.classList.toggle("is-english", questionType !== "meaning");
-  romanization.textContent = questionType === "meaning" ? item.romanization : "";
-  romanization.hidden = questionType !== "meaning";
-  questionTranslation.hidden = false;
-  if (questionType === "meaning") {
+  const exampleBlock = document.querySelector(".question-sentence-block");
+  const examBlock = document.querySelector("#exam-question-block");
+  const progress = item ? wordProgress[item.id] : null;
+  stageLabel.textContent = isExam ? question.skill : progress?.needsPractice ? "ANOTHER LOOK" : progress?.attempts ? "QUICK REVIEW" : "NEW WORD";
+  questionWord.hidden = isExam;
+  romanization.hidden = isExam;
+  exampleBlock.hidden = isExam;
+  examBlock.hidden = !isExam;
+  if (isExam) {
+    questionWord.textContent = "";
+    questionWord.classList.remove("is-english");
+    romanization.textContent = "";
+    prompt.textContent = question.prompt;
+    const passage = document.querySelector("#exam-passage");
+    passage.textContent = question.passage || "";
+    passage.hidden = !question.passage;
+    renderExamChart(question);
+    const translation = document.querySelector("#exam-translation");
+    translation.textContent = question.translation || "";
+    translation.hidden = true;
+    questionTranslation.hidden = true;
+  } else if (questionType === "meaning") {
+    questionWord.textContent = item.form;
+    questionWord.lang = "ko";
+    questionWord.classList.remove("is-english");
+    romanization.textContent = item.romanization;
+    romanization.hidden = false;
+    questionTranslation.hidden = false;
     prompt.textContent = "What does it mean?";
     questionExample.textContent = example.korean;
     questionExample.lang = "ko";
     questionExample.classList.remove("is-english");
     questionTranslation.textContent = example.translation;
   } else if (questionType === "reverse") {
+    questionWord.textContent = item.meaning;
+    questionWord.lang = "en";
+    questionWord.classList.add("is-english");
+    romanization.textContent = "";
+    romanization.hidden = true;
+    questionTranslation.hidden = true;
     prompt.textContent = "Which Korean word matches this meaning?";
     questionExample.textContent = example.translation;
     questionExample.lang = "en";
     questionExample.classList.add("is-english");
-    questionTranslation.hidden = true;
   } else {
+    questionWord.textContent = item.meaning;
+    questionWord.lang = "en";
+    questionWord.classList.add("is-english");
+    romanization.textContent = "";
+    romanization.hidden = true;
+    questionTranslation.hidden = false;
     prompt.textContent = clozeWord === item.form ? "Fill the blank with the right word." : "Which dictionary form is hidden?";
     questionExample.textContent = example.korean.replace(clozeWord, "＿＿＿");
     questionExample.lang = "ko";
@@ -761,21 +827,23 @@ function renderMissionQuestion() {
     questionTranslation.textContent = example.translation;
   }
 
-  const options = makeAnswerOptions(item, questionType);
+  const options = isExam
+    ? question.choices.map((choice) => ({ id: choice.id, label: choice.text }))
+    : makeAnswerOptions(item, questionType);
   missionSession.options = options;
   missionSession.answered = false;
   const optionContainer = document.querySelector("#answer-options");
-  optionContainer.setAttribute("aria-label", questionType === "meaning" ? "Choose the word meaning" : "Choose the Korean word");
+  optionContainer.setAttribute("aria-label", isExam ? "Choose the best answer" : questionType === "meaning" ? "Choose the word meaning" : "Choose the Korean word");
   optionContainer.replaceChildren(...options.map((option) => {
     const button = document.createElement("button");
     button.className = "answer-option";
-    if (questionType !== "meaning") button.classList.add("is-korean");
+    if (isExam || questionType !== "meaning") button.classList.add("is-korean");
     button.type = "button";
     button.dataset.choiceId = option.id;
     button.setAttribute("aria-pressed", "false");
     const label = document.createElement("span");
     label.textContent = option.label;
-    label.lang = questionType === "meaning" ? "en" : "ko";
+    label.lang = isExam || questionType !== "meaning" ? "ko" : "en";
     button.append(label);
     return button;
   }));
@@ -814,15 +882,18 @@ function recordWordAnswer(item, isCorrect) {
 
 function answerQuestion(selectedId) {
   if (!missionSession || missionSession.answered) return;
-  const item = missionSession.items[missionSession.index];
-  const example = getMissionExample(item);
-  const isCorrect = selectedId === item.id;
+  const isExam = missionSession.mode === "exam";
+  const question = missionSession.items[missionSession.index];
+  const item = isExam ? vocabulary.find((candidate) => candidate.id === question.focusWordId) : question;
+  const example = item ? getMissionExample(item) : null;
+  const correctChoice = isExam ? question.choices.find((choice) => choice.id === question.correctChoiceId) : null;
+  const isCorrect = isExam ? selectedId === question.correctChoiceId : selectedId === item.id;
   missionSession.answered = true;
   if (isCorrect) missionSession.correctCount += 1;
-  recordWordAnswer(item, isCorrect);
+  if (item) recordWordAnswer(item, isCorrect);
 
   document.querySelectorAll(".answer-option").forEach((button) => {
-    const isAnswer = button.dataset.choiceId === item.id;
+    const isAnswer = button.dataset.choiceId === (isExam ? question.correctChoiceId : item.id);
     const wasSelected = button.dataset.choiceId === selectedId;
     button.disabled = true;
     button.setAttribute("aria-pressed", String(wasSelected));
@@ -846,23 +917,34 @@ function answerQuestion(selectedId) {
   const feedback = document.querySelector("#answer-feedback");
   feedback.hidden = false;
   feedback.classList.toggle("is-incorrect", !isCorrect);
-  const updatedProgress = wordProgress[item.id];
+  const updatedProgress = item ? wordProgress[item.id] : null;
   document.querySelector("#feedback-title").textContent = isCorrect ? "정답이에요!" : "Let’s try that one again.";
-  const answerMeaning = `${item.form} means “${item.meaning}.”${item.note ? ` ${item.note}` : ""}`;
-  document.querySelector("#feedback-copy").textContent = isCorrect
-    ? `${updatedProgress.needsPractice ? "Good recall. One more correct review clears this word. " : "That’s right! "}${answerMeaning}`
-    : `${answerMeaning} It’ll return for another look.`;
-  document.querySelector("#feedback-translation").textContent = `In this sentence: ${example.translation}`;
-  const questionExample = document.querySelector("#question-example");
-  questionExample.lang = "ko";
-  questionExample.classList.remove("is-english");
-  showKoreanSentence(questionExample, example.korean, item);
-  const questionTranslation = document.querySelector("#question-translation");
-  questionTranslation.textContent = example.translation;
-  questionTranslation.hidden = false;
+  if (isExam) {
+    const reviewMessage = item && updatedProgress.needsPractice
+      ? (isCorrect ? ` One more correct review clears ${item.form} from your revisit list.` : ` ${item.form} will come back for practice.`)
+      : "";
+    document.querySelector("#feedback-copy").textContent = `${question.explanation}${reviewMessage}`;
+    document.querySelector("#feedback-translation").textContent = correctChoice?.translation ? `Best answer: ${correctChoice.translation}` : "";
+    const translation = document.querySelector("#exam-translation");
+    translation.hidden = !question.translation;
+    document.querySelector("#question-translation").hidden = true;
+  } else {
+    const answerMeaning = `${item.form} means “${item.meaning}.”${item.note ? ` ${item.note}` : ""}`;
+    document.querySelector("#feedback-copy").textContent = isCorrect
+      ? `${updatedProgress.needsPractice ? "Good recall. One more correct review clears this word. " : "That’s right! "}${answerMeaning}`
+      : `${answerMeaning} It’ll return for another look.`;
+    document.querySelector("#feedback-translation").textContent = `In this sentence: ${example.translation}`;
+    const questionExample = document.querySelector("#question-example");
+    questionExample.lang = "ko";
+    questionExample.classList.remove("is-english");
+    showKoreanSentence(questionExample, example.korean, item);
+    const questionTranslation = document.querySelector("#question-translation");
+    questionTranslation.textContent = example.translation;
+    questionTranslation.hidden = false;
+  }
   const next = document.querySelector("#next-question");
   next.disabled = false;
-  next.textContent = missionSession.index === missionSession.items.length - 1 ? "See your round" : "Next word →";
+  next.textContent = missionSession.index === missionSession.items.length - 1 ? "See your round" : isExam ? "Next question →" : "Next word →";
 }
 
 function makeResultsWord(item) {
@@ -897,7 +979,11 @@ function finishMission() {
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
   document.querySelector("#results-due-list").hidden = dueItems.length === 0;
   document.querySelector("#results-review-title").textContent = dueItems.length ? "These words need another look" : "All clear for now";
-  const helpfulItem = dueItems[0] || missionSession.items[0];
+  const firstItem = missionSession.items[0];
+  const firstHelpfulWord = missionSession.mode === "exam"
+    ? vocabulary.find((item) => item.id === firstItem.focusWordId)
+    : firstItem;
+  const helpfulItem = dueItems[0] || firstHelpfulWord || vocabulary[0];
   const helpfulExample = getMissionExample(helpfulItem);
   document.querySelector("#results-example-korean").textContent = helpfulExample.korean;
   document.querySelector("#results-example-translation").textContent = helpfulExample.translation;
@@ -1295,7 +1381,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=21", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=22", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
