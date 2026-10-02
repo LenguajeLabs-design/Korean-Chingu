@@ -794,3 +794,48 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
   .review-word-list b { font-size: 18px; }
   .review-word-list span { font-size: 13px; }
 }
+
+:root[data-theme="dark"] .offline-status.is-ready { border-color: rgba(139, 168, 255, .2); }
+:root[data-theme="dark"] .offline-status.is-ready .status-dot { background: #8ba8ff; box-shadow: 0 0 0 3px rgba(139, 168, 255, .18); }
+:root[data-theme="dark"] .grammar-path-card { border-color: rgba(139, 168, 255, .24); background: linear-gradient(112deg, rgba(139, 168, 255, .1), var(--surface) 72%); }
+:root[data-theme="dark"] .grammar-path-track,
+:root[data-theme="dark"] .grammar-step-track { background: #414756; }
+:root[data-theme="dark"] .grammar-path-track > span,
+:root[data-theme="dark"] .grammar-step-track > span { background: #8ba8ff; }
+:root[data-theme="dark"] .bonus-mission-card.is-complete .bonus-mission-number { border-color: #475985; background: #29344b; color: #c3d2ff; }
+:root[data-theme="dark"] .bonus-mission-button { border-color: #475985; background: #29344b; color: #c3d2ff; }
+:root[data-theme="dark"] .bonus-mission-button:hover { background: #354362; }
+:root[data-theme="dark"] .route-stop-marker { border-color: rgba(239, 242, 252, .9); background: #536fae; }
+:root[data-theme="dark"] .grammar-card:not([data-level="2"]) .grammar-level-mark { background: #8ba8ff; }
+:root[data-theme="dark"] .brand-mark,
+:root[data-theme="dark"] .install-illustration { border-color: #8ba8ff; background: #8ba8ff; color: #182033; }
+:root[data-theme="dark"] .primary-button,
+:root[data-theme="dark"] .results-actions .primary-button { border-color: #8ba8ff; background: #8ba8ff; color: #182033; }
+:root[data-theme="dark"] .primary-button:hover:not(:disabled),
+:root[data-theme="dark"] .results-actions .primary-button:hover { border-color: #a9bcff; background: #a9bcff; }
+:root[data-theme="dark"] .mission-step-dot.is-complete { background: #8ba8ff; }
+:root[data-theme="dark"] .question-word { color: #c3d2ff; }
+:root[data-theme="dark"] .question-sentence-block,
+:root[data-theme="dark"] .exam-question-block { border-color: #41485b; background: linear-gradient(135deg, #292c38, #242832); }
+:root[data-theme="dark"] .exam-chart { border-color: #41485b; }
+:root[data-theme="dark"] .exam-chart-title,
+:root[data-theme="dark"] .exam-chart-rows li { color: #d9e0ee; }
+:root[data-theme="dark"] .exam-chart-track { background: rgba(202, 214, 242, .16); }
+:root[data-theme="dark"] .exam-chart-bar { background: #8ba8ff; }
+:root[data-theme="dark"] .exam-translation { border-color: #41485b; }
+:root[data-theme="dark"] .word-highlight { background: #35436a; color: #e0e7ff; }
+:root[data-theme="dark"] .answer-option.is-correct { border-color: #829df0; background: #2b3551; color: #e1e8ff; }
+:root[data-theme="dark"] .answer-option.is-correct::before { border-color: #829df0; background: #526cae; }
+:root[data-theme="dark"] .answer-feedback { border-color: #46577e; background: #252d40; }
+:root[data-theme="dark"] .results-helpful-example { background: #2a3040; }
+:root[data-theme="dark"] .helpful-icon { border-color: #5c6d9d; color: #c3d2ff; }
+:root[data-theme="dark"] .grammar-card:hover { border-color: rgba(139, 168, 255, .48); }
+:root[data-theme="dark"] .search-icon { stroke: #a8b0bf; }
+:root[data-theme="dark"] .search-box input::placeholder { color: #929aaa; }
+:root[data-theme="dark"] .bookmark-button { color: #a0a8b8; }
+:root[data-theme="dark"] .footer-note p span { color: #929aaa; }
+:root[data-theme="dark"] .dialog-grabber { background: #586171; }
+:root[data-theme="dark"] .section-label { color: #a9b3c6; }
+:root[data-theme="dark"] .example-index { color: #a1adc2; }
+:root[data-theme="dark"] .install-steps > div > span { background: #20232c; color: #c3d2ff; }
+:root[data-theme="dark"] .context-options input { accent-color: #8ba8ff; }

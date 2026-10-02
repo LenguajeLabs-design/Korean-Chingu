@@ -130,7 +130,7 @@ function applyThemePreference() {
   themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "day" : "night"} mode`);
   document.querySelector("#theme-label").textContent = isDark ? "Day" : "Night";
   themeToggle.title = `Switch to ${isDark ? "day" : "night"} mode. Preference is saved in this browser on this device.`;
-  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#181a1c" : "#f6f6f3");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#171922" : "#f6f6f3");
 }
 
 themeToggle.addEventListener("click", () => {
