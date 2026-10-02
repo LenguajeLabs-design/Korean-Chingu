@@ -8,10 +8,23 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Chingu" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="./manifest.webmanifest?v=12" />
-    <link rel="icon" href="./icon.svg?v=12" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon.svg?v=12" />
-    <link rel="stylesheet" href="./styles.css?v=12" />
+    <link rel="manifest" href="./manifest.webmanifest?v=13" />
+    <link rel="icon" href="./icon.svg?v=13" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg?v=13" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("korean-chingu-theme-v1");
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (savedTheme === "dark" || (savedTheme !== "light" && systemPrefersDark)) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      } catch {
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="./styles.css?v=13" />
     <title>Korean Chingu · TOPIK study</title>
   </head>
   <body>
@@ -22,6 +35,11 @@
           <span class="brand-name">korean <b>chingu</b></span>
         </a>
         <div class="topbar-actions">
+          <button class="icon-button theme-toggle" id="theme-toggle" type="button" aria-label="Turn on Night mode" aria-pressed="false" title="Theme preference is saved in this browser on this device.">
+            <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 14.2A8.2 8.2 0 0 1 9.8 3.6 8.5 8.5 0 1 0 20.4 14.2Z" /></svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" /></svg>
+            <span id="theme-label">Night</span>
+          </button>
           <button class="icon-button install-button" id="install-button" type="button" aria-haspopup="dialog">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
             <span>Offline setup</span>
@@ -96,7 +114,7 @@
           <div class="practice-home" id="practice-home">
             <section class="route-board" aria-labelledby="practice-title">
               <div class="route-scene">
-                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=12" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
+                <img class="route-scene-art" src="./assets/seoul-route-map.jpg?v=13" alt="Illustrated Seoul route from Seongsu through Hongdae to a riverside walk in Yeouido, guided by a tiger with a backpack." />
                 <div class="route-scene-copy">
                   <p class="eyebrow">SEOUL ROUTE · TOPIK 1 &amp; 2</p>
                   <h1 class="practice-title" id="practice-title">A day around Seoul</h1>
@@ -191,7 +209,7 @@
                 <div><p class="section-label">HELPFUL EXAMPLE</p><p class="helpful-korean" id="results-example-korean" lang="ko"></p><p class="helpful-translation" id="results-example-translation"></p></div>
               </div>
             </div>
-            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=12" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 5 · SEOUL ROUTE</em></span></div>
+            <div class="stamp-reveal" id="results-stamp"><div class="stamp-postage"><img src="./assets/seoul-route-map.jpg?v=13" alt="" /><span>SEOUL</span></div><span class="stamp-copy"><small id="results-stamp-kicker">YOU EARNED A STAMP</small><strong id="results-stamp-name"></strong><em id="results-stamp-meta">MISSION 1 OF 5 · SEOUL ROUTE</em></span></div>
             <div class="results-actions">
               <button class="primary-button" id="play-again" type="button">Review these words <span aria-hidden="true">→</span></button>
               <button class="text-button" id="return-practice-home" type="button">Back to route</button>
@@ -319,6 +337,6 @@
       </div>
     </dialog>
 
-    <script type="module" src="./app.js?v=12"></script>
+    <script type="module" src="./app.js?v=13"></script>
   </body>
 </html>

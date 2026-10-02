@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=12";
-import { vocabulary } from "./vocabulary.js?v=12";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=12";
+import { grammar } from "./grammar.js?v=13";
+import { vocabulary } from "./vocabulary.js?v=13";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=13";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -34,6 +34,7 @@ const practiceHome = document.querySelector("#practice-home");
 const missionPlay = document.querySelector("#mission-play");
 const missionResults = document.querySelector("#mission-results");
 const contextDialog = document.querySelector("#freddie-context-dialog");
+const themeToggle = document.querySelector("#theme-toggle");
 
 const bookmarkIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>`;
 const savedKeys = { grammar: "korean-chingu-saved-v1", vocabulary: "korean-chingu-saved-words-v1" };
@@ -41,6 +42,7 @@ const freddieModeKey = "korean-chingu-freddie-mode-v1";
 const wordProgressKey = "korean-chingu-word-progress-v1";
 const freddieContextKey = "korean-chingu-freddie-context-v1";
 const practiceFreddieKey = "korean-chingu-practice-freddie-v1";
+const themePreferenceKey = "korean-chingu-theme-v1";
 const routeStampsKey = "korean-chingu-route-stamps-v1";
 const contextLabels = {
   seoul: "Travel around Seoul",
@@ -78,6 +80,42 @@ let wordProgress = readWordProgress();
 let routeStamps = readRouteStamps();
 let missionSession = null;
 let practiceStage = "home";
+let themePreference = readThemePreference();
+
+function readThemePreference() {
+  try {
+    const preference = localStorage.getItem(themePreferenceKey);
+    return preference === "dark" || preference === "light" ? preference : "system";
+  } catch {
+    return "system";
+  }
+}
+
+function applyThemePreference() {
+  const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const isDark = themePreference === "dark" || (themePreference === "system" && systemPrefersDark);
+  document.documentElement.dataset.theme = isDark ? "dark" : "light";
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "day" : "night"} mode`);
+  document.querySelector("#theme-label").textContent = isDark ? "Day" : "Night";
+  themeToggle.title = `Switch to ${isDark ? "day" : "night"} mode. Preference is saved in this browser on this device.`;
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#131815" : "#f6f6f3");
+}
+
+themeToggle.addEventListener("click", () => {
+  themePreference = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  try {
+    localStorage.setItem(themePreferenceKey, themePreference);
+  } catch {
+    // The selected theme still applies for this visit if browser storage is unavailable.
+  }
+  applyThemePreference();
+});
+
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => {
+  if (themePreference === "system") applyThemePreference();
+});
+applyThemePreference();
 
 function readRouteStamps() {
   try {
@@ -1133,7 +1171,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=12", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=13", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
