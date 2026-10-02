@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=13";
-import { vocabulary } from "./vocabulary.js?v=13";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=13";
+import { grammar } from "./grammar.js?v=14";
+import { vocabulary } from "./vocabulary.js?v=14";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=14";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -689,11 +689,13 @@ function renderMissionQuestion() {
   optionContainer.replaceChildren(...options.map((option) => {
     const button = document.createElement("button");
     button.className = "answer-option";
+    if (questionType !== "meaning") button.classList.add("is-korean");
     button.type = "button";
     button.dataset.choiceId = option.id;
     button.setAttribute("aria-pressed", "false");
     const label = document.createElement("span");
     label.textContent = option.label;
+    label.lang = questionType === "meaning" ? "en" : "ko";
     button.append(label);
     return button;
   }));
@@ -1171,7 +1173,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=13", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=14", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
