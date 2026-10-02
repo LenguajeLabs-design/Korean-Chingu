@@ -1,23 +1,23 @@
-const CACHE_NAME = "korean-chingu-v27";
+const CACHE_NAME = "korean-chingu-v28";
 const APP_FILES = [
-  "./index.html?v=27",
-  "./styles.css?v=27",
-  "./app.js?v=27",
-  "./grammar.js?v=27",
-  "./vocabulary.js?v=27",
-  "./freddie-examples.js?v=27",
-  "./exam-rounds.js?v=27",
-  "./manifest.webmanifest?v=27",
-  "./icon.svg?v=27",
-  "./assets/seoul-route-map.jpg?v=27",
-  "./assets/royal-seoul-map.jpg?v=27",
-  "./assets/downtown-seoul-map.jpg?v=27",
-  "./assets/river-seoul-map.jpg?v=27",
-  "./assets/gangnam-seoul-map.jpg?v=27",
-  "./assets/everyday-seoul-map.jpg?v=27",
-  "./assets/seodaemun-route-map.jpg?v=27",
-  "./assets/eastern-parks-map.jpg?v=27",
-  "./assets/suwon-fortress-map.jpg?v=27"
+  "./index.html?v=28",
+  "./styles.css?v=28",
+  "./app.js?v=28",
+  "./grammar.js?v=28",
+  "./vocabulary.js?v=28",
+  "./freddie-examples.js?v=28",
+  "./exam-rounds.js?v=28",
+  "./manifest.webmanifest?v=28",
+  "./icon.svg?v=28",
+  "./assets/seoul-route-map.jpg?v=28",
+  "./assets/royal-seoul-map.jpg?v=28",
+  "./assets/downtown-seoul-map.jpg?v=28",
+  "./assets/river-seoul-map.jpg?v=28",
+  "./assets/gangnam-seoul-map.jpg?v=28",
+  "./assets/everyday-seoul-map.jpg?v=28",
+  "./assets/seodaemun-route-map.jpg?v=28",
+  "./assets/eastern-parks-map.jpg?v=28",
+  "./assets/suwon-fortress-map.jpg?v=28"
 ];
 
 self.addEventListener("install", (event) => {
@@ -41,7 +41,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=27")));
+    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=28")));
     return;
   }
 

@@ -1,7 +1,7 @@
-import { grammar } from "./grammar.js?v=27";
-import { vocabulary } from "./vocabulary.js?v=27";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=27";
-import { examRounds } from "./exam-rounds.js?v=27";
+import { grammar } from "./grammar.js?v=28";
+import { vocabulary } from "./vocabulary.js?v=28";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=28";
+import { examRounds } from "./exam-rounds.js?v=28";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -109,7 +109,7 @@ const mapChapters = [
   {
     id: "seoul-day", title: "A day around Seoul", area: "Seongsu · Hongdae · Yeouido",
     description: "Follow the original neighborhood route from Seongsu to the Han River.",
-    image: "./assets/seoul-route-map.jpg?v=27",
+    image: "./assets/seoul-route-map.jpg?v=28",
     alt: "Watercolor Seoul map connecting neighborhood cafés, lively streets, and the Han River.",
     missionIds: ["seongsu", "coffee-order", "hongdae", "coworker-school", "yeouido"],
     points: [[35, 50], [45, 68], [57, 48], [66, 67], [83, 48]]
@@ -117,7 +117,7 @@ const mapChapters = [
   {
     id: "royal-seoul", title: "Royal Seoul", area: "Palaces · hanok lanes · stream",
     description: "Wander from palace courtyards through quiet hanok lanes and old Seoul streets.",
-    image: "./assets/royal-seoul-map.jpg?v=27",
+    image: "./assets/royal-seoul-map.jpg?v=28",
     alt: "Watercolor route through palace courtyards, hanok lanes, tea shops, gardens, and Cheonggyecheon.",
     missionIds: ["gyeongbokgung-palace", "bukchon-hanok-village", "insadong-stroll", "changdeokgung-garden", "cheonggyecheon-evening"],
     points: [[36, 51], [48, 42], [59, 55], [71, 45], [83, 51]]
@@ -125,7 +125,7 @@ const mapChapters = [
   {
     id: "old-seoul-evening", title: "Old Seoul after dark", area: "Myeongdong · markets · city wall",
     description: "Check in, find a market snack, and follow the evening lights toward Naksan.",
-    image: "./assets/downtown-seoul-map.jpg?v=27",
+    image: "./assets/downtown-seoul-map.jpg?v=28",
     alt: "Watercolor Seoul evening route past market stalls, DDP, the old city wall, and Myeongdong lights.",
     missionIds: ["myeongdong-check-in", "myeongdong-snack", "gwangjang", "ddp-after-dark", "naksan-city-wall"],
     points: [[36, 48], [47, 57], [58, 43], [70, 56], [83, 48]]
@@ -133,7 +133,7 @@ const mapChapters = [
   {
     id: "river-and-views", title: "River & city views", area: "Mangwon · Banpo · Namsan",
     description: "Follow the river from a neighborhood market toward museums and hilltop views.",
-    image: "./assets/river-seoul-map.jpg?v=27",
+    image: "./assets/river-seoul-map.jpg?v=28",
     alt: "Watercolor Seoul river route from a neighborhood market past Banpo, a museum, and Namsan.",
     missionIds: ["mangwon-market-run", "banpo-rainbow-fountain", "national-museum-day", "seoul-gallery", "namsan-sunset"],
     points: [[36, 48], [48, 57], [60, 44], [71, 56], [83, 48]]
@@ -141,7 +141,7 @@ const mapChapters = [
   {
     id: "gangnam-jamsil", title: "Gangnam to Jamsil", area: "COEX · Bongeunsa · Seokchon",
     description: "Ride across Gangnam, pause by the lake, and finish high above the city.",
-    image: "./assets/gangnam-seoul-map.jpg?v=27",
+    image: "./assets/gangnam-seoul-map.jpg?v=28",
     alt: "Watercolor route through COEX, Bongeunsa, Seokchon Lake, and the Lotte World Tower skyline.",
     missionIds: ["taxi-ride", "coex-bongeunsa", "subway-reroute", "seokchon-lake-loop", "lotte-world-tower-view"],
     points: [[36, 50], [48, 43], [60, 56], [72, 44], [84, 52]]
@@ -149,7 +149,7 @@ const mapChapters = [
   {
     id: "everyday-seoul", title: "An everyday Seoul day", area: "Your stay · corner shop · commute",
     description: "Make a few familiar stops and end the day with a call home.",
-    image: "./assets/everyday-seoul-map.jpg?v=27",
+    image: "./assets/everyday-seoul-map.jpg?v=28",
     alt: "Watercolor everyday Seoul route past a hotel, convenience store, subway, and a quiet room.",
     missionIds: ["quiet-hotel-room", "gs25-stop", "rainy-commute", "family-catchup"],
     points: [[39, 49], [53, 57], [68, 44], [83, 52]]
@@ -157,7 +157,7 @@ const mapChapters = [
   {
     id: "seodaemun-walk", title: "Old Seoul westward", area: "Gyeonghuigung · Donuimun · Seodaemun",
     description: "Walk from a quiet palace through old city streets toward Seodaemun.",
-    image: "./assets/seodaemun-route-map.jpg?v=27",
+    image: "./assets/seodaemun-route-map.jpg?v=28",
     alt: "Watercolor walking route through a historic Seoul palace, hanok lanes, old city wall, and leafy museum courtyard.",
     missionIds: ["gyeonghuigung-palace", "seoul-history-museum", "donuimun-village", "dongnimmun-gate", "seodaemun-park"],
     points: [[36, 50], [46, 42], [57, 55], [69, 44], [82, 52]]
@@ -165,7 +165,7 @@ const mapChapters = [
   {
     id: "eastern-parks", title: "Eastern Seoul outdoors", area: "Ttukseom · Konkuk · Achasan",
     description: "Follow the river past neighborhood parks and finish with a view over eastern Seoul.",
-    image: "./assets/eastern-parks-map.jpg?v=27",
+    image: "./assets/eastern-parks-map.jpg?v=28",
     alt: "Watercolor route along the Han River in eastern Seoul, with Ttukseom lawns, a cycling path, trees, and distant rooftops.",
     missionIds: ["ttukseom-riverside", "konkuk-lunch", "childrens-grand-park", "achasan-trail"],
     points: [[39, 49], [53, 43], [67, 57], [82, 49]]
@@ -173,7 +173,7 @@ const mapChapters = [
   {
     id: "suwon-day", title: "A Suwon fortress day", area: "Suwon Station · Hwaseong · Haenggung",
     description: "Take a day trip south for Suwon's market, royal courtyard, and UNESCO-listed fortress.",
-    image: "./assets/suwon-fortress-map.jpg?v=27",
+    image: "./assets/suwon-fortress-map.jpg?v=28",
     alt: "Watercolor route through Suwon's stone fortress walls, traditional gate, palace rooftops, and market lane.",
     missionIds: ["suwon-station", "paldalmun-gate", "suwon-market", "suwon-haenggung", "banghwasuryujeong"],
     points: [[35, 50], [46, 42], [57, 55], [69, 44], [82, 52]]
@@ -704,18 +704,18 @@ function renderMapChapterPicker() {
 
 function makeRoutePath(points) {
   if (points.length < 2) return "";
+  return points.slice(0, -1).map((_, index) => makeRouteSegment(points, index)).join(" ");
+}
+
+function makeRouteSegment(points, index) {
   const coordinates = points.map(([top, left]) => [left, top]);
-  let path = `M ${coordinates[0][0]} ${coordinates[0][1]}`;
-  for (let index = 0; index < coordinates.length - 1; index += 1) {
-    const previous = coordinates[index - 1] || coordinates[index];
-    const current = coordinates[index];
-    const next = coordinates[index + 1];
-    const following = coordinates[index + 2] || next;
-    const controlOne = [current[0] + (next[0] - previous[0]) / 6, current[1] + (next[1] - previous[1]) / 6];
-    const controlTwo = [next[0] - (following[0] - current[0]) / 6, next[1] - (following[1] - current[1]) / 6];
-    path += ` C ${controlOne[0]} ${controlOne[1]} ${controlTwo[0]} ${controlTwo[1]} ${next[0]} ${next[1]}`;
-  }
-  return path;
+  const previous = coordinates[index - 1] || coordinates[index];
+  const current = coordinates[index];
+  const next = coordinates[index + 1];
+  const following = coordinates[index + 2] || next;
+  const controlOne = [current[0] + (next[0] - previous[0]) / 6, current[1] + (next[1] - previous[1]) / 6];
+  const controlTwo = [next[0] - (following[0] - current[0]) / 6, next[1] - (following[1] - current[1]) / 6];
+  return `M ${current[0]} ${current[1]} C ${controlOne[0]} ${controlOne[1]} ${controlTwo[0]} ${controlTwo[1]} ${next[0]} ${next[1]}`;
 }
 
 function renderRouteOverview() {
@@ -751,6 +751,13 @@ function renderRouteOverview() {
   const routePath = makeRoutePath(chapter.points.slice(0, missions.length));
   document.querySelector("#route-path-halo").setAttribute("d", routePath);
   document.querySelector("#route-path-line").setAttribute("d", routePath);
+  const completedPath = missions.slice(0, -1).flatMap((mission, index) => {
+    const nextMission = missions[index + 1];
+    if (!routeStamps.includes(mission.id) || !routeStamps.includes(nextMission.id)) return [];
+    return [makeRouteSegment(chapter.points.slice(0, missions.length), index)];
+  }).join(" ");
+  document.querySelector("#route-path-progress-halo").setAttribute("d", completedPath);
+  document.querySelector("#route-path-progress").setAttribute("d", completedPath);
   stopList.replaceChildren(...missions.map((mission, index) => {
     const complete = routeStamps.includes(mission.id);
     const isSuggested = mission.id === suggested.id;
@@ -1210,7 +1217,7 @@ function finishMission() {
     mapImage.src = currentMap.image;
     document.querySelector(".results-hero").style.setProperty("--results-map-art", `url("${currentMap.image}")`);
   } else {
-    document.querySelector("#results-stamp .stamp-postage img").src = "./assets/seoul-route-map.jpg?v=27";
+    document.querySelector("#results-stamp .stamp-postage img").src = "./assets/seoul-route-map.jpg?v=28";
     document.querySelector(".results-hero").style.removeProperty("--results-map-art");
   }
   document.querySelector("#results-due-list").replaceChildren(...dueItems.slice(0, 8).map(makeResultsWord));
@@ -1640,7 +1647,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=27", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=28", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
