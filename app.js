@@ -1,6 +1,6 @@
-import { grammar } from "./grammar.js?v=14";
-import { vocabulary } from "./vocabulary.js?v=14";
-import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=14";
+import { grammar } from "./grammar.js?v=15";
+import { vocabulary } from "./vocabulary.js?v=15";
+import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=15";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -58,7 +58,9 @@ const routeMissions = [
   { id: "hongdae", location: "Hongdae", mapSubtitle: "Music & People", title: "Find a favorite lunch spot", description: "Pick a place, order together, and find out how spicy it is.", contexts: ["food", "work", "friends", "study"], wordIds: ["menyu", "jumunhada", "maepda", "jaeryo", "gyesanseo"] },
   { id: "yeouido", location: "Yeouido", mapSubtitle: "Riverside Walks", title: "Take the long way by the river", description: "Ride across town and find a quiet spot along the Han River.", contexts: ["seoul", "study", "hobbies"], wordIds: ["jido", "beoseu", "pyo", "mul", "chulbalhada"] },
   { id: "gwangjang", location: "Gwangjang Market", title: "A market snack run", description: "Choose a bite, check the ingredients, and save the receipt.", category: "Food & Culture", contexts: ["food", "friends", "hobbies"], wordIds: ["gimbap", "allereugi", "jaeryo", "mul", "yeongsujeung"], bonus: true },
-  { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true }
+  { id: "rainy-commute", location: "Across Seoul", title: "A rainy commute", description: "Top up your transit card as traffic slows down.", category: "Work & Commute", contexts: ["work", "seoul", "study"], wordIds: ["gyotongkadeu", "jihacheol", "makhida", "hwanseung", "gojang-nada"], bonus: true },
+  { id: "myeongdong-check-in", location: "Myeongdong", title: "Check in near Myeongdong", description: "Find your stay, hand over your bag, and check when check-in begins.", category: "Travel & Stay", contexts: ["seoul", "study", "work"], wordIds: ["jido", "juso", "sukso", "jim", "chekeuin"], bonus: true },
+  { id: "myeongdong-snack", location: "Myeongdong", title: "Pick a street-food favorite", description: "Get a recommendation, check the spice, and take a snack to go.", category: "Food & Culture", contexts: ["food", "friends", "seoul", "study"], wordIds: ["menyu", "chucheonhada", "maepda", "gimbap", "pojanghada"], bonus: true }
 ];
 const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
@@ -1173,7 +1175,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=14", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=15", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
