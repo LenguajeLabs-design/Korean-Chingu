@@ -2,6 +2,7 @@ import { grammar } from "./grammar.js?v=28";
 import { vocabulary } from "./vocabulary.js?v=28";
 import { freddieGrammarExamples, freddieVocabularyExamples } from "./freddie-examples.js?v=28";
 import { examRounds } from "./exam-rounds.js?v=28";
+import { isFirebaseConfigured } from "./firebase-config.js?v=32";
 
 const list = document.querySelector("#grammar-list");
 const searchInput = document.querySelector("#search-input");
@@ -38,6 +39,13 @@ const missionResults = document.querySelector("#mission-results");
 const contextDialog = document.querySelector("#freddie-context-dialog");
 const themeToggle = document.querySelector("#theme-toggle");
 const koreanSizeToggle = document.querySelector("#korean-size-toggle");
+const syncButton = document.querySelector("#sync-button");
+const syncDialog = document.querySelector("#sync-dialog");
+const syncEnabledKey = "korean-chingu-cloud-sync-enabled-v1";
+const syncDeviceKey = "korean-chingu-sync-device-v1";
+const syncOwnerKey = "korean-chingu-sync-owner-v1";
+const savedSyncStateKey = "korean-chingu-saved-sync-state-v1";
+const preferenceSyncStateKey = "korean-chingu-preference-sync-state-v1";
 
 const bookmarkIcon = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.8A1.8 1.8 0 0 1 8.3 3h7.4a1.8 1.8 0 0 1 1.8 1.8V21l-6.8-4-6.8 4z" /></svg>`;
 const savedKeys = { grammar: "korean-chingu-saved-v1", vocabulary: "korean-chingu-saved-words-v1" };
@@ -186,6 +194,16 @@ const savedByMode = {
   grammar: readSaved(savedKeys.grammar),
   vocabulary: readSaved(savedKeys.vocabulary)
 };
+const savedSyncState = readSavedSyncState();
+Object.keys(savedByMode).forEach((mode) => {
+  for (const id of savedByMode[mode]) {
+    if (!savedSyncState[mode][id]) savedSyncState[mode][id] = { saved: true, updatedAt: 0 };
+  }
+  for (const [id, state] of Object.entries(savedSyncState[mode])) {
+    if (!state.saved) savedByMode[mode].delete(id);
+    else savedByMode[mode].add(id);
+  }
+});
 let activeMode = "grammar";
 let activeView = "grammar";
 let activeLevel = "1";
@@ -206,6 +224,17 @@ let missionSession = null;
 let practiceStage = "home";
 let themePreference = readThemePreference();
 let koreanTextLarge = readKoreanTextPreference();
+let preferenceSyncState = readPreferenceSyncState();
+let syncIsEnabled = readSyncEnabled();
+let syncClient = null;
+let syncUser = null;
+let syncInitPromise = null;
+let syncUnsubscribe = null;
+let syncSaveTimer = null;
+let syncSavePromise = null;
+let syncSaveQueued = false;
+let applyingSyncedProgress = false;
+let syncMessage = isFirebaseConfigured ? "" : "Google sign-in needs the final Firebase account and database settings. Your progress remains on this device.";
 
 function readKoreanTextPreference() {
   try {
@@ -219,7 +248,7 @@ function applyKoreanTextPreference() {
   document.documentElement.dataset.koreanTextSize = koreanTextLarge ? "large" : "standard";
   koreanSizeToggle.setAttribute("aria-pressed", String(koreanTextLarge));
   koreanSizeToggle.setAttribute("aria-label", koreanTextLarge ? "Return Korean text to standard size" : "Make Korean text larger");
-  koreanSizeToggle.title = `${koreanTextLarge ? "Standard" : "Larger"} Korean text. Preference is saved in this browser on this device.`;
+  koreanSizeToggle.title = `${koreanTextLarge ? "Standard" : "Larger"} Korean text. ${syncUser ? "Preference syncs across your devices." : "Preference is saved on this device."}`;
   koreanSizeToggle.querySelector("span").textContent = koreanTextLarge ? "가−" : "가+";
 }
 
@@ -230,8 +259,11 @@ koreanSizeToggle.addEventListener("click", () => {
   } catch {
     // The selected size still applies for this visit if browser storage is unavailable.
   }
+  preferenceSyncState.koreanTextSize = { value: koreanTextLarge ? "large" : "standard", updatedAt: Date.now() };
+  persistPreferenceSyncState();
+  notifySyncOfLocalChange();
   applyKoreanTextPreference();
-  document.querySelector("#korean-size-status").textContent = `Korean text ${koreanTextLarge ? "enlarged" : "returned to standard size"}. This preference is saved on this device.`;
+  document.querySelector("#korean-size-status").textContent = `Korean text ${koreanTextLarge ? "enlarged" : "returned to standard size"}. ${syncUser ? "This preference syncs across your devices." : "This preference is saved on this device."}`;
 });
 
 applyKoreanTextPreference();
@@ -252,7 +284,7 @@ function applyThemePreference() {
   themeToggle.setAttribute("aria-pressed", String(isDark));
   themeToggle.setAttribute("aria-label", `Switch to ${isDark ? "day" : "night"} mode`);
   document.querySelector("#theme-label").textContent = isDark ? "Day" : "Night";
-  themeToggle.title = `Switch to ${isDark ? "day" : "night"} mode. Preference is saved in this browser on this device.`;
+  themeToggle.title = `Switch to ${isDark ? "day" : "night"} mode. ${syncUser ? "Preference syncs across your devices." : "Preference is saved on this device."}`;
   document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#171922" : "#f6f6f3");
 }
 
@@ -263,6 +295,9 @@ themeToggle.addEventListener("click", () => {
   } catch {
     // The selected theme still applies for this visit if browser storage is unavailable.
   }
+  preferenceSyncState.theme = { value: themePreference, updatedAt: Date.now() };
+  persistPreferenceSyncState();
+  notifySyncOfLocalChange();
   applyThemePreference();
 });
 
@@ -288,6 +323,7 @@ function persistRouteStamps() {
   } catch {
     // Route progress remains available for this visit if browser storage is unavailable.
   }
+  notifySyncOfLocalChange();
 }
 
 function readSaved(key) {
@@ -296,6 +332,77 @@ function readSaved(key) {
     return new Set(Array.isArray(value) ? value : []);
   } catch {
     return new Set();
+  }
+}
+
+function readSavedSyncState() {
+  const empty = { grammar: {}, vocabulary: {} };
+  try {
+    const value = JSON.parse(localStorage.getItem(savedSyncStateKey) || "{}");
+    return {
+      grammar: value.grammar && typeof value.grammar === "object" ? value.grammar : {},
+      vocabulary: value.vocabulary && typeof value.vocabulary === "object" ? value.vocabulary : {}
+    };
+  } catch {
+    return empty;
+  }
+}
+
+function readPreferenceSyncState() {
+  try {
+    const value = JSON.parse(localStorage.getItem(preferenceSyncStateKey) || "{}");
+    return {
+      theme: value.theme || { value: themePreference, updatedAt: 0 },
+      koreanTextSize: value.koreanTextSize || { value: koreanTextLarge ? "large" : "standard", updatedAt: 0 }
+    };
+  } catch {
+    return {
+      theme: { value: themePreference, updatedAt: 0 },
+      koreanTextSize: { value: koreanTextLarge ? "large" : "standard", updatedAt: 0 }
+    };
+  }
+}
+
+function readSyncEnabled() {
+  try {
+    return localStorage.getItem(syncEnabledKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function getSyncDeviceId() {
+  try {
+    let id = localStorage.getItem(syncDeviceKey);
+    if (!id) {
+      id = globalThis.crypto?.randomUUID?.() || `device-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      localStorage.setItem(syncDeviceKey, id);
+    }
+    return id;
+  } catch {
+    return "temporary-device";
+  }
+}
+
+function notifySyncOfLocalChange() {
+  if (applyingSyncedProgress || !syncIsEnabled || !syncUser || !navigator.onLine) return;
+  clearTimeout(syncSaveTimer);
+  syncSaveTimer = setTimeout(() => syncNow(), 500);
+}
+
+function persistSavedSyncState() {
+  try {
+    localStorage.setItem(savedSyncStateKey, JSON.stringify(savedSyncState));
+  } catch {
+    // Saved entries still work for this visit if browser storage is unavailable.
+  }
+}
+
+function persistPreferenceSyncState() {
+  try {
+    localStorage.setItem(preferenceSyncStateKey, JSON.stringify(preferenceSyncState));
+  } catch {
+    // Preferences still apply for this visit if browser storage is unavailable.
   }
 }
 
@@ -343,6 +450,7 @@ function persistWordProgress() {
   } catch {
     // Practice still works for the current session when browser storage is unavailable.
   }
+  notifySyncOfLocalChange();
 }
 
 function readGrammarProgress() {
@@ -361,6 +469,7 @@ function persistGrammarProgress() {
   } catch {
     // Grammar progress remains available for this visit if browser storage is unavailable.
   }
+  notifySyncOfLocalChange();
 }
 
 function getGrammarPathItems(level) {
@@ -409,6 +518,8 @@ function persistSaved(mode) {
   } catch {
     // The guide remains usable when browser storage is unavailable.
   }
+  persistSavedSyncState();
+  notifySyncOfLocalChange();
 }
 
 function getCurrentSaved() {
@@ -548,6 +659,7 @@ function render() {
   renderGrammarPath();
 
   pageTitle.textContent = isWordMode ? "Korean words for the way" : "Korean grammar";
+  renderSyncStorageNotes();
   introCopy.textContent = isWordMode
     ? "Quick meanings, practical topics, and useful examples—ready offline."
     : "Learn one pattern at a time. Mark it understood when you’re ready, then move on.";
@@ -1128,25 +1240,414 @@ function renderMissionQuestion() {
   window.scrollTo(0, 0);
 }
 
+function getWordDeviceRecords(progress) {
+  if (progress.devices && typeof progress.devices === "object") {
+    return Object.fromEntries(Object.entries(progress.devices).map(([id, value]) => [id, { ...value }]));
+  }
+  return {
+    [getSyncDeviceId()]: {
+      attempts: progress.attempts || 0,
+      correct: progress.correct || 0,
+      misses: progress.misses || 0,
+      needsPractice: Boolean(progress.needsPractice),
+      correctReviews: progress.correctReviews || 0,
+      lastPracticedAt: progress.lastPracticedAt || 0
+    }
+  };
+}
+
+function aggregateWordDeviceRecords(devices) {
+  const entries = Object.entries(devices || {});
+  const latest = entries
+    .sort(([idA, a], [idB, b]) => (b.lastPracticedAt || 0) - (a.lastPracticedAt || 0) || idA.localeCompare(idB))[0]?.[1];
+  return {
+    attempts: entries.reduce((sum, [, value]) => sum + (value.attempts || 0), 0),
+    correct: entries.reduce((sum, [, value]) => sum + (value.correct || 0), 0),
+    misses: entries.reduce((sum, [, value]) => sum + (value.misses || 0), 0),
+    needsPractice: Boolean(latest?.needsPractice),
+    correctReviews: latest?.correctReviews || 0,
+    lastPracticedAt: Math.max(0, ...entries.map(([, value]) => value.lastPracticedAt || 0)),
+    devices
+  };
+}
+
 function recordWordAnswer(item, isCorrect) {
   const previous = wordProgress[item.id] || { attempts: 0, correct: 0, misses: 0, needsPractice: false, correctReviews: 0 };
-  const progress = {
-    ...previous,
-    attempts: (previous.attempts || 0) + 1,
-    correct: (previous.correct || 0) + (isCorrect ? 1 : 0),
-    misses: (previous.misses || 0) + (isCorrect ? 0 : 1),
-    lastPracticedAt: Date.now()
-  };
-  if (isCorrect && previous.needsPractice) {
-    progress.correctReviews = (previous.correctReviews || 0) + 1;
-    progress.needsPractice = progress.correctReviews < 2;
-  } else if (!isCorrect) {
-    progress.needsPractice = true;
-    progress.correctReviews = 0;
+  if (syncIsEnabled || previous.devices) {
+    const deviceId = getSyncDeviceId();
+    const devices = getWordDeviceRecords(previous);
+    const current = devices[deviceId] || {
+      attempts: 0, correct: 0, misses: 0,
+      needsPractice: previous.needsPractice,
+      correctReviews: previous.correctReviews || 0,
+      lastPracticedAt: 0
+    };
+    const progress = {
+      ...current,
+      attempts: (current.attempts || 0) + 1,
+      correct: (current.correct || 0) + (isCorrect ? 1 : 0),
+      misses: (current.misses || 0) + (isCorrect ? 0 : 1),
+      lastPracticedAt: Date.now()
+    };
+    if (isCorrect && current.needsPractice) {
+      progress.correctReviews = (current.correctReviews || 0) + 1;
+      progress.needsPractice = progress.correctReviews < 2;
+    } else if (!isCorrect) {
+      progress.needsPractice = true;
+      progress.correctReviews = 0;
+    }
+    devices[deviceId] = progress;
+    wordProgress[item.id] = aggregateWordDeviceRecords(devices);
+  } else {
+    const progress = {
+      ...previous,
+      attempts: (previous.attempts || 0) + 1,
+      correct: (previous.correct || 0) + (isCorrect ? 1 : 0),
+      misses: (previous.misses || 0) + (isCorrect ? 0 : 1),
+      lastPracticedAt: Date.now()
+    };
+    if (isCorrect && previous.needsPractice) {
+      progress.correctReviews = (previous.correctReviews || 0) + 1;
+      progress.needsPractice = progress.correctReviews < 2;
+    } else if (!isCorrect) {
+      progress.needsPractice = true;
+      progress.correctReviews = 0;
+    }
+    wordProgress[item.id] = progress;
   }
-  wordProgress[item.id] = progress;
   persistWordProgress();
 }
+
+function mergeVersionedMaps(remote = {}, local = {}) {
+  const merged = {};
+  const ids = new Set([...Object.keys(remote || {}), ...Object.keys(local || {})]);
+  for (const id of [...ids].sort()) {
+    const remoteValue = remote?.[id];
+    const localValue = local?.[id];
+    const chosen = !remoteValue ? localValue : !localValue ? remoteValue
+      : (localValue.updatedAt || 0) >= (remoteValue.updatedAt || 0) ? localValue : remoteValue;
+    if (chosen && typeof chosen === "object") merged[id] = chosen;
+  }
+  return merged;
+}
+
+function mergeWordProgressMaps(remote = {}, local = {}) {
+  const merged = {};
+  const wordIds = new Set([...Object.keys(remote || {}), ...Object.keys(local || {})]);
+  for (const wordId of [...wordIds].sort()) {
+    if (!vocabulary.some((item) => item.id === wordId)) continue;
+    const remoteDevices = remote?.[wordId]?.devices || {};
+    const localDevices = local?.[wordId]?.devices || {};
+    const devices = {};
+    for (const deviceId of [...new Set([...Object.keys(remoteDevices), ...Object.keys(localDevices)])].sort()) {
+      const remoteState = remoteDevices[deviceId] || {};
+      const localState = localDevices[deviceId] || {};
+      const latest = (localState.lastPracticedAt || 0) >= (remoteState.lastPracticedAt || 0) ? localState : remoteState;
+      devices[deviceId] = {
+        attempts: Math.max(remoteState.attempts || 0, localState.attempts || 0),
+        correct: Math.max(remoteState.correct || 0, localState.correct || 0),
+        misses: Math.max(remoteState.misses || 0, localState.misses || 0),
+        needsPractice: Boolean(latest.needsPractice),
+        correctReviews: latest.correctReviews || 0,
+        lastPracticedAt: Math.max(remoteState.lastPracticedAt || 0, localState.lastPracticedAt || 0)
+      };
+    }
+    merged[wordId] = { devices };
+  }
+  return merged;
+}
+
+function mergeProgressSnapshots(remote, local) {
+  const empty = {};
+  const savedModes = ["grammar", "vocabulary"];
+  const saved = {};
+  for (const mode of savedModes) {
+    const validIds = mode === "grammar" ? grammar : vocabulary;
+    const merged = mergeVersionedMaps(remote?.saved?.[mode], local?.saved?.[mode]);
+    saved[mode] = Object.fromEntries(Object.entries(merged).filter(([id, value]) => validIds.some((item) => item.id === id) && typeof value.saved === "boolean"));
+  }
+  const mergeSet = (remoteItems, localItems, allowedItems) => [...new Set([...(remoteItems || []), ...(localItems || [])]
+    .filter((id) => allowedItems.some((item) => item.id === id)))].sort();
+  const preferences = mergeVersionedMaps(remote?.preferences, local?.preferences);
+  const localTheme = local?.preferences?.theme || { value: "system", updatedAt: 0 };
+  const localTextSize = local?.preferences?.koreanTextSize || { value: "standard", updatedAt: 0 };
+  const theme = ["system", "light", "dark"].includes(preferences.theme?.value) ? preferences.theme : localTheme;
+  const koreanTextSize = ["standard", "large"].includes(preferences.koreanTextSize?.value) ? preferences.koreanTextSize : localTextSize;
+  return {
+    version: 1,
+    routeStamps: mergeSet(remote?.routeStamps, local?.routeStamps, routeMissions),
+    completedGrammarIds: mergeSet(remote?.completedGrammarIds, local?.completedGrammarIds, grammar),
+    wordProgress: mergeWordProgressMaps(remote?.wordProgress, local?.wordProgress),
+    saved,
+    preferences: { theme, koreanTextSize }
+  };
+}
+
+function collectProgressSnapshot() {
+  const saved = { grammar: { ...savedSyncState.grammar }, vocabulary: { ...savedSyncState.vocabulary } };
+  for (const mode of Object.keys(savedByMode)) {
+    for (const id of savedByMode[mode]) {
+      if (!saved[mode][id]) saved[mode][id] = { saved: true, updatedAt: 0 };
+    }
+  }
+  const wordMap = {};
+  for (const [id, progress] of Object.entries(wordProgress)) {
+    if (vocabulary.some((item) => item.id === id)) wordMap[id] = { devices: getWordDeviceRecords(progress) };
+  }
+  return {
+    version: 1,
+    routeStamps: [...routeStamps],
+    completedGrammarIds: [...completedGrammarIds],
+    wordProgress: wordMap,
+    saved,
+    preferences: {
+      theme: { ...preferenceSyncState.theme, value: themePreference },
+      koreanTextSize: { ...preferenceSyncState.koreanTextSize, value: koreanTextLarge ? "large" : "standard" }
+    }
+  };
+}
+
+function applySyncedProgress(progress) {
+  if (!progress) return;
+  applyingSyncedProgress = true;
+  const merged = mergeProgressSnapshots(null, progress);
+  routeStamps = merged.routeStamps;
+  completedGrammarIds = new Set(merged.completedGrammarIds);
+  wordProgress = Object.fromEntries(Object.entries(merged.wordProgress).map(([id, record]) => [id, aggregateWordDeviceRecords(record.devices)]));
+  for (const mode of ["grammar", "vocabulary"]) {
+    savedSyncState[mode] = merged.saved[mode];
+    savedByMode[mode].clear();
+    for (const [id, state] of Object.entries(savedSyncState[mode])) if (state.saved) savedByMode[mode].add(id);
+  }
+  preferenceSyncState = merged.preferences;
+  themePreference = merged.preferences.theme.value;
+  koreanTextLarge = merged.preferences.koreanTextSize.value === "large";
+  try {
+    localStorage.setItem(routeStampsKey, JSON.stringify(routeStamps));
+    localStorage.setItem(grammarProgressKey, JSON.stringify([...completedGrammarIds]));
+    localStorage.setItem(wordProgressKey, JSON.stringify(wordProgress));
+    localStorage.setItem(savedKeys.grammar, JSON.stringify([...savedByMode.grammar]));
+    localStorage.setItem(savedKeys.vocabulary, JSON.stringify([...savedByMode.vocabulary]));
+    localStorage.setItem(themePreferenceKey, themePreference);
+    localStorage.setItem(koreanTextSizeKey, koreanTextLarge ? "large" : "standard");
+    localStorage.setItem(savedSyncStateKey, JSON.stringify(savedSyncState));
+    localStorage.setItem(preferenceSyncStateKey, JSON.stringify(preferenceSyncState));
+  } catch {
+    // The merged state remains available for this visit if browser storage is unavailable.
+  }
+  applyThemePreference();
+  applyKoreanTextPreference();
+  render();
+  renderRouteOverview();
+  renderReviewOverview();
+  renderSyncStorageNotes();
+  applyingSyncedProgress = false;
+}
+
+function renderSyncStorageNotes() {
+  const signedIn = Boolean(syncUser);
+  const savedNote = signedIn
+    ? `Saved ${activeMode === "vocabulary" ? "words" : "grammar points"} sync with your Google account. Freddie topics and personal context stay on this device.`
+    : `Saved ${activeMode === "vocabulary" ? "words" : "grammar points"} are stored in this browser on this device. Turn on Sync to carry them across devices.`;
+  storageNote.textContent = savedNote;
+  document.querySelector("#review-storage-note").textContent = signedIn
+    ? "Map stamps, word reviews, and saved entries sync with your Google account. Freddie topics and personal context stay in this browser on this device."
+    : "Word history and saved entries stay in this browser on this device. Freddie topics always stay here. Turn on Sync to continue progress across devices.";
+  document.querySelector("#route-storage-note").textContent = signedIn
+    ? "Illustrated, not to scale · finished stops glow and connect · syncing across your devices"
+    : "Illustrated, not to scale · finished stops glow and connect · saved on this device";
+  document.querySelector("#install-storage-note").textContent = signedIn
+    ? "Your guide stays available offline on this device. Map progress, word reviews, saved entries, text size, and theme sync; Freddie topics remain local."
+    : "Saved grammar, words, and Freddie topics stay in this browser on this device. Turn on Sync to continue progress elsewhere; offline study still works without an account.";
+}
+
+function renderSyncDialog() {
+  const connected = Boolean(syncUser);
+  const connectButton = document.querySelector("#sync-connect");
+  document.querySelector("#sync-offline-panel").hidden = connected;
+  document.querySelector("#sync-connected-panel").hidden = !connected;
+  document.querySelector("#sync-not-now").hidden = connected;
+  syncButton.classList.toggle("is-connected", connected);
+  syncButton.querySelector("span").textContent = connected ? "On" : "Sync";
+  syncButton.setAttribute("aria-label", connected ? "Sync is on. Manage account sync" : "Sync progress across devices");
+  syncButton.title = connected ? "Manage Google account sync" : "Sync progress across devices";
+  connectButton.disabled = !isFirebaseConfigured;
+  connectButton.querySelector("span:nth-child(2)").textContent = isFirebaseConfigured ? "Continue with Google" : "Google sync setup is finishing";
+  if (connected) {
+    document.querySelector("#sync-account-label").textContent = syncUser.displayName || syncUser.email || "Connected with Google";
+  }
+  const liveStatus = document.querySelector("#sync-live-status");
+  liveStatus.textContent = syncMessage;
+  liveStatus.hidden = !syncMessage;
+  renderSyncStorageNotes();
+}
+
+function setSyncStatus(title, copy, state = "ready", message = "") {
+  const card = document.querySelector(".sync-status-card");
+  card.classList.toggle("is-syncing", state === "syncing");
+  card.classList.toggle("is-error", state === "error");
+  document.querySelector("#sync-status-title").textContent = title;
+  document.querySelector("#sync-status-copy").textContent = copy;
+  syncMessage = message;
+  renderSyncDialog();
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (!value || typeof value !== "object") return JSON.stringify(value);
+  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+}
+
+async function syncNow() {
+  if (!syncClient || !syncUser) return;
+  if (!navigator.onLine) {
+    setSyncStatus("Saved on this device", "You’re offline. Progress will sync when you’re back online.", "ready", "Offline progress stays here until the connection returns.");
+    return;
+  }
+  if (syncSavePromise) {
+    syncSaveQueued = true;
+    return syncSavePromise;
+  }
+  syncSavePromise = (async () => {
+    setSyncStatus("Syncing your progress…", "Your offline changes are being combined with your account.", "syncing");
+    const merged = await syncClient.saveProgress(collectProgressSnapshot(), mergeProgressSnapshots);
+    applySyncedProgress(merged);
+    setSyncStatus("Synced just now", "Your progress is up to date across your devices.", "ready");
+  })();
+  try {
+    await syncSavePromise;
+  } catch (error) {
+    const message = error?.code === "permission-denied"
+      ? "Your account is signed in, but the progress database rules are not ready yet."
+      : "Your progress is safe on this device. We’ll try again when sync is available.";
+    setSyncStatus("Sync paused", message, "error", message);
+  } finally {
+    syncSavePromise = null;
+    if (syncSaveQueued) {
+      syncSaveQueued = false;
+      syncNow();
+    }
+  }
+}
+
+async function initializeProgressSync() {
+  if (!syncIsEnabled || !navigator.onLine) return;
+  if (syncInitPromise) return syncInitPromise;
+  syncInitPromise = (async () => {
+    const { createFirebaseSync } = await import("./firebase-sync.js?v=32");
+    syncClient = createFirebaseSync();
+    if (!syncClient.configured) {
+      setSyncStatus("Sync setup is not finished", "Your saved progress remains on this device.", "error", "Google account sync is not configured yet. Local study and offline access still work.");
+      return;
+    }
+    syncUnsubscribe = await syncClient.start({
+      onUser: (user) => {
+        if (user) {
+          let existingOwner = "";
+          try { existingOwner = localStorage.getItem(syncOwnerKey) || ""; } catch {}
+          if (existingOwner && existingOwner !== user.uid) {
+            syncUser = null;
+            syncIsEnabled = false;
+            try { localStorage.setItem(syncEnabledKey, "false"); } catch {}
+            syncMessage = "This browser was last synced with a different Google account. Sign in with that account to keep its progress separate.";
+            syncClient.signOut();
+            renderSyncDialog();
+            return;
+          }
+          syncUser = user;
+          syncIsEnabled = true;
+          try {
+            localStorage.setItem(syncEnabledKey, "true");
+            localStorage.setItem(syncOwnerKey, user.uid);
+          } catch {}
+          setSyncStatus("Connecting your progress…", "Bringing this device up to date.", "syncing");
+          syncNow();
+        } else {
+          syncUser = null;
+          renderSyncDialog();
+        }
+      },
+      onProgress: (remoteProgress) => {
+        if (!syncUser) return;
+        const localProgress = collectProgressSnapshot();
+        const merged = mergeProgressSnapshots(remoteProgress, localProgress);
+        applySyncedProgress(merged);
+        if (stableJson(merged) !== stableJson(remoteProgress)) syncNow();
+      },
+      onError: (error) => {
+        const message = error?.code === "permission-denied"
+          ? "The database access rules need setup before progress can sync."
+          : "Your progress stays on this device. Try syncing again when you’re online.";
+        setSyncStatus("Sync paused", message, "error", message);
+      }
+    });
+  })().catch((error) => {
+    syncClient = null;
+    setSyncStatus("Couldn’t start sync", "Your progress is still saved on this device.", "error", error?.message || "Connect to the internet and try again.");
+  }).finally(() => {
+    syncInitPromise = null;
+  });
+  return syncInitPromise;
+}
+
+async function connectProgressSync() {
+  if (!navigator.onLine) {
+    setSyncStatus("You’re offline", "Connect once to turn on account sync. Your local progress is safe.", "error", "Account setup needs an internet connection. You can keep studying offline.");
+    return;
+  }
+  try {
+    const { createFirebaseSync } = await import("./firebase-sync.js?v=32");
+    syncClient = createFirebaseSync();
+    if (!syncClient.configured) {
+      setSyncStatus("Sync setup is not finished", "Your saved progress remains on this device.", "error", "The Firebase project needs its final account and database settings before Google sign-in can start.");
+      return;
+    }
+    syncIsEnabled = true;
+    try { localStorage.setItem(syncEnabledKey, "true"); } catch {}
+    await initializeProgressSync();
+    await syncClient.signIn();
+  } catch (error) {
+    const message = error?.code === "auth/unauthorized-domain"
+      ? "This site still needs to be added to Firebase’s approved sign-in domains."
+      : "Google sign-in didn’t finish. Your progress is still safe on this device.";
+    setSyncStatus("Couldn’t connect", message, "error", message);
+  }
+}
+
+syncButton.addEventListener("click", () => {
+  renderSyncDialog();
+  syncDialog.showModal();
+  if (syncIsEnabled && !syncUser) initializeProgressSync();
+});
+document.querySelector("#close-sync").addEventListener("click", () => syncDialog.close());
+document.querySelector("#sync-not-now").addEventListener("click", () => syncDialog.close());
+document.querySelector("#sync-connect").addEventListener("click", connectProgressSync);
+document.querySelector("#sync-now").addEventListener("click", syncNow);
+document.querySelector("#sync-sign-out").addEventListener("click", async () => {
+  try {
+    if (navigator.onLine) await syncNow();
+    syncIsEnabled = false;
+    syncUser = null;
+    try { localStorage.setItem(syncEnabledKey, "false"); } catch {}
+    if (syncUnsubscribe) syncUnsubscribe();
+    syncUnsubscribe = null;
+    await syncClient?.signOut();
+    setSyncStatus("Sync is off on this device", "Your Google account copy remains available when you sign in again.", "ready", "This device keeps its local study data and still works offline.");
+  } catch {
+    syncIsEnabled = false;
+    syncUser = null;
+    try { localStorage.setItem(syncEnabledKey, "false"); } catch {}
+    await syncClient?.signOut().catch(() => {});
+    renderSyncDialog();
+  }
+});
+
+window.addEventListener("online", () => {
+  if (syncIsEnabled) initializeProgressSync();
+});
+window.addEventListener("offline", () => {
+  if (syncUser) setSyncStatus("Saved on this device", "You’re offline. Progress will sync when you’re back online.", "ready");
+});
 
 function answerQuestion(selectedId) {
   if (!missionSession || missionSession.answered) return;
@@ -1320,6 +1821,7 @@ function toggleSaved(id, mode = activeMode) {
   const saved = savedByMode[mode];
   if (saved.has(id)) saved.delete(id);
   else saved.add(id);
+  savedSyncState[mode][id] = { saved: saved.has(id), updatedAt: Date.now() };
   persistSaved(mode);
   render();
   if (mode === "grammar") updateDetailSaveButton();
@@ -1679,7 +2181,7 @@ function setOfflineState(label, state) {
 }
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  navigator.serviceWorker.register("./service-worker.js?v=29", { scope: "./" })
+  navigator.serviceWorker.register("./service-worker.js?v=32", { scope: "./" })
     .then(() => navigator.serviceWorker.ready)
     .then(() => setOfflineState("Offline-ready on this device", "ready"))
     .catch(() => setOfflineState("Open this page online on this device to save it", "error"));
@@ -1689,3 +2191,5 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
 
 render();
 syncFreddieToggles();
+renderSyncDialog();
+if (syncIsEnabled && navigator.onLine) initializeProgressSync();

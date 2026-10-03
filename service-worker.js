@@ -1,8 +1,10 @@
-const CACHE_NAME = "korean-chingu-v29";
+const CACHE_NAME = "korean-chingu-v32";
 const APP_FILES = [
-  "./index.html?v=29",
-  "./styles.css?v=29",
-  "./app.js?v=29",
+  "./index.html?v=32",
+  "./styles.css?v=32",
+  "./app.js?v=32",
+  "./firebase-config.js?v=32",
+  "./firebase-sync.js?v=32",
   "./grammar.js?v=28",
   "./vocabulary.js?v=28",
   "./freddie-examples.js?v=28",
@@ -41,7 +43,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=29")));
+    event.respondWith(fetch(request, { cache: "no-cache" }).catch(() => caches.match("./index.html?v=32")));
     return;
   }
 

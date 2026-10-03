@@ -66,6 +66,9 @@ button:active { transform: scale(.985); }
 .theme-toggle svg { width: 17px; height: 17px; }
 .theme-toggle[aria-pressed="true"] { background: var(--green-wash); color: var(--green-dark); }
 .theme-toggle .sun-icon { display: none; }
+.sync-button { width: auto; min-height: 44px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--green-dark); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.sync-button svg { width: 17px; height: 17px; }
+.sync-button.is-connected { border-color: rgba(62, 108, 80, .22); background: var(--green-wash); }
 
 main { flex: 1; }
 .intro { padding: 34px 0 20px; }
@@ -444,6 +447,34 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 .install-steps p { margin: 0; color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
 .install-steps b { color: var(--ink); }
 .install-footnote { margin: 15px 0 0; color: #8a928a; font-size: 10px; }
+.sync-dialog { max-width: 480px; }
+.sync-content { padding-bottom: 22px; }
+.sync-content h2 { max-width: 390px; font-size: 32px; line-height: 1.08; }
+.sync-content .install-lead { margin-bottom: 17px; }
+.sync-summary { margin: 0 0 12px; padding: 15px 16px 12px; border: 1px solid rgba(64, 108, 82, .13); border-radius: 16px; background: linear-gradient(135deg, var(--green-wash), var(--surface)); }
+.sync-summary .section-label { font-size: 9px; }
+.sync-summary-lead { margin: 7px 0 10px; color: var(--ink); font-family: ui-serif, Georgia, serif; font-size: 16px; font-weight: 600; }
+.sync-summary ul { margin: 0; padding: 0; display: grid; gap: 8px; list-style: none; }
+.sync-summary li { display: flex; align-items: center; gap: 9px; color: var(--ink-soft); font-size: 11px; line-height: 1.4; }
+.sync-summary li::before { content: "✓"; width: 18px; height: 18px; flex: 0 0 18px; display: grid; place-items: center; border-radius: 50%; background: var(--surface); color: var(--green); font-size: 10px; font-weight: 800; }
+.sync-privacy-note { margin: 0 0 13px; padding: 12px 13px; border-radius: 13px; background: var(--surface-soft); color: var(--ink-soft); font-size: 11px; line-height: 1.55; }
+.sync-privacy-note b { color: var(--ink); }
+.sync-connect-button { width: 100%; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 999px; }
+.google-mark { width: 21px; height: 21px; display: grid; place-items: center; border-radius: 50%; background: #fff; color: #4285f4; font-family: Arial, sans-serif; font-size: 15px; font-weight: 800; }
+.sync-disclosure { margin: 12px 0 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.sync-connected-label { margin-bottom: 8px; }
+.sync-status-card { margin: 15px 0 16px; padding: 14px; display: flex; align-items: flex-start; gap: 11px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); }
+.sync-status-dot { width: 9px; height: 9px; margin-top: 4px; flex: 0 0 9px; border-radius: 50%; background: #6d9b73; box-shadow: 0 0 0 4px rgba(109, 155, 115, .13); }
+.sync-status-card.is-syncing .sync-status-dot { background: #c39864; box-shadow: 0 0 0 4px rgba(195, 152, 100, .14); }
+.sync-status-card.is-error .sync-status-dot { background: #b87952; box-shadow: 0 0 0 4px rgba(184, 121, 82, .14); }
+.sync-status-card b, .sync-status-card small { display: block; }
+.sync-status-card b { color: var(--ink); font-size: 12px; }
+.sync-status-card small { margin-top: 4px; color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
+.sync-connected-actions { display: grid; gap: 7px; }
+.sync-connected-actions .primary-button { width: 100%; min-height: 48px; border-radius: 999px; }
+.sync-connected-actions .text-button, .sync-not-now { min-height: 40px; margin: 0; color: var(--ink-soft); font-size: 11px; }
+.sync-live-status { margin: 9px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.sync-not-now { width: 100%; margin-top: 10px; }
 
 @media (max-width: 600px) {
   .app-shell { padding: 0 21px; }
@@ -494,9 +525,15 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
   .stamp-reveal { margin-right: 11px; margin-left: 11px; }
   .results-actions { margin-right: 7px; margin-left: 7px; }
   .context-dialog .install-content { padding-right: 20px; padding-left: 20px; }
+  .sync-dialog .install-content { padding-right: 20px; padding-left: 20px; }
+  .sync-content h2 { font-size: 29px; }
   .topbar { height: 68px; }
   .topbar-actions { gap: 4px; }
   .install-button { min-height: 44px; padding: 0 10px; gap: 6px; font-size: 10px; }
+  .sync-button { min-height: 44px; padding: 0 9px; gap: 5px; font-size: 10px; }
+  .sync-button svg { width: 16px; height: 16px; }
+  .sync-button { width: 44px; padding: 0; }
+  .sync-button span { display: none; }
   .offline-status { min-height: 30px; margin-top: 10px; font-size: 9px; }
   .intro { padding: 27px 0 16px; }
   .intro h1 { margin-top: 9px; font-size: clamp(32px, 9vw, 40px); line-height: 1.04; }
@@ -705,6 +742,10 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 :root[data-theme="dark"] .context-options label { border-color: var(--line); background: var(--surface); }
 :root[data-theme="dark"] .context-options input { accent-color: #a9d76d; }
 :root[data-theme="dark"] .install-footnote { color: var(--muted); }
+:root[data-theme="dark"] .sync-button.is-connected { border-color: rgba(169, 215, 109, .22); }
+:root[data-theme="dark"] .sync-summary { border-color: var(--line); }
+:root[data-theme="dark"] .sync-summary li::before { color: #b9d88e; }
+:root[data-theme="dark"] .sync-status-card { border-color: var(--line); }
 :root[data-theme="dark"] .theme-toggle .moon-icon { display: none; }
 :root[data-theme="dark"] .theme-toggle .sun-icon { display: block; }
 :root[data-theme="dark"] .primary-button:disabled { border-color: #414448; background: #303236; color: #aaaeaa; }
@@ -712,6 +753,13 @@ dialog::backdrop { background: rgba(21, 31, 25, .37); backdrop-filter: blur(3px)
 @media (max-width: 360px) {
   .brand-name { font-size: 12px; }
   .install-button { padding-right: 8px; padding-left: 8px; }
+  .theme-toggle { width: 44px; padding: 0; }
+  .theme-toggle span { display: none; }
+  .sync-button { width: 44px; padding: 0; }
+  .sync-button span { display: none; }
+}
+
+@media (max-width: 420px) {
   .theme-toggle { width: 44px; padding: 0; }
   .theme-toggle span { display: none; }
 }

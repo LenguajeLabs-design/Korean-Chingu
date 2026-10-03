@@ -1,15 +1,23 @@
 # Korean Chingu
 
-A mobile-first, offline-capable TOPIK I and TOPIK II grammar, vocabulary, and short practice guide. It uses plain HTML, CSS, and JavaScript so it can be hosted as a static site without a build step or external runtime dependencies.
+A mobile-first, offline-capable TOPIK I and TOPIK II grammar, vocabulary, and short practice guide. It uses plain HTML, CSS, and JavaScript so it can be hosted as a static site without a build step.
 
 ## Use it
 
-The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. After the first deployment, open the HTTPS site once while online so the service worker can cache the interface and grammar data. Adding it to your phone's home screen is optional. Saved grammar lives in that browser on that device; it does not sync, and clearing site data may remove it.
+The GitHub Actions workflow deploys the site from `main` to GitHub Pages. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. After the first deployment, open the HTTPS site once while online so the service worker can cache the interface and grammar data. Adding it to your phone's home screen is optional. Core study remains available offline.
 
 - **iPhone:** Open the HTTPS site in Safari, tap Share, then **Add to Home Screen**.
 - **Android:** Open the HTTPS site in Chrome, open the menu, then **Install app** or **Add to Home screen**.
 
-The app uses no remote fonts, APIs, or images; the illustrated Seoul route is bundled locally for offline use. Vocabulary is grouped into practical topics and can be searched by Hangul, romanization, and English meaning. The **Play** section offers 17 short playable rounds: three stops on the illustrated route, 12 everyday scenes about taxis, GS25, coffee, school, family, food, commuting, travel, subway changes, galleries, and hotel requests, plus two original TOPIK-style rounds. TOPIK I practice focuses on short conversations and direct details; TOPIK II practice adds chart reading, headline choice, sentence order, notices, and main ideas. Each round has five questions and earns a local stamp on first completion. Words linked to missed answers return later; two correct reviews remove a word from the revisit list. Freddie examples start with broad Seoul travel and study contexts. Those topics are optional and editable, and personal details are not required. Saved grammar, words, practice history, route stamps, Freddie mode, and topic choices are stored in the current browser on this device and do not sync; clearing site data may remove them. Level labels are study guidance, not an official TOPIK syllabus.
+The app uses no remote fonts or images; the illustrated Seoul routes are bundled locally. Vocabulary is grouped into practical topics and can be searched by Hangul, romanization, and English meaning. The **Play** section offers short rounds about Seoul travel, everyday routines, and TOPIK-style questions. Level labels are study guidance, not an official TOPIK syllabus.
+
+### Optional account sync
+
+Account sync uses Google sign-in and Cloud Firestore. The Firebase SDK is loaded only when a learner chooses to connect; the study guide itself keeps working offline. Synced data is limited to route stamps, completed grammar, saved grammar and words, word-review counts, Korean text size, and theme. Freddie topics and personal context stay in the browser on that device. Google may process synced progress; Firebase Analytics is not enabled.
+
+Before enabling account sync, fill the public web-app values in `firebase-config.js`, enable Google as an Authentication provider, add the GitHub Pages domain to Firebase's authorized domains, create a Firestore database, and publish `firestore.rules`. The rules restrict each progress document to its signed-in owner. Never put a Firebase service-account key in this static site.
+
+With Sync off, saved entries and study history remain in the current browser and may be removed when site data is cleared. With Sync on, new changes sync when online; offline changes remain local until a connection returns.
 
 ## Local preview
 
